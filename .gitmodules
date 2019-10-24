@@ -1,0 +1,3 @@
+[submodule "Moza/vendor/spdlog"]
+	path = Moza/vendor/spdlog
+	url = https://github.com/gabime/spdlog

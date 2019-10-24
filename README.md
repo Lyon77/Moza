@@ -2,8 +2,12 @@
 Moza Engine
 
 
-#Sandbox
+# Sandbox
 Main Executable
 
-#Moza
+# Moza
 dll
+
+# 3rd Party Libraries
+## stdlog
+https://github.com/gabime/spdlog

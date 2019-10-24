@@ -1,11 +1,14 @@
 # Moza
 Moza Engine
 
+# How to Run
+Currently, the engine only supports Windows x64. To run it, run 'GenerateProjects.bat'
 
-# Sandbox
+# Architecture
+## Sandbox
 Main Executable
 
-# Moza
+## Moza
 dll
 
 # 3rd Party Libraries

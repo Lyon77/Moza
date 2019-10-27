@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mzpch.h"
 #include "Moza/Core.h"
 
 namespace Moza {

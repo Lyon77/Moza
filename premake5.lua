@@ -10,6 +10,12 @@ workspace "Moza"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+-- Include directories relative to the root folder (solution directory)
+IncludeDir = {}
+IncludeDir["GLFW"] = "Moza/vendor/GLFW/include"
+
+include "Moza/vendor/GLFW"
+
 project "Moza"
 	location "Moza"
 	kind "SharedLib"
@@ -30,7 +36,14 @@ project "Moza"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include"
+		"%{prj.name}/vendor/spdlog/include",
+		"%{IncludeDir.GLFW}"
+	}
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"

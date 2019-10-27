@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core.h"
+#include "Moza/Events/Event.h"
+
 
 namespace Moza
 { 

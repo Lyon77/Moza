@@ -4,6 +4,9 @@
     <Filter Include="Moza">
       <UniqueIdentifier>{FC30897C-E867-8A0D-9154-70107D6A060F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Moza\Events">
+      <UniqueIdentifier>{6069969C-CC1E-0F92-5513-0969C1C70596}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Moza.h" />
@@ -16,9 +19,22 @@
     <ClInclude Include="src\Moza\EntryPoint.h">
       <Filter>Moza</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Events\ApplicationEvent.h">
+      <Filter>Moza\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Events\Event.h">
+      <Filter>Moza\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Events\KeyEvent.h">
+      <Filter>Moza\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Events\MouseEvent.h">
+      <Filter>Moza\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Log.h">
       <Filter>Moza</Filter>
     </ClInclude>
+    <ClInclude Include="src\mzpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Application.cpp">
@@ -27,5 +43,6 @@
     <ClCompile Include="src\Moza\Log.cpp">
       <Filter>Moza</Filter>
     </ClCompile>
+    <ClCompile Include="src\mzpch.cpp" />
   </ItemGroup>
 </Project>

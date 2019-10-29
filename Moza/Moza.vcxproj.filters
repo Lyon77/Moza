@@ -37,6 +37,12 @@
     <ClInclude Include="src\Moza\Events\MouseEvent.h">
       <Filter>Moza\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Layer.h">
+      <Filter>Moza</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\LayerStack.h">
+      <Filter>Moza</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Log.h">
       <Filter>Moza</Filter>
     </ClInclude>
@@ -50,6 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Application.cpp">
+      <Filter>Moza</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Layer.cpp">
+      <Filter>Moza</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\LayerStack.cpp">
       <Filter>Moza</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Log.cpp">

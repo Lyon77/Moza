@@ -13,8 +13,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to the root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Moza/vendor/GLFW/include"
+IncludeDir["Glad"] = "Moza/vendor/Glad/include"
 
 include "Moza/vendor/GLFW"
+include "Moza/vendor/Glad"
 
 project "Moza"
 	location "Moza"
@@ -37,12 +39,14 @@ project "Moza"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links
 	{
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -54,7 +58,8 @@ project "Moza"
 		defines
 		{
 			"MZ_PLATFORM_WINDOWS",
-			"MZ_BUILD_DLL"
+			"MZ_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		postbuildcommands

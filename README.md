@@ -27,3 +27,5 @@ https://github.com/gabime/spdlog
 https://github.com/premake
 ## GLFW
 https://github.com/TheCherno/glfw (forked from GLFW)
+## GLAD (not forked)
+https://glad.dav1d.de/

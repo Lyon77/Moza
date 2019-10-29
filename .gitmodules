@@ -4,3 +4,6 @@
 [submodule "Moza/vendor/GLFW"]
 	path = Moza/vendor/GLFW
 	url = https://github.com/TheCherno/GLFW
+[submodule "Moza/vendor/imgui"]
+	path = Moza/vendor/imgui
+	url = https://github.com/TheCherno/imgui

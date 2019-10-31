@@ -1,5 +1,6 @@
 workspace "Moza"
 	architecture "x64"
+	startproject "Sandbox"
 
 	configurations
 	{
@@ -7,8 +8,6 @@ workspace "Moza"
 		"Release",
 		"Dist"
 	}
-
-	startproject "Sandbox"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -21,6 +20,12 @@ IncludeDir["ImGui"] = "Moza/vendor/imgui"
 include "Moza/vendor/GLFW"
 include "Moza/vendor/Glad"
 include "Moza/vendor/imgui"
+group "Dependencies"
+	include "Moza/vendor/GLFW"
+	include "Moza/vendor/Glad"
+	include "Moza/vendor/imgui"
+	
+group ""
 
 project "Moza"
 	location "Moza"
@@ -70,7 +75,7 @@ project "Moza"
 
 		postbuildcommands
 		{
-			{"{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox"}
+			{"{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\""}
 		}
 
 	filter "configurations:Debug"

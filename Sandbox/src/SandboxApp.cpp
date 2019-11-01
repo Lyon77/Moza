@@ -1,6 +1,5 @@
 #include <Moza.h>
 
-
 class ExampleLayer : public Moza::Layer
 {
 public:
@@ -33,7 +32,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Moza::ImGuiLayer());
 	}
 
 	~Sandbox()

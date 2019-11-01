@@ -14,6 +14,7 @@ namespace Moza
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnUpdate() {}
+		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 		
 		// for debug purposes because it's better practice to only use for debug

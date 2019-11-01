@@ -7,6 +7,9 @@
 #include "Moza/Events/Event.h"
 #include "Moza/Events/ApplicationEvent.h"
 
+#include "Moza/ImGui/ImGuiLayer.h"
+
+
 namespace Moza
 { 
 	class MOZA_API Application
@@ -28,6 +31,7 @@ namespace Moza
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	private:

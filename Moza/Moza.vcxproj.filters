@@ -49,6 +49,9 @@
     <ClInclude Include="src\Moza\Input.h">
       <Filter>Moza</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\KeyCodes.h">
+      <Filter>Moza</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Layer.h">
       <Filter>Moza</Filter>
     </ClInclude>
@@ -56,6 +59,9 @@
       <Filter>Moza</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Log.h">
+      <Filter>Moza</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\MouseButtonCodes.h">
       <Filter>Moza</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Window.h">

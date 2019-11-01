@@ -159,9 +159,11 @@
     <ClInclude Include="src\Moza\Events\MouseEvent.h" />
     <ClInclude Include="src\Moza\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Moza\Input.h" />
+    <ClInclude Include="src\Moza\KeyCodes.h" />
     <ClInclude Include="src\Moza\Layer.h" />
     <ClInclude Include="src\Moza\LayerStack.h" />
     <ClInclude Include="src\Moza\Log.h" />
+    <ClInclude Include="src\Moza\MouseButtonCodes.h" />
     <ClInclude Include="src\Moza\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />

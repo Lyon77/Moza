@@ -44,7 +44,7 @@ namespace Moza
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
 
-		MZ_CORE_TRACE("{0}", e);
+		//MZ_CORE_TRACE("{0}", e);
 
 		//events are triggered from the last layer to the first
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
@@ -69,9 +69,6 @@ namespace Moza
 			{
 				layer->OnUpdate();
 			}
-
-			auto[x, y] = Input::GetMousePosition();
-			MZ_CORE_TRACE("{0}, {1}", x, y);
 			
 			m_Window->OnUpdate();
 		}

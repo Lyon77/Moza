@@ -16,6 +16,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Moza/vendor/GLFW/include"
 IncludeDir["Glad"] = "Moza/vendor/Glad/include"
 IncludeDir["ImGui"] = "Moza/vendor/imgui"
+IncludeDir["glm"] = "Moza/vendor/glm"
 
 include "Moza/vendor/GLFW"
 include "Moza/vendor/Glad"
@@ -42,7 +43,9 @@ project "Moza"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs
@@ -51,7 +54,8 @@ project "Moza"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -111,7 +115,8 @@ project "Sandbox"
 	includedirs 
 	{
 		"Moza/vendor/spdlog/include",
-		"Moza/src"
+		"Moza/src",
+		"%{IncludeDir.glm}"
 	}
 
 	links

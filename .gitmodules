@@ -7,3 +7,6 @@
 [submodule "Moza/vendor/imgui"]
 	path = Moza/vendor/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "Moza\\vendor\\glm"]
+	path = Moza\\vendor\\glm
+	url = https://github.com/g-truc/glm

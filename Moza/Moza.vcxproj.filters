@@ -13,8 +13,14 @@
     <Filter Include="src\Moza\ImGui">
       <UniqueIdentifier>{DD0F105B-C9DD-0361-B271-74879EDEDFC5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Moza\Renderer">
+      <UniqueIdentifier>{79C5068A-E5DB-0420-2E53-90419AA8D5A7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform\Windows">
       <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
@@ -87,8 +93,14 @@
     <ClInclude Include="src\Moza\MouseButtonCodes.h">
       <Filter>src\Moza</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\GraphicsContext.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Window.h">
       <Filter>src\Moza</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
       <Filter>src\Platform\Windows</Filter>
@@ -1222,6 +1234,9 @@
     </ClCompile>
     <ClCompile Include="src\Moza\Log.cpp">
       <Filter>src\Moza</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Platform\Windows</Filter>

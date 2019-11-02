@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Moza/Window.h"
+#include "Moza/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
 
@@ -28,6 +29,7 @@ namespace Moza
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		//just a struct to organize information nicely
 		struct WindowData

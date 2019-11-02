@@ -1,5 +1,7 @@
 #include <Moza.h>
 
+#include "imgui/imgui.h"
+
 class ExampleLayer : public Moza::Layer
 {
 public:
@@ -12,6 +14,13 @@ public:
 	{
 		if (Moza::Input::IsKeyPressed(MZ_KEY_TAB))
 			MZ_TRACE("Tab key has been pressed");
+	}
+
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World");
+		ImGui::End();
 	}
 
 	void OnEvent(Moza::Event& event) override

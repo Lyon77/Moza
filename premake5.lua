@@ -25,14 +25,15 @@ group "Dependencies"
 	include "Moza/vendor/GLFW"
 	include "Moza/vendor/Glad"
 	include "Moza/vendor/imgui"
-	
+
 group ""
 
 project "Moza"
 	location "Moza"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -46,6 +47,11 @@ project "Moza"
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs
@@ -67,7 +73,6 @@ project "Moza"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -77,31 +82,27 @@ project "Moza"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands
-		{
-			{"{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\""}
-		}
-
 	filter "configurations:Debug"
 		defines "MZ_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
 
 	filter "configurations:Release"
 		defines "MZ_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "MZ_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 project "Sandbox"
 	location "SandBox"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -112,10 +113,11 @@ project "Sandbox"
 		"%{prj.name}/src/**.cpp"
 	}
 
-	includedirs 
+	includedirs
 	{
 		"Moza/vendor/spdlog/include",
 		"Moza/src",
+		"Moza/vendor",
 		"%{IncludeDir.glm}"
 	}
 
@@ -125,7 +127,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -136,14 +137,19 @@ project "Sandbox"
 	filter "configurations:Debug"
 		defines "MZ_DEBUG"
 		runtime "Debug"
-		symbols "On"
+		symbols "on"
+
+		linkoptions
+		{
+			"/nodefaultlib:libcmt.lib"
+		}
 
 	filter "configurations:Release"
 		defines "MZ_RELEASE"
 		runtime "Release"
-		optimize "On"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "MZ_DIST"
 		runtime "Release"
-		optimize "On"
+		optimize "on"

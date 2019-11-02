@@ -1,11 +1,15 @@
 #pragma once
 
 #ifdef MZ_PLATFORM_WINDOWS
+#if MZ_DYNAMIC_LINK
 	#ifdef MZ_BUILD_DLL
 		#define MOZA_API __declspec(dllexport)
 	#else
 		#define MOZA_API __declspec(dllimport)
 	#endif
+#else
+	#define MOZA_API
+#endif
 #else
 	#error Moza only supports Windows!
 #endif

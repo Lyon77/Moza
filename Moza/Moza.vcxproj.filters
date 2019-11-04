@@ -93,11 +93,23 @@
     <ClInclude Include="src\Moza\MouseButtonCodes.h">
       <Filter>src\Moza</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Buffer.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Renderer.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Shader.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Window.h">
       <Filter>src\Moza</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -1234,6 +1246,18 @@
     </ClCompile>
     <ClCompile Include="src\Moza\Log.cpp">
       <Filter>src\Moza</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Buffer.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Renderer.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Shader.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\OpenGL</Filter>

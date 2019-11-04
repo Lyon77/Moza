@@ -9,6 +9,8 @@
 
 #include "Moza/ImGui/ImGuiLayer.h"
 
+#include "Moza/Renderer/Shader.h"
+#include "Moza/Renderer/Buffer.h"
 
 namespace Moza
 { 
@@ -16,7 +18,7 @@ namespace Moza
 	{
 	public:
 		Application();
-		virtual ~Application();
+		virtual ~Application() = default;
 
 		void Run();
 
@@ -34,6 +36,12 @@ namespace Moza
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+
+		unsigned int m_VertexArray;
+		std::unique_ptr<VertexBuffer> m_VertexBuffer;
+		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+
+		std::unique_ptr<Shader> m_Shader;
 	private:
 		static Application* s_Instance;
 	};

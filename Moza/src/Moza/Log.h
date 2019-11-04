@@ -21,14 +21,14 @@ namespace Moza
 }
 
 //Core Log Macros
-#define MZ_CORE_FATAL(...)  ::Moza::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define MZ_CORE_FATAL(...)  ::Moza::Log::GetCoreLogger()->critical(__VA_ARGS__)
 #define MZ_CORE_ERROR(...)  ::Moza::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define MZ_CORE_WARN(...)   ::Moza::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define MZ_CORE_INFO(...)   ::Moza::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define MZ_CORE_TRACE(...)  ::Moza::Log::GetCoreLogger()->trace(__VA_ARGS__)
 
 //Client Log Macros
-#define MZ_FATAL(...)		::Moza::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define MZ_FATAL(...)		::Moza::Log::GetClientLogger()->critical(__VA_ARGS__)
 #define MZ_ERROR(...)		::Moza::Log::GetClientLogger()->error(__VA_ARGS__)
 #define MZ_WARN(...)		::Moza::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define MZ_INFO(...)		::Moza::Log::GetClientLogger()->info(__VA_ARGS__)

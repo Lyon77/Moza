@@ -8,9 +8,4 @@ namespace Moza
 	{
 	}
 
-
-	Layer::~Layer()
-	{
-	}
-
 }

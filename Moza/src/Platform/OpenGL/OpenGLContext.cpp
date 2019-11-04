@@ -18,6 +18,11 @@ namespace Moza
 		//load glad
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		MZ_CORE_ASSERT(status, "Failed to initialize Glad");
+
+		MZ_CORE_INFO("OpenGL Info:");
+		MZ_CORE_INFO("  Vender:   {0}", glGetString(GL_VENDOR));
+		MZ_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
+		MZ_CORE_INFO("  Version:  {0}", glGetString(GL_VERSION));
 	}
 
 	void OpenGLContext::SwapBuffers()

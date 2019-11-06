@@ -9,11 +9,6 @@
 
 #include "Moza/ImGui/ImGuiLayer.h"
 
-#include "Moza/Renderer/Shader.h"
-#include "Moza/Renderer/Buffer.h"
-#include "Moza/Renderer/VertexArray.h"
-#include "Moza/Renderer/OrthographicCamera.h"
-
 namespace Moza
 { 
 	class MOZA_API Application
@@ -38,11 +33,6 @@ namespace Moza
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
-
-		std::shared_ptr<VertexArray> m_VertexArray;
-		std::shared_ptr<Shader> m_Shader;
-
-		OrthographicCamera m_Camera;
 	private:
 		static Application* s_Instance;
 	};

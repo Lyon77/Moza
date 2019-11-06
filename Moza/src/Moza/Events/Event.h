@@ -10,7 +10,7 @@ namespace Moza {
 	// For the future, a better strategy might be to buffer events in an event
 	// bus and process them during the "event" part of the update stage.
 
-	enum class EventType
+	enum class MOZA_API EventType
 	{
 		None = 0,
 		WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
@@ -55,7 +55,7 @@ namespace Moza {
 
 	//A way to dispatch events based on type
 	//Because we get events at Event& (Event handlers), we create an instance of this class to handle this
-	class EventDispatcher
+	class MOZA_API EventDispatcher
 	{
 		template<typename T>
 		//implement a function that takes in a Event and returns a bool, implemented somewhere in the Engine

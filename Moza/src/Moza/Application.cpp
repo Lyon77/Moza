@@ -3,7 +3,7 @@
 
 #include "Log.h"
 
-#include <glad/glad.h>
+#include "Moza/Renderer/Renderer.h"
 
 #include "Input.h"
 
@@ -13,29 +13,8 @@ namespace Moza
 
 	Application* Application::s_Instance = nullptr;
 
-	static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type)
-	{
-		switch (type)
-		{
-			case Moza::ShaderDataType::None:    return GL_FLOAT;
-			case Moza::ShaderDataType::Float:   return GL_FLOAT;
-			case Moza::ShaderDataType::Float2:  return GL_FLOAT;
-			case Moza::ShaderDataType::Float3:  return GL_FLOAT;
-			case Moza::ShaderDataType::Float4:  return GL_FLOAT;
-			case Moza::ShaderDataType::Mat3:    return GL_FLOAT;
-			case Moza::ShaderDataType::Mat4:    return GL_FLOAT;
-			case Moza::ShaderDataType::Int:     return GL_INT;
-			case Moza::ShaderDataType::Int2:    return GL_INT;
-			case Moza::ShaderDataType::Int3:    return GL_INT;
-			case Moza::ShaderDataType::Int4:    return GL_INT;
-			case Moza::ShaderDataType::Bool:    return GL_BOOL;
-		}
-
-		MZ_CORE_ASSERT(false, "Unknown ShaderDataType!");
-		return 0;
-	}
-
 	Application::Application()
+		: m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		MZ_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
@@ -45,9 +24,8 @@ namespace Moza
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
 
-		// Vertex Array
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
+		// VertexArray
+		m_VertexArray.reset(VertexArray::Create());
 
 		//The Triangle
 		float verticies[3 * 7] = {
@@ -57,44 +35,34 @@ namespace Moza
 		};
 
 		// Vertex Buffer
+		std::shared_ptr<VertexBuffer> m_VertexBuffer;
 		m_VertexBuffer.reset(VertexBuffer::Create(verticies, sizeof(verticies)));
 
-		{
-			//Create details on how the layout is set
-			BufferLayout layout{
-				{ ShaderDataType::Float3, "a_Position" },
-				{ ShaderDataType::Float4, "a_Color" }
-			};
+		//Create details on how the layout is set
+		BufferLayout layout{
+			{ ShaderDataType::Float3, "a_Position" },
+			{ ShaderDataType::Float4, "a_Color" }
+		};
 
-			m_VertexBuffer->SetLayout(layout);
-		}
+		m_VertexBuffer->SetLayout(layout);
 
-		//assign it to the vertex buffer
-		uint32_t index = 0;
-		const auto& layout = m_VertexBuffer->GetLayout();
-		for (const auto& element : layout)
-		{
-			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index, 
-				element.GetComponentCount(), 
-				ShaderDataTypeToOpenGLBaseType(element.Type), 
-				element.Normalized ? GL_TRUE : GL_FALSE,
-				layout.GetStride(),
-				(const void*) element.Offset);
-			index++;
-		}
+		// assign VertexBuffer to VertexArray
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
 		
 		unsigned int indices[3] = { 0, 1, 2 };
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 		// Index Buffer
+		std::shared_ptr<IndexBuffer> m_IndexBuffer;
 		m_IndexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		std::string vertexSrc = R"(
 			#version 330 core
 
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
+
+			uniform mat4 u_ViewProjection;
 
 			out vec3 v_Position;			
 			out vec4 v_Color;			
@@ -103,7 +71,7 @@ namespace Moza
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -145,6 +113,7 @@ namespace Moza
 		//events are triggered from the last layer to the first
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
 		{
+			//REWORD this line
 			(*--it)->OnEvent(e);
 
 			//if a layer interacts with event, make sure other layers don't interact with it
@@ -157,18 +126,21 @@ namespace Moza
 	{
 		while (m_Running)
 		{
-			glClearColor(0.1f, 0.1f, 0.1f, 1);
-			glClear(GL_COLOR_BUFFER_BIT);
+			RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+			RendererCommand::Clear();
 
-			m_Shader->Bind();
-			glBindVertexArray(m_VertexArray);
-			glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
-			
+			m_Camera.SetPosition({ 0.5f, 0.0f, 0.0f });
+			m_Camera.SetRotation(45.0f);
+
+			Renderer::BeginScene(m_Camera);
+
+			Renderer::Submit(m_Shader, m_VertexArray);
+
+			Renderer::EndScene();
+
 			//update each layer from begining to end
 			for (Layer* layer : m_LayerStack)
-			{
 				layer->OnUpdate();
-			}
 			
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)

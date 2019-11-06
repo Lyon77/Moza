@@ -102,7 +102,16 @@
     <ClInclude Include="src\Moza\Renderer\Renderer.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\RendererAPI.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\RendererCommand.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Shader.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\VertexArray.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Window.h">
@@ -112,6 +121,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
@@ -1227,6 +1239,8 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Application.cpp">
@@ -1253,13 +1267,25 @@
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\RendererAPI.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\RendererCommand.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Shader.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\VertexArray.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
@@ -1271,5 +1297,7 @@
     <ClCompile Include="src\mzpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp" />
   </ItemGroup>
 </Project>

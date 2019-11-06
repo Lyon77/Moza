@@ -11,6 +11,8 @@
 
 #include "Moza/Renderer/Shader.h"
 #include "Moza/Renderer/Buffer.h"
+#include "Moza/Renderer/VertexArray.h"
+#include "Moza/Renderer/OrthographicCamera.h"
 
 namespace Moza
 { 
@@ -37,11 +39,10 @@ namespace Moza
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		unsigned int m_VertexArray;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		std::shared_ptr<VertexArray> m_VertexArray;
+		std::shared_ptr<Shader> m_Shader;
 
-		std::unique_ptr<Shader> m_Shader;
+		OrthographicCamera m_Camera;
 	private:
 		static Application* s_Instance;
 	};

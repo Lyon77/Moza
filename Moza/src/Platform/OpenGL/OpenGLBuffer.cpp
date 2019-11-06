@@ -12,12 +12,12 @@ namespace Moza
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float * verticies, uint32_t size)
 	{
 		glCreateBuffers(1, &m_RendererID);
-		Bind();
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ARRAY_BUFFER, size, verticies, GL_STATIC_DRAW);
 	}
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glDeleteBuffers(GL_ARRAY_BUFFER, &m_RendererID);
+		glDeleteBuffers(1, &m_RendererID);
 	}
 	void OpenGLVertexBuffer::Bind() const
 	{
@@ -37,12 +37,12 @@ namespace Moza
 		: m_Count(count)
 	{
 		glCreateBuffers(1, &m_RendererID);
-		Bind();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		glDeleteBuffers(GL_ELEMENT_ARRAY_BUFFER, &m_RendererID);
+		glDeleteBuffers(1, &m_RendererID);
 	}
 	void OpenGLIndexBuffer::Bind() const
 	{

@@ -143,6 +143,7 @@
     <ClInclude Include="src\Moza.h" />
     <ClInclude Include="src\Moza\Application.h" />
     <ClInclude Include="src\Moza\Core.h" />
+    <ClInclude Include="src\Moza\Core\Timestep.h" />
     <ClInclude Include="src\Moza\EntryPoint.h" />
     <ClInclude Include="src\Moza\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Moza\Events\Event.h" />
@@ -578,4 +579,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 

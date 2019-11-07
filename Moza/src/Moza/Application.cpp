@@ -7,6 +7,8 @@
 
 #include "Input.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Moza
 {
 #define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
@@ -58,9 +60,13 @@ namespace Moza
 	{
 		while (m_Running)
 		{
+			float time = (float) glfwGetTime(); // Platform::GetTime() in the future
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
 			//update each layer from begining to end
 			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 			
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)

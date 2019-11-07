@@ -7,6 +7,9 @@
     <Filter Include="src\Moza">
       <UniqueIdentifier>{735022CF-5F1D-7DDA-8836-6B827462B268}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Moza\Core">
+      <UniqueIdentifier>{ABB4CE40-1775-4A77-E0AF-93F44C2F8F53}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Moza\Events">
       <UniqueIdentifier>{F79C70B4-6328-DE78-6C39-616DD8433A79}</UniqueIdentifier>
     </Filter>
@@ -57,6 +60,9 @@
     <ClInclude Include="src\Moza\Core.h">
       <Filter>src\Moza</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Core\Timestep.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\EntryPoint.h">
       <Filter>src\Moza</Filter>
     </ClInclude>
@@ -99,6 +105,9 @@
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Renderer.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
@@ -121,6 +130,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
@@ -1239,8 +1251,6 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
-    <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Application.cpp">
@@ -1264,6 +1274,9 @@
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
@@ -1285,6 +1298,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1297,7 +1313,5 @@
     <ClCompile Include="src\mzpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
-    <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp" />
   </ItemGroup>
 </Project>

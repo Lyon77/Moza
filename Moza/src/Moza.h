@@ -6,6 +6,8 @@
 #include "Moza/Layer.h"
 #include "Moza/Log.h"
 
+#include "Moza/Core/Timestep.h"
+
 #include "Moza/Input.h"
 #include "Moza/KeyCodes.h"
 #include "Moza/MouseButtonCodes.h"

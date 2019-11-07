@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Moza/Core.h"
+#include "Moza/Core/Timestep.h"
 #include "Moza/Events/Event.h"
 
 namespace Moza 
@@ -13,7 +14,7 @@ namespace Moza
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 		

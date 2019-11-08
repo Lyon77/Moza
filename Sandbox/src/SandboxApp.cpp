@@ -1,8 +1,11 @@
 #include <Moza.h>
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public Moza::Layer
 {
@@ -102,9 +105,9 @@ public:
 			}
 		)";
 
-		m_Shader.reset(new Moza::Shader(vertexSrc, fragmentSrc));
+		m_Shader.reset(Moza::Shader::Create(vertexSrc, fragmentSrc));
 
-		std::string squareVertexSrc = R"(
+		std::string flatColorVertexSrc = R"(
 			#version 330 core
 
 			layout(location = 0) in vec3 a_Position;
@@ -121,19 +124,21 @@ public:
 			}
 		)";
 
-		std::string squareFragmentSrc = R"(
+		std::string flatColorFragmentSrc = R"(
 			#version 330 core
 
 			layout(location = 0) out vec4 color;			
 			in vec3 v_Position;
+	
+			uniform vec3 u_Color;
 
 			void main()
 			{
-				color = vec4(0.2f, 0.3f, 0.8f, 1.0f);
+				color = vec4(u_Color, 1.0f);
 			}
 		)";
 
-		m_SquareShader.reset(new Moza::Shader(squareVertexSrc, squareFragmentSrc));
+		m_FlatColorShader.reset(Moza::Shader::Create(flatColorVertexSrc, flatColorFragmentSrc));
 	}
 
 	void OnUpdate(Moza::Timestep ts) override
@@ -176,24 +181,30 @@ public:
 		Moza::Renderer::BeginScene(m_Camera);
 
 		//Render array of squares
+		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-		for (int y = 0; y < 5; y++) 
+		for (int y = 0; y < 8; y++) 
 		{
-			for (int x = 0; x < 5; x++)
+			for (int x = 0; x < 8; x++)
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos + m_RenderPosition) * scale;
-				Moza::Renderer::Submit(m_SquareShader, m_SquareVertexArray, transform);
+				Moza::Renderer::Submit(m_FlatColorShader, m_SquareVertexArray, transform);
 			}
 		}
 		//Render Triangle
-		Moza::Renderer::Submit(m_Shader, m_VertexArray);
+		Moza::Renderer::Submit(m_Shader, m_VertexArray); 
 
 		Moza::Renderer::EndScene();
 	}
 
 	virtual void OnImGuiRender() override
 	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 
 	void OnEvent(Moza::Event& event) override
@@ -204,7 +215,7 @@ private:
 	std::shared_ptr<Moza::VertexArray> m_VertexArray;
 	std::shared_ptr<Moza::Shader> m_Shader;
 	std::shared_ptr<Moza::VertexArray> m_SquareVertexArray;
-	std::shared_ptr<Moza::Shader> m_SquareShader;
+	std::shared_ptr<Moza::Shader> m_FlatColorShader;
 
 	Moza::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
@@ -215,6 +226,8 @@ private:
 
 	glm::vec3 m_RenderPosition;
 	float m_RenderMoveSpeed = 3.0f;
+
+	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 };
 
 class Sandbox : public Moza::Application

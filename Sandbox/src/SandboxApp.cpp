@@ -2,14 +2,17 @@
 
 #include "imgui/imgui.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 class ExampleLayer : public Moza::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f)
+		: Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_RenderPosition(0.0f)
 	{
 		// VertexArray
 		m_VertexArray.reset(Moza::VertexArray::Create());
+		m_SquareVertexArray.reset(Moza::VertexArray::Create());
 
 		//The Triangle
 		float verticies[3 * 7] = {
@@ -40,6 +43,31 @@ public:
 		m_IndexBuffer.reset(Moza::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
+		//The Square
+		float squareVerticies[3 * 4] = {
+			-0.5f, -0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f,
+			 0.5f,  0.5f, 0.0f,
+			-0.5f,  0.5f, 0.0f
+		};
+
+		std::shared_ptr<Moza::VertexBuffer> m_SquareVertexBuffer;
+		m_SquareVertexBuffer.reset(Moza::VertexBuffer::Create(squareVerticies, sizeof(squareVerticies)));
+
+		Moza::BufferLayout squareLayout{
+			{ Moza::ShaderDataType::Float3, "a_Position" }
+		};
+		
+		m_SquareVertexBuffer->SetLayout(squareLayout);
+
+		m_SquareVertexArray->AddVertexBuffer(m_SquareVertexBuffer);
+		
+		unsigned int squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
+
+		std::shared_ptr<Moza::IndexBuffer> m_SquareIndexBuffer;
+		m_SquareIndexBuffer.reset(Moza::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		m_SquareVertexArray->SetIndexBuffer(m_SquareIndexBuffer);
+
 		std::string vertexSrc = R"(
 			#version 330 core
 
@@ -47,6 +75,7 @@ public:
 			layout(location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;			
 			out vec4 v_Color;			
@@ -55,7 +84,7 @@ public:
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -74,10 +103,42 @@ public:
 		)";
 
 		m_Shader.reset(new Moza::Shader(vertexSrc, fragmentSrc));
+
+		std::string squareVertexSrc = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 a_Position;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+ 
+			out vec3 v_Position;					
+
+			void main()
+			{
+				v_Position = a_Position;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+		)";
+
+		std::string squareFragmentSrc = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 color;			
+			in vec3 v_Position;
+
+			void main()
+			{
+				color = vec4(0.2f, 0.3f, 0.8f, 1.0f);
+			}
+		)";
+
+		m_SquareShader.reset(new Moza::Shader(squareVertexSrc, squareFragmentSrc));
 	}
 
 	void OnUpdate(Moza::Timestep ts) override
 	{
+		//move camera
 		if (Moza::Input::IsKeyPressed(MZ_KEY_LEFT))
 			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
 		else if (Moza::Input::IsKeyPressed(MZ_KEY_RIGHT))
@@ -93,7 +154,18 @@ public:
 			m_CameraRotation += m_CameraRotationSpeed * ts;
 		else if (Moza::Input::IsKeyPressed(MZ_KEY_D))
 			m_CameraRotation -= m_CameraRotationSpeed * ts;
-		
+
+		//move render
+		if (Moza::Input::IsKeyPressed(MZ_KEY_J))
+			m_RenderPosition.x -= m_RenderMoveSpeed * ts;
+		else if (Moza::Input::IsKeyPressed(MZ_KEY_L))
+			m_RenderPosition.x += m_RenderMoveSpeed * ts;
+
+		if (Moza::Input::IsKeyPressed(MZ_KEY_K))
+			m_RenderPosition.y -= m_RenderMoveSpeed * ts;
+		else if (Moza::Input::IsKeyPressed(MZ_KEY_I))
+			m_RenderPosition.y += m_RenderMoveSpeed * ts;
+
 
 		Moza::RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Moza::RendererCommand::Clear();
@@ -103,6 +175,18 @@ public:
 
 		Moza::Renderer::BeginScene(m_Camera);
 
+		//Render array of squares
+		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		for (int y = 0; y < 5; y++) 
+		{
+			for (int x = 0; x < 5; x++)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos + m_RenderPosition) * scale;
+				Moza::Renderer::Submit(m_SquareShader, m_SquareVertexArray, transform);
+			}
+		}
+		//Render Triangle
 		Moza::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Moza::Renderer::EndScene();
@@ -119,6 +203,8 @@ public:
 private:
 	std::shared_ptr<Moza::VertexArray> m_VertexArray;
 	std::shared_ptr<Moza::Shader> m_Shader;
+	std::shared_ptr<Moza::VertexArray> m_SquareVertexArray;
+	std::shared_ptr<Moza::Shader> m_SquareShader;
 
 	Moza::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
@@ -126,6 +212,9 @@ private:
 	
 	float m_CameraRotation = 0.0f;
 	float m_CameraRotationSpeed = 60.0f;
+
+	glm::vec3 m_RenderPosition;
+	float m_RenderMoveSpeed = 3.0f;
 };
 
 class Sandbox : public Moza::Application

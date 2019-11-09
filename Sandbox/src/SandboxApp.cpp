@@ -25,7 +25,7 @@ public:
 		};
 
 		// Vertex Buffer
-		std::shared_ptr<Moza::VertexBuffer> m_VertexBuffer;
+		Moza::Ref<Moza::VertexBuffer> m_VertexBuffer;
 		m_VertexBuffer.reset(Moza::VertexBuffer::Create(verticies, sizeof(verticies)));
 
 		//Create details on how the layout is set
@@ -42,23 +42,24 @@ public:
 		unsigned int indices[3] = { 0, 1, 2 };
 
 		// Index Buffer
-		std::shared_ptr<Moza::IndexBuffer> m_IndexBuffer;
+		Moza::Ref<Moza::IndexBuffer> m_IndexBuffer;
 		m_IndexBuffer.reset(Moza::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		//The Square
-		float squareVerticies[3 * 4] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+		float squareVertices[6 * 4] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<Moza::VertexBuffer> m_SquareVertexBuffer;
-		m_SquareVertexBuffer.reset(Moza::VertexBuffer::Create(squareVerticies, sizeof(squareVerticies)));
+		Moza::Ref<Moza::VertexBuffer> m_SquareVertexBuffer;
+		m_SquareVertexBuffer.reset(Moza::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 
 		Moza::BufferLayout squareLayout{
-			{ Moza::ShaderDataType::Float3, "a_Position" }
+			{ Moza::ShaderDataType::Float3, "a_Position" },
+			{ Moza::ShaderDataType::Float2, "a_TexCoord" }
 		};
 		
 		m_SquareVertexBuffer->SetLayout(squareLayout);
@@ -67,7 +68,7 @@ public:
 		
 		unsigned int squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
-		std::shared_ptr<Moza::IndexBuffer> m_SquareIndexBuffer;
+		Moza::Ref<Moza::IndexBuffer> m_SquareIndexBuffer;
 		m_SquareIndexBuffer.reset(Moza::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		m_SquareVertexArray->SetIndexBuffer(m_SquareIndexBuffer);
 
@@ -139,6 +140,46 @@ public:
 		)";
 
 		m_FlatColorShader.reset(Moza::Shader::Create(flatColorVertexSrc, flatColorFragmentSrc));
+
+		std::string textureShaderVertexSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
+			}
+		)";
+
+		std::string textureShaderFragmentSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			in vec2 v_TexCoord;
+			
+			uniform sampler2D u_Texture;
+
+			void main()
+			{
+				color = texture(u_Texture, v_TexCoord);
+			}
+		)";
+
+		m_TextureShader.reset(Moza::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
+
+		m_Texture = Moza::Texture2D::Create("assets/textures/Checkerboard.png");
+
+		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
 	void OnUpdate(Moza::Timestep ts) override
@@ -184,7 +225,7 @@ public:
 		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_FlatColorShader)->Bind();
 		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
-		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		for (int y = 0; y < 8; y++) 
 		{
 			for (int x = 0; x < 8; x++)
@@ -194,8 +235,12 @@ public:
 				Moza::Renderer::Submit(m_FlatColorShader, m_SquareVertexArray, transform);
 			}
 		}
+
+		m_Texture->Bind();
+		Moza::Renderer::Submit(m_TextureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
 		//Render Triangle
-		Moza::Renderer::Submit(m_Shader, m_VertexArray); 
+		//Moza::Renderer::Submit(m_Shader, m_VertexArray); 
 
 		Moza::Renderer::EndScene();
 	}
@@ -212,10 +257,12 @@ public:
 	}
 
 private:
-	std::shared_ptr<Moza::VertexArray> m_VertexArray;
-	std::shared_ptr<Moza::Shader> m_Shader;
-	std::shared_ptr<Moza::VertexArray> m_SquareVertexArray;
-	std::shared_ptr<Moza::Shader> m_FlatColorShader;
+	Moza::Ref<Moza::VertexArray> m_VertexArray;
+	Moza::Ref<Moza::Shader> m_Shader;
+	Moza::Ref<Moza::VertexArray> m_SquareVertexArray;
+	Moza::Ref<Moza::Shader> m_FlatColorShader, m_TextureShader;
+
+	Moza::Ref<Moza::Texture2D> m_Texture;
 
 	Moza::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;

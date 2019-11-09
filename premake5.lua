@@ -17,6 +17,7 @@ IncludeDir["GLFW"] = "Moza/vendor/GLFW/include"
 IncludeDir["Glad"] = "Moza/vendor/Glad/include"
 IncludeDir["ImGui"] = "Moza/vendor/imgui"
 IncludeDir["glm"] = "Moza/vendor/glm"
+IncludeDir["stb_image"] = "Moza/vendor/stb_image"
 
 include "Moza/vendor/GLFW"
 include "Moza/vendor/Glad"
@@ -45,6 +46,8 @@ project "Moza"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -61,7 +64,8 @@ project "Moza"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	links

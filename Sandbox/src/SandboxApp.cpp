@@ -177,6 +177,7 @@ public:
 		m_TextureShader.reset(Moza::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc));
 
 		m_Texture = Moza::Texture2D::Create("assets/textures/Checkerboard.png");
+		m_ChernoLogoTexture = Moza::Texture2D::Create("assets/textures/ChernoLogo.png");
 
 		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_TextureShader)->Bind();
 		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);
@@ -239,6 +240,9 @@ public:
 		m_Texture->Bind();
 		Moza::Renderer::Submit(m_TextureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
+		m_ChernoLogoTexture->Bind();
+		Moza::Renderer::Submit(m_TextureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
 		//Render Triangle
 		//Moza::Renderer::Submit(m_Shader, m_VertexArray); 
 
@@ -262,7 +266,7 @@ private:
 	Moza::Ref<Moza::VertexArray> m_SquareVertexArray;
 	Moza::Ref<Moza::Shader> m_FlatColorShader, m_TextureShader;
 
-	Moza::Ref<Moza::Texture2D> m_Texture;
+	Moza::Ref<Moza::Texture2D> m_Texture, m_ChernoLogoTexture;
 
 	Moza::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;

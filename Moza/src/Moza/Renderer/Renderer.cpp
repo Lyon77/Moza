@@ -16,6 +16,11 @@ namespace Moza
 	{
 	}
 
+	void Renderer::Init()
+	{
+		RendererCommand::Init();
+	}
+
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
 	{
 		shader->Bind();

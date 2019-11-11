@@ -57,20 +57,17 @@ namespace Moza {
 	//Because we get events at Event& (Event handlers), we create an instance of this class to handle this
 	class MOZA_API EventDispatcher
 	{
-		template<typename T>
-		//implement a function that takes in a Event and returns a bool, implemented somewhere in the Engine
-		using EventFn = std::function<bool(T&)>;
 	public:
 		EventDispatcher(Event& event)
 			: m_Event(event) {}
 
 		//if the type of event giveb from EventFn matches the function, run it
-		template<typename T>
-		bool Dispatch(EventFn<T> func)
+		template<typename T, typename F>
+		bool Dispatch(const F& func)
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.Handled = func(*(T*)&m_Event);
+				m_Event.Handled = func(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;

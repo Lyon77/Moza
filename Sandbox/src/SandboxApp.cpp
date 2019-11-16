@@ -11,7 +11,7 @@ class ExampleLayer : public Moza::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f), m_RenderPosition(0.0f)
+		: Layer("Example"), m_CameraController(1280.0f / 720.0f, true), m_RenderPosition(0.0f)
 	{
 		// VertexArray
 		m_VertexArray.reset(Moza::VertexArray::Create());
@@ -106,7 +106,8 @@ public:
 			}
 		)";
 
-		m_Shader = Moza::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
+		Moza::Ref<Moza::Shader> shader = Moza::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
+		m_ShaderLibrary.Add("VertexPosColor", shader);
 
 		std::string flatColorVertexSrc = R"(
 			#version 330 core
@@ -139,7 +140,9 @@ public:
 			}
 		)";
 
-		m_FlatColorShader = Moza::Shader::Create("FlatColor", flatColorVertexSrc, flatColorFragmentSrc);
+		Moza::Ref<Moza::Shader> flatColorShader = Moza::Shader::Create("FlatColor", flatColorVertexSrc, flatColorFragmentSrc);
+
+		m_ShaderLibrary.Add("FlatColor", flatColorShader);
 
 		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 
@@ -152,23 +155,10 @@ public:
 
 	void OnUpdate(Moza::Timestep ts) override
 	{
-		//move camera
-		if (Moza::Input::IsKeyPressed(MZ_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-		else if (Moza::Input::IsKeyPressed(MZ_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
+		// update Camera
+		m_CameraController.OnUpdate(ts);
 
-		if (Moza::Input::IsKeyPressed(MZ_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-		else if (Moza::Input::IsKeyPressed(MZ_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-
-		//positive is clockwise rotation for the camera
-		if (Moza::Input::IsKeyPressed(MZ_KEY_A))
-			m_CameraRotation += m_CameraRotationSpeed * ts;
-		else if (Moza::Input::IsKeyPressed(MZ_KEY_D))
-			m_CameraRotation -= m_CameraRotationSpeed * ts;
-
+		// update Render
 		//move render
 		if (Moza::Input::IsKeyPressed(MZ_KEY_J))
 			m_RenderPosition.x -= m_RenderMoveSpeed * ts;
@@ -184,14 +174,13 @@ public:
 		Moza::RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Moza::RendererCommand::Clear();
 
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
-
-		Moza::Renderer::BeginScene(m_Camera);
+		Moza::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		//Render array of squares
-		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_FlatColorShader)->Bind();
-		std::dynamic_pointer_cast<Moza::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+		auto flatShader = m_ShaderLibrary.Get("FlatColor");
+
+		std::dynamic_pointer_cast<Moza::OpenGLShader>(flatShader)->Bind();
+		std::dynamic_pointer_cast<Moza::OpenGLShader>(flatShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		for (int y = 0; y < 8; y++) 
@@ -200,7 +189,7 @@ public:
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos + m_RenderPosition) * scale;
-				Moza::Renderer::Submit(m_FlatColorShader, m_SquareVertexArray, transform);
+				Moza::Renderer::Submit(flatShader, m_SquareVertexArray, transform);
 			}
 		}
 
@@ -213,7 +202,8 @@ public:
 		Moza::Renderer::Submit(textureShader, m_SquareVertexArray, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//Render Triangle
-		//Moza::Renderer::Submit(m_Shader, m_VertexArray); 
+		auto shader = m_ShaderLibrary.Get("VertexPosColor");
+		Moza::Renderer::Submit(shader, m_VertexArray);
 
 		Moza::Renderer::EndScene();
 	}
@@ -225,8 +215,9 @@ public:
 		ImGui::End();
 	}
 
-	void OnEvent(Moza::Event& event) override
+	void OnEvent(Moza::Event& e) override
 	{
+		m_CameraController.OnEvent(e);
 	}
 
 private:
@@ -234,18 +225,11 @@ private:
 	Moza::ShaderLibrary m_ShaderLibrary;
 
 	Moza::Ref<Moza::VertexArray> m_VertexArray;
-	Moza::Ref<Moza::Shader> m_Shader;
 	Moza::Ref<Moza::VertexArray> m_SquareVertexArray;
-	Moza::Ref<Moza::Shader> m_FlatColorShader;
 
 	Moza::Ref<Moza::Texture2D> m_Texture, m_ChernoLogoTexture;
 
-	Moza::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed = 3.0f;
-	
-	float m_CameraRotation = 0.0f;
-	float m_CameraRotationSpeed = 60.0f;
+	Moza::OrthographicCameraController m_CameraController;
 
 	glm::vec3 m_RenderPosition;
 	float m_RenderMoveSpeed = 3.0f;

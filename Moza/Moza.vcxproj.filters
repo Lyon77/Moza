@@ -102,6 +102,9 @@
     <ClInclude Include="src\Moza\MouseButtonCodes.h">
       <Filter>src\Moza</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\OrthographicCameraController.h">
+      <Filter>src\Moza</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Buffer.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
@@ -1284,6 +1287,9 @@
       <Filter>src\Moza</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Log.cpp">
+      <Filter>src\Moza</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\OrthographicCameraController.cpp">
       <Filter>src\Moza</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp">

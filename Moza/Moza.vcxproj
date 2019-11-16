@@ -160,6 +160,7 @@
     <ClInclude Include="src\Moza\LayerStack.h" />
     <ClInclude Include="src\Moza\Log.h" />
     <ClInclude Include="src\Moza\MouseButtonCodes.h" />
+    <ClInclude Include="src\Moza\OrthographicCameraController.h" />
     <ClInclude Include="src\Moza\Renderer\Buffer.h" />
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h" />
@@ -556,6 +557,7 @@
     <ClCompile Include="src\Moza\Layer.cpp" />
     <ClCompile Include="src\Moza\LayerStack.cpp" />
     <ClCompile Include="src\Moza\Log.cpp" />
+    <ClCompile Include="src\Moza\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp" />

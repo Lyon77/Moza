@@ -11,6 +11,7 @@
 #include "Moza/Input.h"
 #include "Moza/KeyCodes.h"
 #include "Moza/MouseButtonCodes.h"
+#include "Moza/OrthographicCameraController.h"
 
 #include "Moza/ImGui/ImGuiLayer.h"
 

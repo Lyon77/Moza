@@ -221,7 +221,7 @@ public:
 	}
 
 private:
-	// Will be in Renderer
+	// Will be in Renderer in the future
 	Moza::ShaderLibrary m_ShaderLibrary;
 
 	Moza::Ref<Moza::VertexArray> m_VertexArray;

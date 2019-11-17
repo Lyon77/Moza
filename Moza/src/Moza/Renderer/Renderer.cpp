@@ -21,6 +21,11 @@ namespace Moza
 		RendererCommand::Init();
 	}
 
+	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+	{
+		RendererCommand::SetViewport(0, 0, width, height);
+	}
+
 	void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
 	{
 		shader->Bind();

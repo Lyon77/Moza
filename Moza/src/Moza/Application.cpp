@@ -43,8 +43,7 @@ namespace Moza
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-
-		//MZ_CORE_TRACE("{0}", e);
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(Application::OnWindowResize));
 
 		//events are triggered from the last layer to the first
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
@@ -66,10 +65,13 @@ namespace Moza
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			//update each layer from begining to end
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(timestep);
-			
+			if (!m_Minimized)
+			{
+				//update each layer from begining to end
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(timestep);
+			}
+
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
@@ -83,6 +85,20 @@ namespace Moza
 	{
 		m_Running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+
+		m_Minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Moza/Core.h"
+#include "Moza/Core/Core.h"
 #include "Layer.h"
 
 namespace Moza

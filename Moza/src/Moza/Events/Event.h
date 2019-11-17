@@ -1,7 +1,7 @@
 #pragma once
 
 #include "mzpch.h"
-#include "Moza/Core.h"
+#include "Moza/Core/Core.h"
 
 namespace Moza {
 
@@ -31,7 +31,7 @@ namespace Moza {
 
 //allows the implementing classes of Event to not need to rewrite all this code
 //need to have an virtual GetEventType because be able to check polymorphic Event types ie. Event*
-#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::##type; }\
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
 								virtual EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
 

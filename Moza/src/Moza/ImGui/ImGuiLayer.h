@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Moza/Layer.h"
+#include "Moza/Core/Layer.h"
 
 #include "Moza/Events/MouseEvent.h"
 #include "Moza/Events/KeyEvent.h"

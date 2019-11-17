@@ -181,7 +181,10 @@ namespace Moza
 
 		// Always detach shaders after a successful link.
 		for (auto id : glShaderIDs)
+		{
 			glDetachShader(program, id);
+			glDeleteShader(id);
+		}
 	}
 
 	void OpenGLShader::UploadUniformInt(const std::string& name, int value)

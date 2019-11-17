@@ -1,8 +1,8 @@
 #include "mzpch.h"
 #include "OrthographicCameraController.h"
 
-#include "Moza/Input.h"
-#include "Moza/KeyCodes.h"
+#include "Moza/Core/Input.h"
+#include "Moza/Core/KeyCodes.h"
 
 namespace Moza
 {

@@ -2,7 +2,7 @@
 
 #include "mzpch.h"
 
-#include "Moza/Core.h"
+#include "Moza/Core/Core.h"
 #include "Moza/Events/Event.h"
 
 namespace Moza

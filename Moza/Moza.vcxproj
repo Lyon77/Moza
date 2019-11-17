@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -19,26 +19,26 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Moza</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -145,32 +145,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Moza.h" />
-    <ClInclude Include="src\Moza\Application.h" />
-    <ClInclude Include="src\Moza\Core.h" />
+    <ClInclude Include="src\Moza\Core\Application.h" />
+    <ClInclude Include="src\Moza\Core\Core.h" />
+    <ClInclude Include="src\Moza\Core\EntryPoint.h" />
+    <ClInclude Include="src\Moza\Core\Input.h" />
+    <ClInclude Include="src\Moza\Core\KeyCodes.h" />
+    <ClInclude Include="src\Moza\Core\Layer.h" />
+    <ClInclude Include="src\Moza\Core\LayerStack.h" />
+    <ClInclude Include="src\Moza\Core\Log.h" />
+    <ClInclude Include="src\Moza\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Moza\Core\Timestep.h" />
-    <ClInclude Include="src\Moza\EntryPoint.h" />
+    <ClInclude Include="src\Moza\Core\Window.h" />
     <ClInclude Include="src\Moza\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Moza\Events\Event.h" />
     <ClInclude Include="src\Moza\Events\KeyEvent.h" />
     <ClInclude Include="src\Moza\Events\MouseEvent.h" />
     <ClInclude Include="src\Moza\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\Moza\Input.h" />
-    <ClInclude Include="src\Moza\KeyCodes.h" />
-    <ClInclude Include="src\Moza\Layer.h" />
-    <ClInclude Include="src\Moza\LayerStack.h" />
-    <ClInclude Include="src\Moza\Log.h" />
-    <ClInclude Include="src\Moza\MouseButtonCodes.h" />
-    <ClInclude Include="src\Moza\OrthographicCameraController.h" />
     <ClInclude Include="src\Moza\Renderer\Buffer.h" />
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h" />
+    <ClInclude Include="src\Moza\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Moza\Renderer\Renderer.h" />
     <ClInclude Include="src\Moza\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Moza\Renderer\RendererCommand.h" />
     <ClInclude Include="src\Moza\Renderer\Shader.h" />
     <ClInclude Include="src\Moza\Renderer\Texture.h" />
     <ClInclude Include="src\Moza\Renderer\VertexArray.h" />
-    <ClInclude Include="src\Moza\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
@@ -551,15 +551,15 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Moza\Application.cpp" />
+    <ClCompile Include="src\Moza\Core\Application.cpp" />
+    <ClCompile Include="src\Moza\Core\Layer.cpp" />
+    <ClCompile Include="src\Moza\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Moza\Core\Log.cpp" />
     <ClCompile Include="src\Moza\ImGui\ImGuiBuilder.cpp" />
     <ClCompile Include="src\Moza\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\Moza\Layer.cpp" />
-    <ClCompile Include="src\Moza\LayerStack.cpp" />
-    <ClCompile Include="src\Moza\Log.cpp" />
-    <ClCompile Include="src\Moza\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp" />
+    <ClCompile Include="src\Moza\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Moza\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Moza\Renderer\RendererCommand.cpp" />

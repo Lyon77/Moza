@@ -15,9 +15,9 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Moza/Log.h"
-#include "Moza/KeyCodes.h"
-#include "Moza/MouseButtonCodes.h"
+#include "Moza/Core/Log.h"
+#include "Moza/Core/KeyCodes.h"
+#include "Moza/Core/MouseButtonCodes.h"
 
 
 #ifdef MZ_PLATFORM_WINDOWS

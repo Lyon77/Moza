@@ -2,16 +2,15 @@
 
 //For use by Moza applications
 
-#include "Moza/Application.h"
-#include "Moza/Layer.h"
-#include "Moza/Log.h"
+#include "Moza/Core/Application.h"
+#include "Moza/Core/Layer.h"
+#include "Moza/Core/Log.h"
 
 #include "Moza/Core/Timestep.h"
 
-#include "Moza/Input.h"
-#include "Moza/KeyCodes.h"
-#include "Moza/MouseButtonCodes.h"
-#include "Moza/OrthographicCameraController.h"
+#include "Moza/Core/Input.h"
+#include "Moza/Core/KeyCodes.h"
+#include "Moza/Core/MouseButtonCodes.h"
 
 #include "Moza/ImGui/ImGuiLayer.h"
 
@@ -25,8 +24,9 @@
 #include "Moza/Renderer/VertexArray.h"
 
 #include "Moza/Renderer/OrthographicCamera.h"
+#include "Moza/Renderer/OrthographicCameraController.h"
 //-------------------------------------------
 
 //--- Entry Point ---------------------------
-#include "Moza/EntryPoint.h"
+#include "Moza/Core/EntryPoint.h"
 //-------------------------------------------

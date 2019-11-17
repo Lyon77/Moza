@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Moza/Input.h"
+#include "Moza/Core/Input.h"
 
 namespace Moza
 {

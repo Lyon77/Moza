@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Moza/Core.h"
+#include "Moza/Core/Core.h"
 
 namespace Moza
 {
@@ -26,6 +26,6 @@ namespace Moza
 		virtual float GetMouseXImpl() = 0;
 		virtual float GetMouseYImpl() = 0;
 	private:
-		static Input* s_Instance;
+		static Scope<Input> s_Instance;
 	};
 }

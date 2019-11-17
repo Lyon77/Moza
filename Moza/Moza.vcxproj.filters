@@ -57,17 +57,38 @@
     <ClInclude Include="src\Moza.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Moza\Application.h">
-      <Filter>src\Moza</Filter>
+    <ClInclude Include="src\Moza\Core\Application.h">
+      <Filter>src\Moza\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Moza\Core.h">
-      <Filter>src\Moza</Filter>
+    <ClInclude Include="src\Moza\Core\Core.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Core\EntryPoint.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Core\Input.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Core\KeyCodes.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Core\Layer.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Core\LayerStack.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Core\Log.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Core\MouseButtonCodes.h">
+      <Filter>src\Moza\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Core\Timestep.h">
       <Filter>src\Moza\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Moza\EntryPoint.h">
-      <Filter>src\Moza</Filter>
+    <ClInclude Include="src\Moza\Core\Window.h">
+      <Filter>src\Moza\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Events\ApplicationEvent.h">
       <Filter>src\Moza\Events</Filter>
@@ -84,27 +105,6 @@
     <ClInclude Include="src\Moza\ImGui\ImGuiLayer.h">
       <Filter>src\Moza\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Moza\Input.h">
-      <Filter>src\Moza</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Moza\KeyCodes.h">
-      <Filter>src\Moza</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Moza\Layer.h">
-      <Filter>src\Moza</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Moza\LayerStack.h">
-      <Filter>src\Moza</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Moza\Log.h">
-      <Filter>src\Moza</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Moza\MouseButtonCodes.h">
-      <Filter>src\Moza</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Moza\OrthographicCameraController.h">
-      <Filter>src\Moza</Filter>
-    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Buffer.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
@@ -112,6 +112,9 @@
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\OrthographicCameraController.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Renderer.h">
@@ -131,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="src\Moza\Renderer\VertexArray.h">
       <Filter>src\Moza\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Moza\Window.h">
-      <Filter>src\Moza</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -1271,8 +1271,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Moza\Application.cpp">
-      <Filter>src\Moza</Filter>
+    <ClCompile Include="src\Moza\Core\Application.cpp">
+      <Filter>src\Moza\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Core\Layer.cpp">
+      <Filter>src\Moza\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Core\LayerStack.cpp">
+      <Filter>src\Moza\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Core\Log.cpp">
+      <Filter>src\Moza\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\ImGui\ImGuiBuilder.cpp">
       <Filter>src\Moza\ImGui</Filter>
@@ -1280,22 +1289,13 @@
     <ClCompile Include="src\Moza\ImGui\ImGuiLayer.cpp">
       <Filter>src\Moza\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Moza\Layer.cpp">
-      <Filter>src\Moza</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Moza\LayerStack.cpp">
-      <Filter>src\Moza</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Moza\Log.cpp">
-      <Filter>src\Moza</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Moza\OrthographicCameraController.cpp">
-      <Filter>src\Moza</Filter>
-    </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\OrthographicCameraController.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp">

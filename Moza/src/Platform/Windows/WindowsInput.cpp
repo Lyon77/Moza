@@ -2,12 +2,12 @@
 #include "WindowsInput.h"
 
 #include <GLFW/glfw3.h>
-#include "Moza/Application.h"
+#include "Moza/Core/Application.h"
 
 namespace Moza
 {
 	// can initialize because Input is only holding data
-	Input* Input::s_Instance = new WindowsInput();
+	Scope<Input> Input::s_Instance = CreateScope<WindowsInput>();
 
 	bool WindowsInput::IsKeyPressedImpl(int keycode)
 	{

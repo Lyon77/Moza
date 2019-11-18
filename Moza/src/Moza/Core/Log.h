@@ -7,7 +7,7 @@
 
 namespace Moza
 {
-	class MOZA_API Log
+	class Log
 	{
 	public:
 		static void Init();

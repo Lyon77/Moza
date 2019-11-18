@@ -86,7 +86,6 @@ project "Moza"
 
 		defines
 		{
-			"MZ_PLATFORM_WINDOWS",
 			"MZ_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
@@ -137,11 +136,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		systemversion "latest"
-
-		defines
-		{
-			"MZ_PLATFORM_WINDOWS"
-		}
 
 	filter "configurations:Debug"
 		defines "MZ_DEBUG"

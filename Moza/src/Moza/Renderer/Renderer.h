@@ -6,7 +6,7 @@
 
 namespace Moza
 {
-	class MOZA_API Renderer
+	class Renderer
 	{
 	public:
 		static void BeginScene(OrthographicCamera& camera);

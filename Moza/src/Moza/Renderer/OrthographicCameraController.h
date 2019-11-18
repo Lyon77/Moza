@@ -8,7 +8,7 @@
 
 namespace Moza
 {
-	class MOZA_API OrthographicCameraController
+	class OrthographicCameraController
 	{
 	public:
 		OrthographicCameraController(float aspectRatio, bool rotation = false);

@@ -13,7 +13,7 @@
 
 namespace Moza
 { 
-	class MOZA_API Application
+	class Application
 	{
 	public:
 		Application();

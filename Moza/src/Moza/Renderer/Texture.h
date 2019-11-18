@@ -5,7 +5,7 @@
 
 namespace Moza
 {
-	class MOZA_API Texture
+	class Texture
 	{
 	public:
 		virtual uint32_t GetWidth() const = 0;
@@ -14,7 +14,7 @@ namespace Moza
 		virtual void Bind(uint32_t slot = 0) const = 0;
 	};
 
-	class MOZA_API Texture2D : public Texture
+	class Texture2D : public Texture
 	{
 	public:
 		static Ref<Texture2D> Create(const std::string& path);

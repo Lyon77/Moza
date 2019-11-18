@@ -4,7 +4,7 @@
 
 namespace Moza
 {
-	class MOZA_API OpenGLVertexBuffer : public VertexBuffer
+	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
 		OpenGLVertexBuffer(float * verticies, uint32_t size);
@@ -21,7 +21,7 @@ namespace Moza
 		BufferLayout m_Layout;
 	};
 
-	class MOZA_API OpenGLIndexBuffer : public IndexBuffer
+	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
 		OpenGLIndexBuffer(uint32_t * indices, uint32_t count);

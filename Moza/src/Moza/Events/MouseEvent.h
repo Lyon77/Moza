@@ -5,7 +5,7 @@
 
 namespace Moza
 {
-	class MOZA_API MouseMovedEvent : public Event
+	class MouseMovedEvent : public Event
 	{
 	public:
 		MouseMovedEvent(float x, float y)
@@ -28,7 +28,7 @@ namespace Moza
 		float m_MouseX, m_MouseY;
 	};
 
-	class MOZA_API MouseScrolledEvent : public Event
+	class MouseScrolledEvent : public Event
 	{
 	public:
 		MouseScrolledEvent(float xOffset, float yOffset)
@@ -51,7 +51,7 @@ namespace Moza
 		float m_XOffset, m_YOffset;
 	};
 
-	class MOZA_API MouseButtonEvent : public Event
+	class MouseButtonEvent : public Event
 	{
 	public:
 		inline int GetMouseButton() const { return m_Button; }
@@ -65,7 +65,7 @@ namespace Moza
 		int m_Button;
 	};
 
-	class MOZA_API MouseButtonPressedEvent : public MouseButtonEvent
+	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressedEvent(int button)
@@ -81,7 +81,7 @@ namespace Moza
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class MOZA_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(int button)

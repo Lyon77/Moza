@@ -6,7 +6,7 @@
 namespace Moza
 {
 	//not a regular stack because overlays can be placed in the latter half
-	class MOZA_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack();

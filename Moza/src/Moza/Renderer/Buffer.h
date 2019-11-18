@@ -64,7 +64,7 @@ namespace Moza
 		}
 	};
 
-	class MOZA_API BufferLayout
+	class BufferLayout
 	{
 	public:
 		BufferLayout() {}
@@ -104,7 +104,7 @@ namespace Moza
 	};
 
 
-	class MOZA_API VertexBuffer
+	class VertexBuffer
 	{
 	public:
 		virtual ~VertexBuffer() = default;
@@ -118,7 +118,7 @@ namespace Moza
 		static VertexBuffer* Create(float* verticies, uint32_t size);
 	};
 
-	class MOZA_API IndexBuffer
+	class IndexBuffer
 	{
 	public:
 		virtual ~IndexBuffer() = default;

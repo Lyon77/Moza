@@ -3,7 +3,7 @@
 
 namespace Moza
 {
-	class MOZA_API Timestep
+	class Timestep
 	{
 	public:
 		Timestep(float time = 0.0f)

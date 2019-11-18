@@ -4,7 +4,7 @@
 
 namespace Moza
 {
-	class MOZA_API Shader
+	class Shader
 	{
 	public:
 		virtual ~Shader() = default;
@@ -18,7 +18,7 @@ namespace Moza
 		static Ref<Shader> Create(const std::string& name, std::string & vertexSrc, const std::string & fragmentSrc);
 	};
 
-	class MOZA_API ShaderLibrary
+	class ShaderLibrary
 	{
 	public:
 		void Add(const std::string& name, const Ref<Shader>& shader);

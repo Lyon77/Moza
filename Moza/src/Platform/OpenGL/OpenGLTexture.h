@@ -4,7 +4,7 @@
 
 namespace Moza
 {
-	class MOZA_API OpenGLTexture2D : public Texture2D
+	class OpenGLTexture2D : public Texture2D
 	{
 	public:
 		OpenGLTexture2D(const std::string& path);

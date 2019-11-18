@@ -4,7 +4,7 @@
 
 namespace Moza
 {
-	class MOZA_API OpenGLRendererAPI : public RendererAPI
+	class OpenGLRendererAPI : public RendererAPI
 	{
 	public:
 		virtual void Init() override;

@@ -6,10 +6,10 @@
 
 namespace Moza 
 {
-	class MOZA_API RendererAPI
+	class RendererAPI
 	{
 	public:
-		enum class MOZA_API API
+		enum class API
 		{
 			None = 0, OpenGL = 1
 		};

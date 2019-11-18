@@ -9,7 +9,7 @@ typedef unsigned int GLenum;
 
 namespace Moza
 {
-	class MOZA_API OpenGLShader : public Shader
+	class OpenGLShader : public Shader
 	{
 	public:
 		OpenGLShader(const std::string& filePath);

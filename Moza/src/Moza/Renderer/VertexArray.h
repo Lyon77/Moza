@@ -19,6 +19,6 @@ namespace Moza
 		virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffer() = 0;
 		virtual const Ref<IndexBuffer>& GetIndexBuffer() = 0;
 
-		static VertexArray* Create();
+		static Ref<VertexArray> Create();
 	};
 }

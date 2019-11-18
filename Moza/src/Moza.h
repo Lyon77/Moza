@@ -26,7 +26,3 @@
 #include "Moza/Renderer/OrthographicCamera.h"
 #include "Moza/Renderer/OrthographicCameraController.h"
 //-------------------------------------------
-
-//--- Entry Point ---------------------------
-#include "Moza/Core/EntryPoint.h"
-//-------------------------------------------

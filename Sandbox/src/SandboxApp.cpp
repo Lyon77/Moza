@@ -1,4 +1,5 @@
 #include <Moza.h>
+#include <Moza/Core/EntryPoint.h>
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -7,6 +8,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Sandbox2D.h"
+
 class ExampleLayer : public Moza::Layer
 {
 public:
@@ -14,8 +17,8 @@ public:
 		: Layer("Example"), m_CameraController(1280.0f / 720.0f, true), m_RenderPosition(0.0f)
 	{
 		// VertexArray
-		m_VertexArray.reset(Moza::VertexArray::Create());
-		m_SquareVertexArray.reset(Moza::VertexArray::Create());
+		m_VertexArray = Moza::VertexArray::Create();
+		m_SquareVertexArray = Moza::VertexArray::Create();
 
 		//The Triangle
 		float verticies[3 * 7] = {
@@ -242,7 +245,8 @@ class Sandbox : public Moza::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()

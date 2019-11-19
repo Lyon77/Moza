@@ -166,6 +166,7 @@
     <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Moza\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Moza\Renderer\Renderer.h" />
+    <ClInclude Include="src\Moza\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Moza\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Moza\Renderer\RendererCommand.h" />
     <ClInclude Include="src\Moza\Renderer\Shader.h" />
@@ -561,6 +562,7 @@
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Moza\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Moza\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Moza\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Moza\Renderer\RendererCommand.cpp" />
     <ClCompile Include="src\Moza\Renderer\Shader.cpp" />

@@ -16,6 +16,7 @@
 
 //--- Renderer ------------------------------
 #include "Moza/Renderer/Renderer.h"
+#include "Moza/Renderer/Renderer2D.h"
 #include "Moza/Renderer/RendererCommand.h"
 
 #include "Moza/Renderer/Buffer.h"

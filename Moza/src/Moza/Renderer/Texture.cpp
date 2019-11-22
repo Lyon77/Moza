@@ -1,7 +1,7 @@
 #include "mzpch.h"
-#include "Texture.h"
+#include "Moza/Renderer/Texture.h"
 
-#include "Renderer.h"
+#include "Moza/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLTexture.h"
 

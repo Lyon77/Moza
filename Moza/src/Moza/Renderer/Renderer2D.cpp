@@ -1,9 +1,9 @@
 #include "mzpch.h"
-#include "Renderer2D.h"
+#include "Moza/Renderer/Renderer2D.h"
 
-#include "VertexArray.h"
-#include "Shader.h"
-#include "RendererCommand.h"
+#include "Moza/Renderer/VertexArray.h"
+#include "Moza/Renderer/Shader.h"
+#include "Moza/Renderer/RendererCommand.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -34,8 +34,7 @@ namespace Moza
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		Ref<VertexBuffer> m_SquareVertexBuffer;
-		m_SquareVertexBuffer.reset(VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		Ref<VertexBuffer> m_SquareVertexBuffer = VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 
 		BufferLayout squareLayout{
 			{ ShaderDataType::Float3, "a_Position" },
@@ -48,8 +47,7 @@ namespace Moza
 
 		unsigned int squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
-		Ref<IndexBuffer> m_SquareIndexBuffer;
-		m_SquareIndexBuffer.reset(IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		Ref<IndexBuffer> m_SquareIndexBuffer = IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		s_Data->QuadVertexArray->SetIndexBuffer(m_SquareIndexBuffer);
 
 		// Create White Texture

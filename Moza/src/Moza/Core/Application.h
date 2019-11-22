@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Core.h"
+#include "Moza/Core/Core.h"
 
-#include "Window.h"
-#include "LayerStack.h"
+#include "Moza/Core/Window.h"
+#include "Moza/Core/LayerStack.h"
 #include "Moza/Events/Event.h"
 #include "Moza/Events/ApplicationEvent.h"
 
@@ -17,7 +17,7 @@ namespace Moza
 	{
 	public:
 		Application();
-		virtual ~Application() = default;
+		virtual ~Application();
 
 		void Run();
 

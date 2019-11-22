@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Moza/Core/Core.h"
-#include "Layer.h"
+#include "Moza/Core/Layer.h"
 
 namespace Moza
 {
@@ -9,7 +9,7 @@ namespace Moza
 	class LayerStack
 	{
 	public:
-		LayerStack();
+		LayerStack() = default;
 		~LayerStack();
 
 		//stack functions

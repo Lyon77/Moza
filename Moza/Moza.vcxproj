@@ -559,6 +559,7 @@
     <ClCompile Include="src\Moza\ImGui\ImGuiBuilder.cpp" />
     <ClCompile Include="src\Moza\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Moza\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Moza\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp" />

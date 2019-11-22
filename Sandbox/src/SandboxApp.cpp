@@ -1,9 +1,7 @@
 #include <Moza.h>
 #include <Moza/Core/EntryPoint.h>
 
-#include "Platform/OpenGL/OpenGLShader.h"
-
-#include "imgui/imgui.h"
+#include <imgui/imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -28,8 +26,7 @@ public:
 		};
 
 		// Vertex Buffer
-		Moza::Ref<Moza::VertexBuffer> m_VertexBuffer;
-		m_VertexBuffer.reset(Moza::VertexBuffer::Create(verticies, sizeof(verticies)));
+		Moza::Ref<Moza::VertexBuffer> m_VertexBuffer = Moza::VertexBuffer::Create(verticies, sizeof(verticies));
 
 		//Create details on how the layout is set
 		Moza::BufferLayout layout{
@@ -45,8 +42,7 @@ public:
 		unsigned int indices[3] = { 0, 1, 2 };
 
 		// Index Buffer
-		Moza::Ref<Moza::IndexBuffer> m_IndexBuffer;
-		m_IndexBuffer.reset(Moza::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		Moza::Ref<Moza::IndexBuffer> m_IndexBuffer = Moza::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		//The Square
@@ -57,8 +53,7 @@ public:
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		Moza::Ref<Moza::VertexBuffer> m_SquareVertexBuffer;
-		m_SquareVertexBuffer.reset(Moza::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		Moza::Ref<Moza::VertexBuffer> m_SquareVertexBuffer = Moza::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 
 		Moza::BufferLayout squareLayout{
 			{ Moza::ShaderDataType::Float3, "a_Position" },
@@ -71,8 +66,7 @@ public:
 		
 		unsigned int squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 
-		Moza::Ref<Moza::IndexBuffer> m_SquareIndexBuffer;
-		m_SquareIndexBuffer.reset(Moza::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		Moza::Ref<Moza::IndexBuffer> m_SquareIndexBuffer = Moza::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		m_SquareVertexArray->SetIndexBuffer(m_SquareIndexBuffer);
 
 		std::string vertexSrc = R"(
@@ -152,8 +146,8 @@ public:
 		m_Texture = Moza::Texture2D::Create("assets/textures/Checkerboard.png");
 		m_ChernoLogoTexture = Moza::Texture2D::Create("assets/textures/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<Moza::OpenGLShader>(textureShader)->Bind();
-		std::dynamic_pointer_cast<Moza::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+		textureShader->Bind();
+		textureShader->SetInt("u_Texture", 0);
 	}
 
 	void OnUpdate(Moza::Timestep ts) override
@@ -182,8 +176,8 @@ public:
 		//Render array of squares
 		auto flatShader = m_ShaderLibrary.Get("FlatColor");
 
-		std::dynamic_pointer_cast<Moza::OpenGLShader>(flatShader)->Bind();
-		std::dynamic_pointer_cast<Moza::OpenGLShader>(flatShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+		flatShader->Bind();
+		flatShader->SetFloat3("u_Color", m_SquareColor);
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 		for (int y = 0; y < 8; y++) 

@@ -1,7 +1,7 @@
 #include "mzpch.h"
-#include "Shader.h"
+#include "Moza/Renderer/Shader.h"
 
-#include "Renderer.h"
+#include "Moza/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Moza
@@ -10,8 +10,8 @@ namespace Moza
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLShader>(filePath);
+			case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(filePath);
 		}
 
 		MZ_CORE_ASSERT(false, "Unknown RendererAPI");
@@ -22,8 +22,8 @@ namespace Moza
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
 
 		MZ_CORE_ASSERT(false, "Unknown RendererAPI");

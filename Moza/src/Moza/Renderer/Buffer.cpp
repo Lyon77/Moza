@@ -1,30 +1,30 @@
 #include "mzpch.h"
-#include "Buffer.h"
+#include "Moza/Renderer/Buffer.h"
 
-#include "Renderer.h"
+#include "Moza/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Moza
 {
-	VertexBuffer * VertexBuffer::Create(float * verticies, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::Create(float * verticies, uint32_t size)
 	{
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:  return new OpenGLVertexBuffer(verticies, size);
+			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLVertexBuffer>(verticies, size);
 		}
 
 		MZ_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::Create(uint32_t* indices, uint32_t count)
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count)
 	{
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:  return new OpenGLIndexBuffer(indices, count);
+			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLIndexBuffer>(indices, count);
 		}
 
 		MZ_CORE_ASSERT(false, "Unknown RendererAPI!");

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Moza/Core/Core.h"
 
 #ifdef MZ_PLATFORM_WINDOWS
 

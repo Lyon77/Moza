@@ -43,24 +43,6 @@
 	#error "Unknown platform!"
 #endif // End of platform detection
 
-
-// DLL support
-#ifdef MZ_PLATFORM_WINDOWS
-	#if MZ_DYNAMIC_LINK
-		#ifdef MZ_BUILD_DLL
-		#define MOZA_API __declspec(dllexport)
-		#else
-		#define MOZA_API __declspec(dllimport)
-		#endif
-	#else
-		#define MOZA_API
-	#endif
-#else
-	#error Hazel only supports Windows!
-#endif // End of DLL support
-
-
-
 #ifdef MZ_DEBUG
 	#define MZ_ENABLE_ASSERTS
 #endif

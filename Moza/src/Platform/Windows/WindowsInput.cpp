@@ -1,5 +1,5 @@
 #include "mzpch.h"
-#include "WindowsInput.h"
+#include "Platform/Windows/WindowsInput.h"
 
 #include <GLFW/glfw3.h>
 #include "Moza/Core/Application.h"

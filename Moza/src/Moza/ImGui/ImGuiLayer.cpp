@@ -1,9 +1,9 @@
 #include "mzpch.h"
-#include "ImGuiLayer.h"
+#include "Moza/ImGui/ImGuiLayer.h"
 
-#include "imgui.h"
-#include "examples/imgui_impl_glfw.h"
-#include "examples/imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <examples/imgui_impl_glfw.h>
+#include <examples/imgui_impl_opengl3.h>
 
 #include "Moza/Core/Application.h"
 

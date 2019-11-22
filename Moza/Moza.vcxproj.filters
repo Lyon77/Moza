@@ -1348,5 +1348,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Moza\Renderer\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

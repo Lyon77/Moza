@@ -1,5 +1,5 @@
 #include "mzpch.h"
-#include "OpenGLVertexArray.h"
+#include "Platform/OpenGL/OpenGLVertexArray.h"
 
 #include <glad/glad.h>
 
@@ -9,18 +9,18 @@ namespace Moza
 	{
 		switch (type)
 		{
-		case Moza::ShaderDataType::None:    return GL_FLOAT;
-		case Moza::ShaderDataType::Float:   return GL_FLOAT;
-		case Moza::ShaderDataType::Float2:  return GL_FLOAT;
-		case Moza::ShaderDataType::Float3:  return GL_FLOAT;
-		case Moza::ShaderDataType::Float4:  return GL_FLOAT;
-		case Moza::ShaderDataType::Mat3:    return GL_FLOAT;
-		case Moza::ShaderDataType::Mat4:    return GL_FLOAT;
-		case Moza::ShaderDataType::Int:     return GL_INT;
-		case Moza::ShaderDataType::Int2:    return GL_INT;
-		case Moza::ShaderDataType::Int3:    return GL_INT;
-		case Moza::ShaderDataType::Int4:    return GL_INT;
-		case Moza::ShaderDataType::Bool:    return GL_BOOL;
+		case ShaderDataType::None:    return GL_FLOAT;
+		case ShaderDataType::Float:   return GL_FLOAT;
+		case ShaderDataType::Float2:  return GL_FLOAT;
+		case ShaderDataType::Float3:  return GL_FLOAT;
+		case ShaderDataType::Float4:  return GL_FLOAT;
+		case ShaderDataType::Mat3:    return GL_FLOAT;
+		case ShaderDataType::Mat4:    return GL_FLOAT;
+		case ShaderDataType::Int:     return GL_INT;
+		case ShaderDataType::Int2:    return GL_INT;
+		case ShaderDataType::Int3:    return GL_INT;
+		case ShaderDataType::Int4:    return GL_INT;
+		case ShaderDataType::Bool:    return GL_BOOL;
 		}
 
 		MZ_CORE_ASSERT(false, "Unknown ShaderDataType!");

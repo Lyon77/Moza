@@ -1,7 +1,7 @@
 #include "mzpch.h"
-#include "VertexArray.h"
+#include "Moza/Renderer/VertexArray.h"
 
-#include "Renderer.h"
+#include "Moza/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 

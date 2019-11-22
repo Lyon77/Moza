@@ -1,8 +1,8 @@
 #pragma once
 
-#include "RendererCommand.h"
-#include "OrthographicCamera.h"
-#include "Shader.h"
+#include "Moza/Renderer/RendererCommand.h"
+#include "Moza/Renderer/OrthographicCamera.h"
+#include "Moza/Renderer/Shader.h"
 
 namespace Moza
 {
@@ -13,6 +13,8 @@ namespace Moza
 		static void EndScene();
 
 		static void Init();
+		static void Shutdown();
+
 		static void OnWindowResize(uint32_t width, uint32_t height);
 
 		static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform = glm::mat4(1.0f));

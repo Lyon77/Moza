@@ -1,5 +1,5 @@
 #include "mzpch.h"
-#include "OrthographicCamera.h"
+#include "Moza/Renderer/OrthographicCamera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 

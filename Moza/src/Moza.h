@@ -2,6 +2,8 @@
 
 //For use by Moza applications
 
+#include "Moza/Core/Core.h"
+
 #include "Moza/Core/Application.h"
 #include "Moza/Core/Layer.h"
 #include "Moza/Core/Log.h"

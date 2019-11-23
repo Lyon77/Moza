@@ -9,13 +9,18 @@ extern Moza::Application* Moza::CreateApplication();
 int main(int argc, char** argv)
 {
 	Moza::Log::Init();
-	MZ_CORE_WARN("Initalized Log!");
-	int a = 5;
-	MZ_INFO("Hello! Var={0}", a);
 
+	MZ_PROFILE_BEGIN_SESSION("Startup", "MozaProfile-Startup.json");
 	auto app = Moza::CreateApplication();
+	MZ_PROFILE_END_SESSION();
+
+	MZ_PROFILE_BEGIN_SESSION("Startup", "MozaProfile-Runtime.json");
 	app->Run();
+	MZ_PROFILE_END_SESSION();
+
+	MZ_PROFILE_BEGIN_SESSION("Startup", "MozaProfile-Shutdown.json");
 	delete app;
+	MZ_PROFILE_END_SESSION();
 }
 
 #endif

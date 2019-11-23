@@ -10,6 +10,9 @@
     <Filter Include="src\Moza\Core">
       <UniqueIdentifier>{ABB4CE40-1775-4A77-E0AF-93F44C2F8F53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Moza\Debug">
+      <UniqueIdentifier>{29A5B15A-1573-A560-FE06-1687EA7381C5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Moza\Events">
       <UniqueIdentifier>{F79C70B4-6328-DE78-6C39-616DD8433A79}</UniqueIdentifier>
     </Filter>
@@ -90,6 +93,9 @@
     <ClInclude Include="src\Moza\Core\Window.h">
       <Filter>src\Moza\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Debug\Instrumentor.h">
+      <Filter>src\Moza\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Events\ApplicationEvent.h">
       <Filter>src\Moza\Events</Filter>
     </ClInclude>
@@ -118,6 +124,9 @@
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Renderer.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Renderer2D.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Renderer\RendererAPI.h">
@@ -1269,7 +1278,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Moza\Renderer\Renderer2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Core\Application.cpp">
@@ -1293,6 +1301,9 @@
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\GraphicsContext.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
@@ -1300,6 +1311,9 @@
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Renderer2D.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\RendererAPI.cpp">
@@ -1347,7 +1361,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Moza\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Moza\Renderer\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

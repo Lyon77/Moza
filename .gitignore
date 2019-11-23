@@ -8,3 +8,6 @@ bin-int/
 **.sln
 **.vcxproj.filters
 **.vcxproj.user
+
+# Profiling
+Sandbox/*.json

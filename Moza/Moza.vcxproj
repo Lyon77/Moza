@@ -156,6 +156,7 @@
     <ClInclude Include="src\Moza\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Moza\Core\Timestep.h" />
     <ClInclude Include="src\Moza\Core\Window.h" />
+    <ClInclude Include="src\Moza\Debug\Instrumentor.h" />
     <ClInclude Include="src\Moza\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Moza\Events\Event.h" />
     <ClInclude Include="src\Moza\Events\KeyEvent.h" />

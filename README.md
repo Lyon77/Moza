@@ -45,6 +45,9 @@ VFX | Pipelines
 PostFX | Render Passes
 Relections, Ambient occlusion, etc. | 
 
+# Profiling
+To check how Moza runs on your computer, simply run the application and take the json files in the Sandbox folder and bring it to [Chrome Tracing](chrome://tracing). You will need to have a browser that supports chromium
+
 
 # Main features to come:
 Fast 2D rendering (UI, particles, sprites, etc.)

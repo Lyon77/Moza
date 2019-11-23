@@ -19,6 +19,8 @@
 #include "Moza/Core/KeyCodes.h"
 #include "Moza/Core/MouseButtonCodes.h"
 
+#include "Moza/Debug/Instrumentor.h"
+
 
 #ifdef MZ_PLATFORM_WINDOWS
 	#include <Windows.h>

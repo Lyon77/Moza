@@ -17,6 +17,8 @@ namespace Moza
 
 	void Renderer::Init()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		RendererCommand::Init();
 		Renderer2D::Init();
 	}

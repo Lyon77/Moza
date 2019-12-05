@@ -15,6 +15,8 @@ namespace Moza
 
 	Application::Application()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		MZ_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		m_Window = Window::Create();
@@ -28,22 +30,32 @@ namespace Moza
 
 	Application::~Application()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		Renderer::Shutdown();
 	}
 
 
 	void Application::PushLayer(Layer * layer)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer * overlay)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		m_LayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void Application::OnEvent(Event& e)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(MZ_BIND_EVENT_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(MZ_BIND_EVENT_FN(Application::OnWindowResize));
@@ -62,24 +74,33 @@ namespace Moza
 
 	void Application::Run()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		while (m_Running)
 		{
+			MZ_PROFILE_SCOPE("RunLoop");
+
 			float time = (float) glfwGetTime(); // Platform::GetTime() in the future
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
 			if (!m_Minimized)
 			{
+				MZ_PROFILE_SCOPE("LayerStack OnUpdate");
+
 				//update each layer from begining to end
 				for (Layer* layer : m_LayerStack)
 					layer->OnUpdate(timestep);
 			}
 
 			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)
-				layer->OnImGuiRender();
-			m_ImGuiLayer->End();
+			{
+				MZ_PROFILE_SCOPE("LayerStack OnImGuiRender");
 
+				for (Layer* layer : m_LayerStack)
+					layer->OnImGuiRender();
+				m_ImGuiLayer->End();
+			}
 			m_Window->OnUpdate();
 		}
 	}
@@ -92,6 +113,8 @@ namespace Moza
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
 			m_Minimized = true;

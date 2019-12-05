@@ -22,11 +22,15 @@ namespace Moza
 
 	WindowsWindow::WindowsWindow(const WindowProps & props)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
@@ -40,14 +44,19 @@ namespace Moza
 
 		if (s_GLFWWindowCount == 0)
 		{
+			MZ_PROFILE_SCOPE("glfwInit");
+
 			//Todo: glfwTerminate on system shutdown
 			int success = glfwInit();
 			MZ_CORE_ASSERT(success, "Count not initalize GLFW!");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		++s_GLFWWindowCount;
+		{
+			MZ_PROFILE_SCOPE("glfwCreateWindow");
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
+		}
 
 		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
@@ -151,6 +160,8 @@ namespace Moza
 
 	void WindowsWindow::Shutdown()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_Window);
 		--s_GLFWWindowCount;
 
@@ -162,12 +173,16 @@ namespace Moza
 
 	void WindowsWindow::OnUpdate()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else

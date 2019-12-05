@@ -21,6 +21,8 @@ namespace Moza
 
 	void Renderer2D::Init()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		s_Data = new Renderer2DStorage();
 
 		// VertexArray
@@ -62,17 +64,23 @@ namespace Moza
 
 	void Renderer2D::Shutdown()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		delete s_Data;
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		s_Data->TextureAndColorShader->Bind();
 		s_Data->TextureAndColorShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
 	{
+		MZ_PROFILE_FUNCTION();
+
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -82,6 +90,8 @@ namespace Moza
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		s_Data->TextureAndColorShader->SetFloat4("u_Color", color);
 
 		// Bind White Texture
@@ -104,6 +114,8 @@ namespace Moza
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		texture->Bind();
 		s_Data->TextureAndColorShader->SetFloat("u_TextureScale", 10.0f);
 
@@ -125,6 +137,8 @@ namespace Moza
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		texture->Bind();
 		s_Data->TextureAndColorShader->SetFloat("u_TextureScale", 10.0f);
 

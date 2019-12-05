@@ -13,6 +13,8 @@ namespace Moza
 	}
 	void OrthographicCameraController::OnUpdate(Timestep ts)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		//move camera
 		if (Input::IsKeyPressed(MZ_KEY_A))
 			m_CameraPosition.x -= m_CameraTranslationSpeed * ts;
@@ -42,6 +44,8 @@ namespace Moza
 	}
 	void OrthographicCameraController::OnEvent(Event & e)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(MZ_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(MZ_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
@@ -49,6 +53,8 @@ namespace Moza
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent & e)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		m_ZoomLevel -= e.GetYOffset() * 0.25f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
 
@@ -59,6 +65,8 @@ namespace Moza
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent & e)
 	{
+		MZ_PROFILE_FUNCTION();
+
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);

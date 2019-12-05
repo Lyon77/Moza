@@ -15,11 +15,15 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
+	MZ_PROFILE_FUNCTION();
+
 	m_CheckerboardTexture = Moza::Texture2D::Create("assets/textures/Checkerboard.png");
 }
 
 void Sandbox2D::OnDetach()
 {
+	MZ_PROFILE_FUNCTION();
+
 }
 
 void Sandbox2D::OnUpdate(Moza::Timestep ts)

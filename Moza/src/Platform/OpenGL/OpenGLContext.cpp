@@ -14,6 +14,8 @@ namespace Moza
 
 	void OpenGLContext::Init()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		glfwMakeContextCurrent(m_WindowHandle);
 		//load glad
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -36,6 +38,8 @@ namespace Moza
 
 	void OpenGLContext::SwapBuffers()
 	{
+		MZ_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_WindowHandle);
 	}
 }

@@ -1,5 +1,5 @@
 # Moza
-Moza Engine modeled after on the Hazel Engine from TheCherno
+Moza Engine modeled after on the Hazel Engine from TheCherno. A ton of the features that will be added upon this engine lies in the [OpenGL Github](https://github.com/Lyon77/OpenGLBasicFramework). 
 
 # How to Run
 Currently, the engine only supports Windows x64 as Moza is officially untested on other development environments.. If you need to recreate the solution file, run 'GenerateProjects.bat.' Takes advantage of 'Premake'

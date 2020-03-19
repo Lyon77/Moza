@@ -1,7 +1,6 @@
 #pragma once
 
 //For use by Moza applications
-
 #include "Moza/Core/Core.h"
 
 #include "Moza/Core/Application.h"

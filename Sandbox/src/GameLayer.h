@@ -33,6 +33,7 @@ private:
 	Moza::Ref<Player> m_Natsuki;
 	Moza::Ref<Player> m_Kenji;
 	Moza::Ref<Player> m_Kazuto;
+	Moza::Ref<Player> m_LoveMachine;
 
 	Moza::Ref<CardEvent> m_Cards;
 
@@ -42,4 +43,6 @@ private:
 	int m_CardIndex;
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
+
+	glm::vec2 m_Position = glm::vec2(0.0f, 0.0f);
 };

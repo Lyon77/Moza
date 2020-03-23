@@ -12,11 +12,12 @@ public:
 	int Move();
 
 	bool IsMoving;
+	glm::vec2 m_Location;
+	glm::vec2 m_Destination;
 private:
 	Moza::Ref<Moza::Texture2D> m_Player;
 
 	int m_Position;
-	glm::vec2 m_Location;
-	glm::vec2 m_Destination;
+	
 	std::vector<glm::vec3> m_Locations;
 };

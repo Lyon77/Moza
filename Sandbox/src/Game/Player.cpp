@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(const std::string& path, glm::vec2 start, std::vector<int> destinations, glm::vec2 offset)
-	: m_Location(start + offset), m_Destination(start + offset), m_Locations(destinations), IsMoving(false), points(20), m_Offset(offset), m_Index(0), locationIndex(0)
+	: m_Location(start + offset), m_Destination(start + offset), m_Locations(destinations), IsMoving(false), points(10), m_Offset(offset), m_Index(0), locationIndex(0)
 {
 	m_Player = Moza::Texture2D::Create(path);
 }

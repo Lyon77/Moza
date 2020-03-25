@@ -62,12 +62,13 @@ void GameLayer::OnAttach()
 	kenjiDestinations.push_back(15);
 	kenjiDestinations.push_back(15);
 	kenjiDestinations.push_back(21);
-	kenjiDestinations.push_back(27);
+	kenjiDestinations.push_back(26);
 	kenjiDestinations.push_back(30);
 	kenjiDestinations.push_back(36);
 	kenjiDestinations.push_back(41);
 	kenjiDestinations.push_back(46);
 	kenjiDestinations.push_back(50);
+	kenjiDestinations.push_back(51);
 
 
 	std::vector<int> kazutoDestinations;
@@ -85,6 +86,7 @@ void GameLayer::OnAttach()
 	kazutoDestinations.push_back(43);
 	kazutoDestinations.push_back(45);
 	kazutoDestinations.push_back(50);
+	kazutoDestinations.push_back(51);
 
 
 	m_Board   = Moza::Texture2D::Create("assets/textures/characters/board.png");

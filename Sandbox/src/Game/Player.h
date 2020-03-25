@@ -25,7 +25,7 @@ private:
 
 	int m_Index;
 
-	glm::vec2 m_Points[50] = {
+	glm::vec2 m_Points[51] = {
 		//Row 1
 		glm::vec2(-2.712, 1.691),
 		glm::vec2(-2.059, 1.691),

@@ -99,7 +99,21 @@ void GameLayer::OnAttach()
 
 	std::vector<int> pointValues;
 	pointValues.push_back(20);
-	pointValues.push_back(5);
+	pointValues.push_back(5); //
+	pointValues.push_back(10);
+	pointValues.push_back(10);
+	pointValues.push_back(5); //
+	pointValues.push_back(5); //
+	pointValues.push_back(10); 
+	pointValues.push_back(30); 
+	pointValues.push_back(20); // 
+	pointValues.push_back(5);  
+	pointValues.push_back(10); //
+	pointValues.push_back(0);  
+	pointValues.push_back(-20);  
+	pointValues.push_back(-22); //  
+
+
 
 	m_Cards = Moza::CreateRef<CardEvent>("assets/textures/cards/", pointValues);
 }
@@ -140,7 +154,7 @@ void GameLayer::OnUpdate(Moza::Timestep ts)
 		m_Kenji->Update(ts);
 		m_Kazuto->Update(ts);
 
-		if (m_DisplayCards && m_CardIndex < 2 && m_CardIndex > -1) 
+		if (m_DisplayCards && m_CardIndex < 7 && m_CardIndex > -1) 
 			m_Cards->Draw(m_CardIndex);
 
 

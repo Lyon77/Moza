@@ -1,7 +1,7 @@
 #include "Player.h"
 
-Player::Player(const std::string& path, glm::vec2 start, std::vector<glm::vec3> destinations)
-	: m_Location(start), m_Destination(start), m_Locations(destinations), m_Position(0), IsMoving(false)
+Player::Player(const std::string& path, glm::vec2 start, std::vector<int> destinations, glm::vec2 offset)
+	: m_Location(start + offset), m_Destination(start + offset), m_Locations(destinations), IsMoving(false), points(20), m_Offset(offset), m_Index(0), locationIndex(0)
 {
 	m_Player = Moza::Texture2D::Create(path);
 }
@@ -27,10 +27,15 @@ void Player::Update(Moza::Timestep ts)
 
 int Player::Move()
 {
-	m_Destination = glm::vec2(m_Locations[m_Position].x, m_Locations[m_Position].y);
-	int out = (int)m_Locations[m_Position].z;
+	if (m_Index >= m_Locations.size())
+		return 0;
 
-	m_Position += m_Locations.size() > ((int)m_Position + 1) ? 1 : 0;
+	int out = m_Index == 0 ? m_Locations.at(m_Index) : m_Locations.at(m_Index) - m_Locations.at(m_Index - 1);
+
+	m_Destination = m_Points[m_Locations.at(m_Index) - 1] + m_Offset;
+
+	locationIndex = m_Locations.at(m_Index);
+	m_Index++;
 
 	return out;
 }

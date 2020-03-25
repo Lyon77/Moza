@@ -14,6 +14,7 @@ namespace Moza
 	{
 		Ref<VertexArray> QuadVertexArray;
 		Ref<Shader> TextureAndColorShader;
+		Ref<Shader> ScreenShader;
 		Ref<Texture2D> WhiteTexture;
 	};
 
@@ -58,8 +59,11 @@ namespace Moza
 		s_Data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
 		s_Data->TextureAndColorShader = Shader::Create("assets/shaders/TextureAndColor.glsl");
-		//s_Data->TextureAndColorShader->Bind();
+		s_Data->ScreenShader = Shader::Create("assets/shaders/TextureAndColor.glsl");
+		s_Data->TextureAndColorShader->Bind();
 		s_Data->TextureAndColorShader->SetInt("u_Texture", 0);
+		s_Data->ScreenShader->Bind();
+		s_Data->ScreenShader->SetInt("u_Texture", 0);
 	}
 
 	void Renderer2D::Shutdown()
@@ -75,6 +79,9 @@ namespace Moza
 
 		s_Data->TextureAndColorShader->Bind();
 		s_Data->TextureAndColorShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+
+		s_Data->ScreenShader->Bind();
+		s_Data->ScreenShader->SetMat4("u_ViewProjection", camera.GetProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
@@ -91,7 +98,7 @@ namespace Moza
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		MZ_PROFILE_FUNCTION();
-
+		s_Data->TextureAndColorShader->Bind();
 		s_Data->TextureAndColorShader->SetFloat4("u_Color", color);
 
 		// Bind White Texture
@@ -115,7 +122,7 @@ namespace Moza
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color, const float textureScale)
 	{
 		MZ_PROFILE_FUNCTION();
-
+		s_Data->TextureAndColorShader->Bind();
 		texture->Bind();
 		s_Data->TextureAndColorShader->SetFloat("u_TextureScale", textureScale);
 
@@ -137,7 +144,7 @@ namespace Moza
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
 	{
 		MZ_PROFILE_FUNCTION();
-
+		s_Data->TextureAndColorShader->Bind();
 		s_Data->TextureAndColorShader->SetFloat4("u_Color", color);
 
 		// Bind White Texture
@@ -163,7 +170,7 @@ namespace Moza
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& color, const float textureScale)
 	{
 		MZ_PROFILE_FUNCTION();
-
+		s_Data->TextureAndColorShader->Bind();
 		texture->Bind();
 		s_Data->TextureAndColorShader->SetFloat("u_TextureScale", textureScale);
 
@@ -174,6 +181,26 @@ namespace Moza
 			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		s_Data->TextureAndColorShader->SetMat4("u_Transform", transform);
+
+		s_Data->QuadVertexArray->Bind();
+		RendererCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawScreenQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color, float textureScale)
+	{
+		MZ_PROFILE_FUNCTION();
+		s_Data->ScreenShader->Bind();
+		s_Data->ScreenShader->SetFloat4("u_Color", color);
+
+		// Bind White Texture
+		texture->Bind();
+
+		s_Data->ScreenShader->SetFloat("u_TextureScale", textureScale);
+
+		// Create transform
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), { position.x, position.y, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		s_Data->ScreenShader->SetMat4("u_Transform", transform);
 
 		s_Data->QuadVertexArray->Bind();
 		RendererCommand::DrawIndexed(s_Data->QuadVertexArray);

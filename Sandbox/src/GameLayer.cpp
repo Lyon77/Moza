@@ -1,7 +1,5 @@
 #include "GameLayer.h"
 
-#include "Platform/OpenGL/OpenGLShader.h"
-
 #include <imgui/imgui.h>
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -17,100 +15,91 @@ void GameLayer::OnAttach()
 {
 	MZ_PROFILE_FUNCTION();
 
-	glm::vec3 destinations[50] = {
-		//Row 1
-		glm::vec3(-2.712, 1.691, 1.0),
-		glm::vec3(-2.059, 1.691, 1.0),
-		glm::vec3(-1.471, 1.691, 1.0),
-		glm::vec3(-0.882, 1.691, 1.0),
-		glm::vec3(-0.294, 1.691, 1.0),
-		glm::vec3( 0.294, 1.691, 1.0),
-		glm::vec3( 0.882, 1.691, 1.0),
-		glm::vec3( 1.471, 1.691, 1.0),
-		glm::vec3( 2.059, 1.691, 1.0),
-		glm::vec3( 2.712, 1.691, 1.0),
-
-		//Row 2
-		glm::vec3( 2.712, 0.882, 1.0),
-		glm::vec3( 2.059, 0.882, 1.0),
-		glm::vec3( 1.471, 0.882, 1.0),
-		glm::vec3( 0.882, 0.882, 1.0),
-		glm::vec3( 0.294, 0.882, 1.0),
-		glm::vec3(-0.294, 0.882, 1.0),
-		glm::vec3(-0.882, 0.882, 1.0),
-		glm::vec3(-1.471, 0.882, 1.0),
-		glm::vec3(-2.059, 0.882, 1.0),
-		glm::vec3(-2.712, 0.882, 1.0),
-
-		// Row 3
-		glm::vec3(-2.712, 0.100, 1.0),
-		glm::vec3(-2.059, 0.100, 1.0),
-		glm::vec3(-1.471, 0.100, 1.0),
-		glm::vec3(-0.882, 0.100, 1.0),
-		glm::vec3(-0.294, 0.100, 1.0),
-		glm::vec3( 0.294, 0.100, 1.0),
-		glm::vec3( 0.882, 0.100, 1.0),
-		glm::vec3( 1.471, 0.100, 1.0),
-		glm::vec3( 2.059, 0.100, 1.0),
-		glm::vec3( 2.712, 0.100, 1.0),
-
-
-		// Row 4
-		glm::vec3( 2.712, -0.662, 1.0),
-		glm::vec3( 2.059, -0.662, 1.0),
-		glm::vec3( 1.471, -0.662, 1.0),
-		glm::vec3( 0.882, -0.662, 1.0),
-		glm::vec3( 0.294, -0.662, 1.0),
-		glm::vec3(-0.294, -0.662, 1.0),
-		glm::vec3(-0.882, -0.662, 1.0),
-		glm::vec3(-1.471, -0.662, 1.0),
-		glm::vec3(-2.059, -0.662, 1.0),
-		glm::vec3(-2.712, -0.662, 1.0),
-
-		// Row 5
-		glm::vec3(-2.712, -1.472, 1.0),
-		glm::vec3(-2.059, -1.472, 1.0),
-		glm::vec3(-1.471, -1.472, 1.0),
-		glm::vec3(-0.882, -1.472, 1.0),
-		glm::vec3(-0.294, -1.472, 1.0),
-		glm::vec3( 0.294, -1.472, 1.0),
-		glm::vec3( 0.882, -1.472, 1.0),
-		glm::vec3( 1.471, -1.472, 1.0),
-		glm::vec3( 2.059, -1.472, 1.0),
-		glm::vec3( 2.712, -1.472, 1.0)
-	};
-
 	// Offset so they don't overlap
-	glm::vec3 wabitoOffset =   glm::vec3(-0.12, -0.12, 0.0f);
-	glm::vec3 natsukiOffset =  glm::vec3( 0.12, -0.12, 0.0f);
-	glm::vec3 kenjiOffset =    glm::vec3( 0.12,  0.12, 0.0f);
-	glm::vec3 kazutoOffset =   glm::vec3(-0.12,  0.12, 0.0f);
+	glm::vec2 wabitoOffset =   glm::vec2(-0.12, -0.12);
+	glm::vec2 natsukiOffset =  glm::vec2( 0.12, -0.12);
+	glm::vec2 kenjiOffset =    glm::vec2( 0.12,  0.12);
+	glm::vec2 kazutoOffset =   glm::vec2(-0.12,  0.12);
 
-	std::vector<glm::vec3> wabitoDestinations;
-	wabitoDestinations.push_back(destinations[0] + wabitoOffset);
-	wabitoDestinations.push_back(destinations[1] + wabitoOffset);
+	std::vector<int> wabitoDestinations;
+	wabitoDestinations.push_back(6);
+	wabitoDestinations.push_back(9);
+	wabitoDestinations.push_back(11);
+	wabitoDestinations.push_back(12);
+	wabitoDestinations.push_back(18);
+	wabitoDestinations.push_back(20);
+	wabitoDestinations.push_back(26);
+	wabitoDestinations.push_back(28);
+	wabitoDestinations.push_back(30);
+	wabitoDestinations.push_back(30);
+	wabitoDestinations.push_back(35);
+	wabitoDestinations.push_back(41);
+	wabitoDestinations.push_back(44);
+	wabitoDestinations.push_back(48);
+	wabitoDestinations.push_back(50);
 
-	std::vector<glm::vec3> natsukiDestinations;
-	natsukiDestinations.push_back(destinations[0] + natsukiOffset);
-	natsukiDestinations.push_back(destinations[1] + natsukiOffset);
+	std::vector<int> natsukiDestinations;
+	natsukiDestinations.push_back(3);
+	natsukiDestinations.push_back(6);
+	natsukiDestinations.push_back(10);
+	natsukiDestinations.push_back(14);
+	natsukiDestinations.push_back(17);
+	natsukiDestinations.push_back(22);
+	natsukiDestinations.push_back(27);
+	natsukiDestinations.push_back(30);
+	natsukiDestinations.push_back(31);
+	natsukiDestinations.push_back(35);
+	natsukiDestinations.push_back(38);
+	natsukiDestinations.push_back(40);
 
-	std::vector<glm::vec3> kenjiDestinations;
-	kenjiDestinations.push_back(destinations[0] + kenjiOffset);
-	kenjiDestinations.push_back(destinations[1] + kenjiOffset);
 
-	std::vector<glm::vec3> kazutoDestinations;
-	kazutoDestinations.push_back(destinations[0] + kazutoOffset);
-	kazutoDestinations.push_back(destinations[1] + kazutoOffset);
+	std::vector<int> kenjiDestinations;
+	kenjiDestinations.push_back(1);
+	kenjiDestinations.push_back(3);
+	kenjiDestinations.push_back(7);
+	kenjiDestinations.push_back(9);
+	kenjiDestinations.push_back(14);
+	kenjiDestinations.push_back(15);
+	kenjiDestinations.push_back(15);
+	kenjiDestinations.push_back(21);
+	kenjiDestinations.push_back(27);
+	kenjiDestinations.push_back(30);
+	kenjiDestinations.push_back(36);
+	kenjiDestinations.push_back(41);
+	kenjiDestinations.push_back(46);
+	kenjiDestinations.push_back(50);
+
+
+	std::vector<int> kazutoDestinations;
+	kazutoDestinations.push_back(2);
+	kazutoDestinations.push_back(6);
+	kazutoDestinations.push_back(11);
+	kazutoDestinations.push_back(12);
+	kazutoDestinations.push_back(17);
+	kazutoDestinations.push_back(19);
+	kazutoDestinations.push_back(24);
+	kazutoDestinations.push_back(29);
+	kazutoDestinations.push_back(32);
+	kazutoDestinations.push_back(35);
+	kazutoDestinations.push_back(41);
+	kazutoDestinations.push_back(43);
+	kazutoDestinations.push_back(45);
+	kazutoDestinations.push_back(50);
+
 
 	m_Board   = Moza::Texture2D::Create("assets/textures/characters/board.png");
+	m_LoveMachine = Moza::Texture2D::Create("assets/textures/characters/LoveMachine.png");
 
-	m_Wabito = Moza::CreateRef<Player>("assets/textures/characters/Wabito.png", glm::vec2(-3.897f, 1.691f) + glm::vec2(wabitoOffset.x, wabitoOffset.y), wabitoDestinations);
-	m_Natsuki = Moza::CreateRef<Player>("assets/textures/characters/Natsuki.png", glm::vec2(-3.897f, 1.691f) + glm::vec2(natsukiOffset.x, natsukiOffset.y), natsukiDestinations);
-	m_Kenji = Moza::CreateRef<Player>("assets/textures/characters/Kenji.png", glm::vec2(-3.897f, 1.691f) + glm::vec2(kenjiOffset.x, kenjiOffset.y), kenjiDestinations);
-	m_Kazuto  = Moza::CreateRef<Player>("assets/textures/characters/Kazuto.png", glm::vec2(-3.897f, 1.691f) + glm::vec2(kazutoOffset.x, kazutoOffset.y), kazutoDestinations);
-	m_LoveMachine  = Moza::CreateRef<Player>("assets/textures/characters/LoveMachine.png", glm::vec2(3.897f, -1.397f), kazutoDestinations);
+	m_Wabito = Moza::CreateRef<Player>("assets/textures/characters/Wabito.png", glm::vec2(-3.897f, 1.691f), wabitoDestinations, wabitoOffset);
+	m_Natsuki = Moza::CreateRef<Player>("assets/textures/characters/Natsuki.png", glm::vec2(-3.897f, 1.691f), natsukiDestinations, natsukiOffset);
+	m_Kenji = Moza::CreateRef<Player>("assets/textures/characters/Kenji.png", glm::vec2(-3.897f, 1.691f), kenjiDestinations, kenjiOffset);
+	m_Kazuto  = Moza::CreateRef<Player>("assets/textures/characters/Kazuto.png", glm::vec2(-3.897f, 1.691f), kazutoDestinations, kazutoOffset);
 
-	m_Cards = Moza::CreateRef<CardEvent>("assets/textures/ChernoLogo.png");
+	std::vector<int> pointValues;
+	pointValues.push_back(20);
+	pointValues.push_back(5);
+
+	m_Cards = Moza::CreateRef<CardEvent>("assets/textures/cards/", pointValues);
 }
 
 void GameLayer::OnDetach()
@@ -140,17 +129,18 @@ void GameLayer::OnUpdate(Moza::Timestep ts)
 		MZ_PROFILE_SCOPE("RendererDraw");
 		Moza::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		Moza::Renderer2D::DrawQuad({  0.0f, 0.0f, 0.0f }, { 10.0f, 5.0f }, m_Board,  { 1.0f, 1.0f, 1.0f, 1.0f }, 1.0f);
+
+		if (m_Revealed)
+			Moza::Renderer2D::DrawQuad({ 3.897f, -1.397f, 0.1f }, { 1.0f, 1.0f }, m_LoveMachine,  { 1.0f, 1.0f, 1.0f, 1.0f }, 1.0f);
 		
-		//m_Wabito->m_Location = m_Position;
-		//m_Wabito->m_Destination = m_Position;
 		m_Wabito->Update(ts);
 		m_Natsuki->Update(ts);
 		m_Kenji->Update(ts);
 		m_Kazuto->Update(ts);
-		m_LoveMachine->Update(ts);
 
-		if (m_DisplayCards)
+		if (m_DisplayCards && m_CardIndex < 2 && m_CardIndex > -1) 
 			m_Cards->Draw(m_CardIndex);
+
 
 		Moza::Renderer2D::EndScene();
 	}
@@ -164,30 +154,41 @@ void GameLayer::OnImGuiRender()
 
 	ImGui::TextWrapped("Welcome to Love Machine. This is a Co-operative game where the 4 players try to defeat Love Machine from destroying the Internet. In order to defeat him, you must unlock his location and discover his weakness. The chance spaces will reveal more information and lead you to him. Good Luck!");
 
-	ImGui::SliderFloat2("Position", &m_Position.x, -5.0f, 5.0f);
+	std::string wabitoPoints = "Wabito: " + std::to_string(m_Wabito->points);
+	std::string natsukiPoints = "Natsuki: " + std::to_string(m_Natsuki->points);
+	std::string kenjiPoints = "Kenji: " + std::to_string(m_Kenji->points);
+	std::string kazutoPoints = "Kazuto: " + std::to_string(m_Kazuto->points);
+	ImGui::TextWrapped(wabitoPoints.c_str());
+	ImGui::TextWrapped(natsukiPoints.c_str());
+	ImGui::TextWrapped(kenjiPoints.c_str());
+	ImGui::TextWrapped(kazutoPoints.c_str());
+
+	//ImGui::SliderFloat2("Position", &m_Position.x, -5.0f, 5.0f);
 
 	bool moving = m_Wabito->IsMoving || m_Natsuki->IsMoving || m_Kenji->IsMoving || m_Kazuto->IsMoving;
 
 	static int roll = 0;
 	if (!moving && ImGui::Button("Roll"))
 	{
-		switch (m_Turn)
-		{
-		case 0:
-			roll = m_Wabito->Move();
-			break;
-		case 1:
-			roll = m_Natsuki->Move();
-			break;
-		case 2:
-			roll = m_Kenji->Move();
-			break;
-		case 3:
-			roll = m_Kazuto->Move();
-			break;
-		default:
-			MZ_ERROR("No Player Selected!");
+		std::vector<Moza::Ref<Player>> players;
+		players.push_back(m_Wabito);
+		players.push_back(m_Natsuki);
+		players.push_back(m_Kenji);
+		players.push_back(m_Kazuto);
+
+		roll = players.at(m_Turn)->Move();
+		int index = players.at(m_Turn)->locationIndex;
+
+		if (index % 3 == 0 || index % 10 == 0 || index == 1 || index == 2) {
+			m_CardIndex++;
+			m_DisplayCards = true;
+			players.at(m_Turn)->points += m_Cards->Value(m_CardIndex);
 		}
+		if (index == 40)
+		{
+			m_Revealed = true;
+		}
+
 		m_Turn = (m_Turn + 1) % 4;
 	}
 

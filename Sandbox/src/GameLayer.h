@@ -28,16 +28,18 @@ private:
 	Moza::OrthographicCameraController m_CameraController;
 
 	Moza::Ref<Moza::Texture2D> m_Board;
+	Moza::Ref<Moza::Texture2D> m_LoveMachine;
 
 	Moza::Ref<Player> m_Wabito;
 	Moza::Ref<Player> m_Natsuki;
 	Moza::Ref<Player> m_Kenji;
 	Moza::Ref<Player> m_Kazuto;
-	Moza::Ref<Player> m_LoveMachine;
+	
 
 	Moza::Ref<CardEvent> m_Cards;
 
 	unsigned int m_Turn;
+	bool m_Revealed = false;
 
 	bool m_DisplayCards;
 	int m_CardIndex;

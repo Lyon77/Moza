@@ -108,10 +108,27 @@ void GameLayer::OnAttach()
 	pointValues.push_back(30); 
 	pointValues.push_back(20); // 
 	pointValues.push_back(5);  
+	pointValues.push_back(10);
 	pointValues.push_back(10); //
 	pointValues.push_back(0);  
 	pointValues.push_back(-20);  
-	pointValues.push_back(-22); //  
+	pointValues.push_back(0); //   
+	pointValues.push_back(0); //  
+	pointValues.push_back(40);  
+	pointValues.push_back(20); // 
+	pointValues.push_back(20); 
+	pointValues.push_back(-10);  //
+	pointValues.push_back(-10);  
+	pointValues.push_back(-10);  //
+	pointValues.push_back(20);  //
+	pointValues.push_back(-20);  //
+	pointValues.push_back(-15);  //
+	pointValues.push_back(0);  //
+	pointValues.push_back(0);  //
+	pointValues.push_back(0);  //
+	pointValues.push_back(0);  
+	pointValues.push_back(-5);  //
+	pointValues.push_back(0);  //
 
 
 
@@ -154,7 +171,7 @@ void GameLayer::OnUpdate(Moza::Timestep ts)
 		m_Kenji->Update(ts);
 		m_Kazuto->Update(ts);
 
-		if (m_DisplayCards && m_CardIndex < 7 && m_CardIndex > -1) 
+		if (m_DisplayCards && m_CardIndex < 31 && m_CardIndex > -1) 
 			m_Cards->Draw(m_CardIndex);
 
 
@@ -199,7 +216,9 @@ void GameLayer::OnImGuiRender()
 			m_CardIndex++;
 			m_DisplayCards = true;
 			players.at(m_Turn)->points += m_Cards->Value(m_CardIndex);
-		}
+		} 
+		else 
+			m_DisplayCards = false;
 		if (index == 40)
 		{
 			m_Revealed = true;

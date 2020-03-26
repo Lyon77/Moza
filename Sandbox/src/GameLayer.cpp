@@ -27,7 +27,7 @@ void GameLayer::OnAttach()
 	wabitoDestinations.push_back(11);
 	wabitoDestinations.push_back(12);
 	wabitoDestinations.push_back(18);
-	wabitoDestinations.push_back(20);
+	wabitoDestinations.push_back(22);
 	wabitoDestinations.push_back(26);
 	wabitoDestinations.push_back(28);
 	wabitoDestinations.push_back(30);
@@ -35,19 +35,19 @@ void GameLayer::OnAttach()
 	wabitoDestinations.push_back(35);
 	wabitoDestinations.push_back(41);
 	wabitoDestinations.push_back(44);
-	wabitoDestinations.push_back(48);
+	wabitoDestinations.push_back(47);
 	wabitoDestinations.push_back(50);
 
 	std::vector<int> natsukiDestinations;
 	natsukiDestinations.push_back(3);
 	natsukiDestinations.push_back(6);
 	natsukiDestinations.push_back(10);
-	natsukiDestinations.push_back(14);
+	natsukiDestinations.push_back(15);
 	natsukiDestinations.push_back(17);
 	natsukiDestinations.push_back(22);
+	natsukiDestinations.push_back(26);
 	natsukiDestinations.push_back(27);
 	natsukiDestinations.push_back(30);
-	natsukiDestinations.push_back(31);
 	natsukiDestinations.push_back(35);
 	natsukiDestinations.push_back(38);
 	natsukiDestinations.push_back(40);
@@ -74,17 +74,17 @@ void GameLayer::OnAttach()
 	std::vector<int> kazutoDestinations;
 	kazutoDestinations.push_back(2);
 	kazutoDestinations.push_back(6);
-	kazutoDestinations.push_back(11);
 	kazutoDestinations.push_back(12);
+	kazutoDestinations.push_back(15);
 	kazutoDestinations.push_back(17);
 	kazutoDestinations.push_back(19);
-	kazutoDestinations.push_back(24);
+	kazutoDestinations.push_back(25);
 	kazutoDestinations.push_back(29);
-	kazutoDestinations.push_back(32);
+	kazutoDestinations.push_back(30);
 	kazutoDestinations.push_back(35);
 	kazutoDestinations.push_back(41);
 	kazutoDestinations.push_back(43);
-	kazutoDestinations.push_back(45);
+	kazutoDestinations.push_back(44);
 	kazutoDestinations.push_back(50);
 	kazutoDestinations.push_back(51);
 
@@ -122,13 +122,13 @@ void GameLayer::OnAttach()
 	pointValues.push_back(-10);  //
 	pointValues.push_back(20);  //
 	pointValues.push_back(-20);  //
-	pointValues.push_back(-15);  //
+	pointValues.push_back(0);  //
 	pointValues.push_back(0);  //
 	pointValues.push_back(0);  //
 	pointValues.push_back(0);  //
 	pointValues.push_back(0);  
-	pointValues.push_back(-5);  //
-	pointValues.push_back(0);  //
+	pointValues.push_back(-5); 
+	pointValues.push_back(0);  
 
 
 
@@ -212,17 +212,79 @@ void GameLayer::OnImGuiRender()
 		roll = players.at(m_Turn)->Move();
 		int index = players.at(m_Turn)->locationIndex;
 
-		if (index % 3 == 0 || index % 10 == 0 || index == 1 || index == 2) {
+		if (!(roll == 0 && m_Turn == 0) && !(roll == 0 && m_Turn == 1 && m_CardIndex <= 25) && (index % 3 == 0 || index % 10 == 0 || index == 1 || index == 2))
+		{
 			m_CardIndex++;
 			m_DisplayCards = true;
 			players.at(m_Turn)->points += m_Cards->Value(m_CardIndex);
+
+			// Taking care of special cases where more than 1 player is effected
+			switch (m_CardIndex)
+			{
+			case 1:
+				m_Kenji->points += 5;
+				break;
+			case 4:
+				m_Natsuki->points += 5;
+				break;
+			case 5:
+				m_Kenji->points -= 5;
+				break;
+			case 8:
+				m_Kenji->points += 20;
+				break;
+			case 10:
+				m_Kenji->points -= 10;
+				break;
+			case 14:
+				m_Wabito->points /= 2;
+				break;
+			case 15:
+				m_Kenji->points = 5;
+				break;
+			case 17:
+				m_Wabito->points += 20;
+				m_Kenji->points += 20;
+				m_Kazuto->points += 20;
+				break;
+			case 21:
+				m_Wabito->points -= 10;
+				m_Natsuki->points -= 10;
+				m_Kazuto->points -= 10;
+				break;
+			case 22:
+				m_Kazuto->points += 20;
+				break;
+			case 23:
+				m_Kazuto->points -= 20;
+				break;
+			case 25:
+				m_Kenji->points -= 75;
+				m_Natsuki->points += 65;
+				break;
+			case 26:
+				m_Kazuto->points -= 25;
+				m_Natsuki->points += 25;
+				break;
+			case 27:
+				m_Wabito->points -= 12;
+				m_Natsuki->points += 12;
+				break;
+			}
 		} 
 		else 
 			m_DisplayCards = false;
-		if (index == 40)
-		{
+		
+		// Taking care of timer based effect
+		if (m_Turn == 1 && index == 40)
+			m_Natsuki->points -= 15;
+
+		// Location 30 reveals the boss
+		if (index == 30)
 			m_Revealed = true;
-		}
+
+		if (index == 51 && m_Turn == 3)
+			m_Revealed = false;
 
 		m_Turn = (m_Turn + 1) % 4;
 	}

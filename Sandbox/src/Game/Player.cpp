@@ -9,7 +9,7 @@ Player::Player(const std::string& path, glm::vec2 start, std::vector<int> destin
 void Player::Update(Moza::Timestep ts)
 {
 	glm::vec2 distance = m_Destination - m_Location;
-	m_Location = m_Destination;
+	//m_Location = m_Destination;
 	if (std::abs(distance.x) + std::abs(distance.y) > 0.03f) // To ensure that the piece doesn't keep encroaching the destination
 	{
 		glm::vec2 displacement = distance * glm::vec2(ts * 2.0f);

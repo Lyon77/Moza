@@ -29,6 +29,7 @@ private:
 
 	Moza::Ref<Moza::Texture2D> m_Board;
 	Moza::Ref<Moza::Texture2D> m_LoveMachine;
+	Moza::Ref<Moza::Texture2D> m_Win;
 
 	Moza::Ref<Player> m_Wabito;
 	Moza::Ref<Player> m_Natsuki;
@@ -40,6 +41,7 @@ private:
 
 	unsigned int m_Turn;
 	bool m_Revealed = false;
+	bool m_Won = false;
 
 	bool m_DisplayCards;
 	int m_CardIndex;

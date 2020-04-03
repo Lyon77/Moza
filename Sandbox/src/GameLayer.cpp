@@ -91,6 +91,7 @@ void GameLayer::OnAttach()
 
 	m_Board   = Moza::Texture2D::Create("assets/textures/characters/board.png");
 	m_LoveMachine = Moza::Texture2D::Create("assets/textures/characters/LoveMachine.png");
+	m_Win = Moza::Texture2D::Create("assets/textures/win.png");
 
 	m_Wabito = Moza::CreateRef<Player>("assets/textures/characters/Wabito.png", glm::vec2(-3.897f, 1.691f), wabitoDestinations, wabitoOffset);
 	m_Natsuki = Moza::CreateRef<Player>("assets/textures/characters/Natsuki.png", glm::vec2(-3.897f, 1.691f), natsukiDestinations, natsukiOffset);
@@ -174,6 +175,8 @@ void GameLayer::OnUpdate(Moza::Timestep ts)
 		if (m_DisplayCards && m_CardIndex < 31 && m_CardIndex > -1) 
 			m_Cards->Draw(m_CardIndex);
 
+		if (m_Won)
+			Moza::Renderer2D::DrawQuad({ 0.0f, 3.0f, 1.0f }, { 6.0f, 3.0f }, m_Win, { 1.0f, 1.0f, 1.0f, 1.0f }, 1.0f);
 
 		Moza::Renderer2D::EndScene();
 	}
@@ -185,7 +188,8 @@ void GameLayer::OnImGuiRender()
 
 	ImGui::Begin("Menu");
 
-	ImGui::TextWrapped("Welcome to Love Machine. This is a Co-operative game where the 4 players try to defeat Love Machine from destroying the Internet. In order to defeat him, you must unlock his location and discover his weakness. The chance spaces will reveal more information and lead you to him. Good Luck!");
+	ImGui::TextWrapped("Welcome to Love Machine. This is a Co-operative game where the 4 players try to defeat Love Machine from destroying Oz. In order to defeat him, you must unlock his location and discover his weakness. The chance spaces will reveal more information and lead you to him. Good Luck!");
+	ImGui::TextWrapped("Move around with WASD and Press C to toggle the current event card. Play the game by pressing the Roll Button below.");
 
 	std::string wabitoPoints = "Wabito: " + std::to_string(m_Wabito->points);
 	std::string natsukiPoints = "Natsuki: " + std::to_string(m_Natsuki->points);
@@ -283,8 +287,11 @@ void GameLayer::OnImGuiRender()
 		if (index == 30)
 			m_Revealed = true;
 
-		if (index == 51 && m_Turn == 3)
+		if (index == 51 && m_Turn == 3) {
 			m_Revealed = false;
+			m_Won = true;
+		}
+			
 
 		m_Turn = (m_Turn + 1) % 4;
 	}

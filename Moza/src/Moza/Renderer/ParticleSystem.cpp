@@ -36,8 +36,6 @@ namespace Moza
 
 	void ParticleSystem::OnRender2D(OrthographicCamera& camera)
 	{
-		Renderer2D::BeginScene(camera);
-
 		for (auto& particle : m_ParticlePool)
 		{
 			if (!particle.Active)
@@ -52,8 +50,6 @@ namespace Moza
 			// Render
 			Renderer2D::DrawRotatedQuad({ particle.Position.x, particle.Position.y }, { size, size }, particle.Rotation, color);
 		}
-		
-		Renderer2D::EndScene();
 	}
 
 	void ParticleSystem::Emit(const ParticleProps& particleProps)

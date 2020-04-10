@@ -7,6 +7,7 @@
 #include "Moza/Core/Application.h"
 #include "Moza/Core/Layer.h"
 #include "Moza/Core/Log.h"
+#include "Moza/Core/Random.h"
 
 #include "Moza/Core/Timestep.h"
 
@@ -28,4 +29,6 @@
 
 #include "Moza/Renderer/OrthographicCamera.h"
 #include "Moza/Renderer/OrthographicCameraController.h"
+
+#include "Moza/Renderer/ParticleSystem.h"
 //-------------------------------------------

@@ -1,0 +1,87 @@
+#include "ParticleLayer.h"
+
+#include "Platform/OpenGL/OpenGLShader.h"
+
+#include <imgui/imgui.h>
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+
+ParticleLayer::ParticleLayer()
+	: Layer("ParticleLayer"), m_CameraController(1280.0f / 720.0f, true)
+{
+}
+
+void ParticleLayer::OnAttach()
+{
+	MZ_PROFILE_FUNCTION();
+
+	m_Particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+	m_Particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
+	m_Particle.SizeBegin = 0.5f, m_Particle.SizeVariation = 0.3f, m_Particle.SizeEnd = 0.0f;
+	m_Particle.LifeTime = 1.0f;
+	m_Particle.Velocity = { 0.0f, 0.0f };
+	m_Particle.VelocityVariation = { 3.0f, 1.0f };
+	m_Particle.Position = { 0.0f, 0.0f };
+}
+
+void ParticleLayer::OnDetach()
+{
+	MZ_PROFILE_FUNCTION();
+
+}
+
+void ParticleLayer::OnUpdate(Moza::Timestep ts)
+{
+	MZ_PROFILE_FUNCTION();
+
+	// update Camera
+	{
+		MZ_PROFILE_SCOPE("CameraController::OnUpdate");
+		m_CameraController.OnUpdate(ts);
+	}
+
+	// update Render
+	{
+		MZ_PROFILE_SCOPE("RendererPrep");
+		Moza::RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		Moza::RendererCommand::Clear();
+	}
+
+	{
+		MZ_PROFILE_SCOPE("RendererDraw");
+
+		if (Moza::Input::IsMouseButtonPressed(MZ_MOUSE_BUTTON_LEFT))
+		{
+			auto [x, y] = Moza::Input::GetMousePosition();
+			auto width = Moza::Application::Get().GetWindow().GetWidth();
+			auto height = Moza::Application::Get().GetWindow().GetHeight();
+
+			auto bounds = m_CameraController.GetBounds();
+			auto pos = m_CameraController.GetCamera().GetPosition();
+			x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+			y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+			m_Particle.Position = { x + pos.x, y + pos.y };
+			for (int i = 0; i < 5; i++)
+				m_ParticleSystem.Emit(m_Particle);
+		}
+
+		m_ParticleSystem.OnUpdate(ts);
+		m_ParticleSystem.OnRender2D(m_CameraController.GetCamera());
+	}
+}
+
+void ParticleLayer::OnImGuiRender()
+{
+	MZ_PROFILE_FUNCTION();
+
+	ImGui::Begin("Settings");
+
+	ImGui::End();
+}
+
+void ParticleLayer::OnEvent(Moza::Event& e)
+{
+	m_CameraController.OnEvent(e);
+}

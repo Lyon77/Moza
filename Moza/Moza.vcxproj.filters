@@ -87,6 +87,9 @@
     <ClInclude Include="src\Moza\Core\MouseButtonCodes.h">
       <Filter>src\Moza\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Core\Random.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Core\Timestep.h">
       <Filter>src\Moza\Core</Filter>
     </ClInclude>
@@ -121,6 +124,9 @@
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Renderer\OrthographicCameraController.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\ParticleSystem.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Renderer.h">
@@ -1292,6 +1298,9 @@
     <ClCompile Include="src\Moza\Core\Log.cpp">
       <Filter>src\Moza\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Moza\Core\Random.cpp">
+      <Filter>src\Moza\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Moza\ImGui\ImGuiBuilder.cpp">
       <Filter>src\Moza\ImGui</Filter>
     </ClCompile>
@@ -1308,6 +1317,9 @@
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\OrthographicCameraController.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\ParticleSystem.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Renderer.cpp">

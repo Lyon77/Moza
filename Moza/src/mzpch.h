@@ -18,6 +18,7 @@
 #include "Moza/Core/Log.h"
 #include "Moza/Core/KeyCodes.h"
 #include "Moza/Core/MouseButtonCodes.h"
+#include "Moza/Core/Random.h"
 
 #include "Moza/Debug/Instrumentor.h"
 

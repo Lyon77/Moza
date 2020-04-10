@@ -40,15 +40,18 @@ namespace Moza
 		{
 			if (!particle.Active)
 				continue;
+			else
+			{
+				// Fade away particles
+				float life = particle.LifeRemaining / particle.LifeTime;
+				glm::vec4 color = glm::lerp(particle.ColorEnd, particle.ColorBegin, life);
 
-			// Fade away particles
-			float life = particle.LifeRemaining / particle.LifeTime;
-			glm::vec4 color = glm::lerp(particle.ColorEnd, particle.ColorBegin, life);
+				float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
 
-			float size = glm::lerp(particle.SizeEnd, particle.SizeBegin, life);
-
-			// Render
-			Renderer2D::DrawRotatedQuad({ particle.Position.x, particle.Position.y }, { size, size }, particle.Rotation, color);
+				// Render
+				Renderer2D::DrawRotatedQuad({ particle.Position.x, particle.Position.y }, { size, size }, particle.Rotation, color);
+			}
+			
 		}
 	}
 

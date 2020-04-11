@@ -16,6 +16,8 @@ Make sure that you do a --recursive clone to fetch all of the submodules!
 ## Sandbox
 Main Executable
 
+There are currently 3 test layers. One displays simple quads, the second displays more advanced quads with transforms, and the third is a particle system. 
+
 ## Moza
 Static Library (was a dll, but eventually switched to static due to optimization reasons)
 

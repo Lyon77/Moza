@@ -44,6 +44,8 @@ void ParticleLayer::OnUpdate(Moza::Timestep ts)
 	}
 
 	// update Render
+	Moza::Renderer2D::ResetStats();
+
 	{
 		MZ_PROFILE_SCOPE("RendererPrep");
 		Moza::RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
@@ -91,6 +93,14 @@ void ParticleLayer::OnImGuiRender()
 	ImGui::ColorEdit3("Start Color", glm::value_ptr(m_StartColor));
 	ImGui::ColorEdit3("End Color", glm::value_ptr(m_EndColor));
 	ImGui::DragFloat("Life Time", &m_LifeTime, 0.01f,  0.1f, 5.0f);
+
+	//Stats
+	Moza::Renderer2D::Statistics stats = Moza::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+	ImGui::Text("Quads: %d", stats.QuadCount);
+	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
 	ImGui::End();
 }

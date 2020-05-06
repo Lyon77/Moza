@@ -22,7 +22,7 @@ namespace Moza
 	class ParticleSystem
 	{
 	public:
-		ParticleSystem();
+		ParticleSystem(uint32_t maxParticles = 10000);
 
 		void OnUpdate(Timestep ts);
 		void OnRender2D(OrthographicCamera& camera);

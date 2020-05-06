@@ -10,9 +10,9 @@
 
 namespace Moza
 {
-	ParticleSystem::ParticleSystem()
+	ParticleSystem::ParticleSystem(uint32_t maxParticles)
 	{
-		m_ParticlePool.resize(1000);
+		m_ParticlePool.resize(maxParticles);
 	}
 
 	void ParticleSystem::OnUpdate(Timestep ts)

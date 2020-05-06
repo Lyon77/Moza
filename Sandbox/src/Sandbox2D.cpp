@@ -63,7 +63,7 @@ void Sandbox2D::OnImGuiRender()
 	MZ_PROFILE_FUNCTION();
 
 	ImGui::Begin("Settings"); 
-	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+	//ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
 
 	ImGui::End();
 }

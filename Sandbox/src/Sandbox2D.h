@@ -23,6 +23,9 @@ private:
 	Moza::OrthographicCameraController m_CameraController;
 
 	Moza::Ref<Moza::Texture2D> m_CheckerboardTexture;
+	Moza::Ref<Moza::Texture2D> m_SpriteSheet;
+	Moza::Ref<Moza::SubTexture2D> m_Stairs;
+	Moza::Ref<Moza::SubTexture2D> m_Tree;
 
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 };

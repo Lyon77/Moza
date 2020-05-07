@@ -2,6 +2,7 @@
 
 #include "Moza/Renderer/OrthographicCamera.h"
 #include "Moza/Renderer/Texture.h"
+#include "Moza/Renderer/SubTexture2D.h"
 
 namespace Moza
 {
@@ -23,12 +24,16 @@ namespace Moza
 		// Texture
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color = glm::vec4(1.0f), float textureScale = 1.0f);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4& color = glm::vec4(1.0f), float textureScale = 1.0f);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, const glm::vec4& color = glm::vec4(1.0f), float textureScale = 1.0f);
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, const glm::vec4& color = glm::vec4(1.0f), float textureScale = 1.0f);
 
 		// Rotated Quads
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color);
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color);
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& color = glm::vec4(1.0f), float textureScale = 1.0f);
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, const glm::vec4& color = glm::vec4(1.0f), float textureScale = 1.0f);
+		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subtexture, const glm::vec4& color = glm::vec4(1.0f), float textureScale = 1.0f);
+		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<SubTexture2D>& subtexture, const glm::vec4& color = glm::vec4(1.0f), float textureScale = 1.0f);
 
 		struct Statistics
 		{

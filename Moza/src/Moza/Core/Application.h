@@ -26,6 +26,7 @@ namespace Moza
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
 
+
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
 	private:
@@ -39,7 +40,7 @@ namespace Moza
 		bool m_Minimized = false;
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
-	private:
+
 		static Application* s_Instance;
 	};
 

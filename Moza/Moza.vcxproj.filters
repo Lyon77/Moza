@@ -117,6 +117,9 @@
     <ClInclude Include="src\Moza\Renderer\Buffer.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Camera.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Framebuffer.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
@@ -1293,7 +1296,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Moza\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Core\Application.cpp">
@@ -1318,6 +1320,9 @@
       <Filter>src\Moza\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Camera.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Framebuffer.cpp">
@@ -1392,6 +1397,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Moza\Renderer\Camera.cpp" />
   </ItemGroup>
 </Project>

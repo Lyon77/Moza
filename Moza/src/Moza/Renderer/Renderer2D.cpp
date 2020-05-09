@@ -88,7 +88,7 @@ namespace Moza
 		delete[] quadIndices;
 
 		// Create White Texture
-		s_Data.WhiteTexture = Texture2D::Create(TextureFormat::RGB, 1, 1);
+		s_Data.WhiteTexture = Texture2D::Create(TextureFormat::RGBA, 1, 1);
 		uint32_t whiteTextureData = 0xffffffff;
 		s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 

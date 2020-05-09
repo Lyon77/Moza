@@ -71,7 +71,8 @@ project "Moza"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{prj.name}/vendor/assimp/include"
 	}
 
 	links
@@ -130,7 +131,8 @@ project "Sandbox"
 
 	links
 	{
-		"Moza"
+		"Moza",
+		"Moza/vendor/assimp/win64/assimp.lib"
 	}
 
 	filter "system:windows"

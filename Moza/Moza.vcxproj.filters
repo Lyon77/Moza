@@ -117,7 +117,13 @@
     <ClInclude Include="src\Moza\Renderer\Buffer.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Framebuffer.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Mesh.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h">
@@ -154,6 +160,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
@@ -1284,6 +1293,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Core\Application.cpp">
@@ -1310,7 +1320,13 @@
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Framebuffer.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Moza\Renderer\GraphicsContext.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Mesh.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp">
@@ -1349,6 +1365,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1373,5 +1392,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Camera.cpp" />
   </ItemGroup>
 </Project>

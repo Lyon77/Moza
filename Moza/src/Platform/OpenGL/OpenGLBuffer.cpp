@@ -55,6 +55,14 @@ namespace Moza
 	// IndexBuffer //////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////
 
+	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t size)
+		: m_RendererID(0), m_Count(size)
+	{
+		MZ_PROFILE_FUNCTION();
+
+		glGenBuffers(1, &m_RendererID);
+	}
+
 	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t * indices, uint32_t count)
 		: m_Count(count)
 	{
@@ -81,5 +89,14 @@ namespace Moza
 		MZ_PROFILE_FUNCTION();
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+	void OpenGLIndexBuffer::SetData(const void* data, uint32_t count)
+	{
+		MZ_PROFILE_FUNCTION();
+
+		m_Count = count;
+
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), data, GL_STATIC_DRAW);
 	}
 }

@@ -25,7 +25,9 @@ namespace Moza
 
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* overlay);
+		void RenderImGui();
 
+		std::string OpenFile(const std::string& filter) const;
 
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }

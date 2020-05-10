@@ -18,6 +18,7 @@ namespace Moza
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& filePath)
+		: m_AssetPath(filePath)
 	{
 		MZ_PROFILE_FUNCTION();
 
@@ -32,6 +33,7 @@ namespace Moza
 		auto count = lastDot == std::string::npos ? filePath.size() - lastSlash : lastDot - lastSlash;
 		m_Name = filePath.substr(lastSlash, count);
 	}
+
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string & vertexSrc, const std::string & fragmentSrc)
 		: m_Name(name)
 	{
@@ -42,18 +44,21 @@ namespace Moza
 		sources[GL_FRAGMENT_SHADER] = fragmentSrc;
 		Compile(sources);
 	}
+
 	OpenGLShader::~OpenGLShader()
 	{
 		MZ_PROFILE_FUNCTION();
 
 		glDeleteProgram(m_RendererID);
 	}
+
 	void OpenGLShader::Bind() const
 	{
 		MZ_PROFILE_FUNCTION();
 
 		glUseProgram(m_RendererID);
 	}
+
 	void OpenGLShader::UnBind() const
 	{
 		MZ_PROFILE_FUNCTION();
@@ -261,6 +266,21 @@ namespace Moza
 			glDetachShader(program, id);
 			glDeleteShader(id);
 		}
+
+		// Bind default texture unit
+		UploadUniformInt("u_Texture", 0);
+
+		// PBR shader textures
+		UploadUniformInt("u_AlbedoTexture", 1);
+		UploadUniformInt("u_NormalTexture", 2);
+		UploadUniformInt("u_MetalnessTexture", 3);
+		UploadUniformInt("u_RoughnessTexture", 4);
+
+		UploadUniformInt("u_EnvRadianceTex", 10);
+		UploadUniformInt("u_EnvIrradianceTex", 11);
+
+		UploadUniformInt("u_BRDFLUTTexture", 15);
+
 	}
 
 	void OpenGLShader::UploadUniformInt(const std::string& name, int value)

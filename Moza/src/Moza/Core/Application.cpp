@@ -4,9 +4,13 @@
 #include "Moza/Core/Log.h"
 
 #include "Moza/Renderer/Renderer.h"
+#include "Moza/Renderer/Framebuffer.h"
 
 #include "Moza/Core/Input.h"
 
+#include <imgui.h>
+
+#include <Glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Moza
@@ -52,6 +56,33 @@ namespace Moza
 		overlay->OnAttach();
 	}
 
+	void Application::RenderImGui()
+	{
+		MZ_PROFILE_SCOPE("LayerStack OnImGuiRender");
+
+		m_ImGuiLayer->Begin();
+
+		
+		ImGui::Begin("Renderer");
+		std::string vendor = (const char*)glGetString(GL_VENDOR);
+		std::string renderer = (const char*)glGetString(GL_RENDERER);
+		std::string version = (const char*)glGetString(GL_VERSION);
+		ImGui::Text("Vendor: %s", vendor.c_str());
+		ImGui::Text("Renderer: %s", renderer.c_str());
+		ImGui::Text("Version: %s", version.c_str());
+		ImGui::End();
+
+		for (Layer* layer : m_LayerStack)
+			layer->OnImGuiRender();
+
+		m_ImGuiLayer->End();
+	}
+
+	std::string Application::OpenFile(const std::string& filter) const
+	{
+		return std::string();
+	}
+
 	void Application::OnEvent(Event& e)
 	{
 		MZ_PROFILE_FUNCTION();
@@ -93,14 +124,8 @@ namespace Moza
 					layer->OnUpdate(timestep);
 			}
 
-			m_ImGuiLayer->Begin();
-			{
-				MZ_PROFILE_SCOPE("LayerStack OnImGuiRender");
+			RenderImGui();
 
-				for (Layer* layer : m_LayerStack)
-					layer->OnImGuiRender();
-				m_ImGuiLayer->End();
-			}
 			m_Window->OnUpdate();
 		}
 	}

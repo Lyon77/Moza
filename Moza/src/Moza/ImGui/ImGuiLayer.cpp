@@ -15,6 +15,10 @@ namespace Moza
 	ImGuiLayer::ImGuiLayer()
 		: Layer("ImGuiLayer") {}
 
+	ImGuiLayer::ImGuiLayer(const std::string& name)
+	{
+	}
+
 
 	void ImGuiLayer::OnAttach()
 	{
@@ -65,6 +69,10 @@ namespace Moza
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplGlfw_Shutdown();
 		ImGui::DestroyContext();
+	}
+
+	void ImGuiLayer::OnImGuiRender()
+	{
 	}
 
 	void ImGuiLayer::Begin()

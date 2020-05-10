@@ -16,8 +16,8 @@ namespace Moza
 		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 		~OpenGLShader();
 
-		void Bind() const;
-		void UnBind() const;
+		virtual void Bind() const override;
+		virtual void UnBind() const override;
 
 		virtual void SetInt(const std::string& name, int value) override;
 		virtual void SetIntArray(const std::string& name, int* values, uint32_t count) override;
@@ -45,6 +45,6 @@ namespace Moza
 		void UploadUniformFloat4(const std::string& name, const glm::vec4& values);
 	private:
 		uint32_t m_RendererID;
-		std::string m_Name;
+		std::string m_Name, m_AssetPath;
 	};
 }

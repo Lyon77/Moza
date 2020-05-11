@@ -35,14 +35,34 @@ void Sandbox3D::OnAttach()
 	m_SimplePBRShader = Moza::Shader::Create("assets/shaders/simplepbr.glsl");
 	m_QuadShader = Moza::Shader::Create("assets/shaders/quad.glsl");
 	m_HDRShader = Moza::Shader::Create("assets/shaders/hdr.glsl");
-	m_Shader = Moza::Shader::Create("assets/shaders/Texture.glsl");
 	m_Mesh = Moza::CreateRef<Moza::Mesh>("assets/meshes/cerberus.fbx");
 	m_SphereMesh = Moza::CreateRef<Moza::Mesh>("assets/models/Sphere.fbx");
 
+	m_QuadShader->Bind();
+	m_QuadShader->SetInt("u_Texture", 0);
+	m_QuadShader->SetInt("u_AlbedoTexture", 1);
+	m_QuadShader->SetInt("u_NormalTexture", 2);
+	m_QuadShader->SetInt("u_MetalnessTexture", 3);
+	m_QuadShader->SetInt("u_RoughnessTexture", 4);
+	m_QuadShader->SetInt("u_EnvRadianceTex", 10);
+	m_QuadShader->SetInt("u_EnvIrradianceTex", 11);
+	m_QuadShader->SetInt("u_BRDFLUTTexture", 15);
+	m_QuadShader->UnBind();
+
+	m_SimplePBRShader->Bind();
+	m_SimplePBRShader->SetInt("u_Texture", 0);
+	m_SimplePBRShader->SetInt("u_AlbedoTexture", 1);
+	m_SimplePBRShader->SetInt("u_NormalTexture", 2);
+	m_SimplePBRShader->SetInt("u_MetalnessTexture", 3);
+	m_SimplePBRShader->SetInt("u_RoughnessTexture", 4);
+	m_SimplePBRShader->SetInt("u_EnvRadianceTex", 10);
+	m_SimplePBRShader->SetInt("u_EnvIrradianceTex", 11);
+	m_SimplePBRShader->SetInt("u_BRDFLUTTexture", 15);
+	m_SimplePBRShader->UnBind();
+
+	// Enviroment
 	m_EnvironmentCubeMap = Moza::TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Radiance.tga");
 	m_EnvironmentIrradiance = Moza::TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Irradiance.tga");
-	m_Test = Moza::Texture2D::Create("assets/textures/environments/Arches_E_PineTree_Radiance.tga");
-	
 	m_BRDFLUT = Moza::Texture2D::Create("assets/textures/BRDF_LUT.tga");
 
 	m_CheckerboardTex = Moza::Texture2D::Create("assets/textures/Checkerboard.png");
@@ -128,22 +148,8 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 		
 		Moza::RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);
 
-		//---------------------------------------------------------------
-
-		m_Shader->Bind();
-		m_Test->Bind();
-		m_VertexArray->Bind();
-		m_VertexBuffer->Bind();
-		m_IndexBuffer->Bind();
-
-		m_Shader->SetMat4("u_ViewProjection", viewProjection);
-		m_Shader->SetMat4("u_Transform", glm::mat4(1.0f));
-
-		Moza::RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);
-
-		//---------------------------------------------------------------
-
 		m_SimplePBRShader->Bind();
+		
 		m_SimplePBRShader->SetMat4("u_ViewProjectionMatrix", viewProjection);
 		m_SimplePBRShader->SetMat4("u_ModelMatrix", glm::mat4(1.0f));
 		m_SimplePBRShader->SetFloat3("u_AlbedoColor", m_AlbedoInput.Color);
@@ -183,7 +189,7 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 				m_SimplePBRShader->SetMat4("u_ModelMatrix", glm::translate(glm:: mat4(1.0f), glm::vec3(x, 0.0f, 0.0f)));
 				m_SimplePBRShader->SetFloat("u_Roughness", roughness);
 				m_SimplePBRShader->SetFloat("u_Metalness", 1.0f);
-				//m_SphereMesh->Render();
+				m_SphereMesh->Render();
 
 				roughness += 0.15f;
 				x += 22.0f;
@@ -198,7 +204,7 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 				m_SimplePBRShader->SetMat4("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 22.0f, 0.0f)));
 				m_SimplePBRShader->SetFloat("u_Roughness", roughness);
 				m_SimplePBRShader->SetFloat("u_Metalness", 0.0f);
-				//m_SphereMesh->Render();
+				m_SphereMesh->Render();
 
 				roughness += 0.15f;
 				x += 22.0f;

@@ -40,6 +40,7 @@ namespace Moza
 	{
 	public:
 		OpenGLTextureCube(const std::string& path);
+		OpenGLTextureCube(const std::vector<std::string> textures_faces);
 		virtual ~OpenGLTextureCube();
 
 		virtual TextureFormat GetFormat() const { return m_Format; }

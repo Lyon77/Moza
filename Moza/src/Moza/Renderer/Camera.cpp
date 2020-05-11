@@ -14,7 +14,7 @@
 namespace Moza
 {
 	Camera::Camera(const glm::mat4& projectionMatrix)
-		: m_ProjectionMatrix(projectionMatrix)
+		: m_ProjectionMatrix(projectionMatrix), m_ViewMatrix(glm::mat4(1.0f))
 	{
 		m_PanSpeed = 0.0015f;
 		m_RotationSpeed = 0.002f;

@@ -40,5 +40,6 @@ namespace Moza
 	{
 	public:
 		static Ref<TextureCube> Create(const std::string& path);
+		static Ref<TextureCube> Create(const std::vector<std::string> textures_faces);
 	};
 }

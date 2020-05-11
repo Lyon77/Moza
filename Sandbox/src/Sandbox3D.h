@@ -16,7 +16,6 @@ public:
 	void OnEvent(Moza::Event& e) override;
 
 private:
-	Moza::Ref<Moza::Shader> m_Shader;
 	Moza::Ref<Moza::Shader> m_PBRShader;
 	Moza::Ref<Moza::Shader> m_SimplePBRShader;
 	Moza::Ref<Moza::Shader> m_QuadShader;
@@ -24,7 +23,6 @@ private:
 	Moza::Ref<Moza::Mesh> m_Mesh;
 	Moza::Ref<Moza::Mesh> m_SphereMesh;
 	Moza::Ref<Moza::Texture2D> m_BRDFLUT;
-	Moza::Ref<Moza::Texture2D> m_Test;
 
 	Moza::Ref<Moza::Texture2D> m_CheckerboardTex;
 

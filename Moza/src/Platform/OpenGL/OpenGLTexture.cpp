@@ -53,7 +53,7 @@ namespace Moza
 		MZ_PROFILE_FUNCTION();
 
 		int width, height, channels;
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(false);
 		{
 			MZ_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
 
@@ -67,7 +67,7 @@ namespace Moza
 
 		if (srgb)
 		{
-			glGenTextures(1, &m_RendererID);
+			glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 			int levels = CalculateMipMapCount(m_Width, m_Height);
 			
 			glTextureStorage2D(m_RendererID, levels, GL_SRGB8, m_Width, m_Height);
@@ -82,10 +82,10 @@ namespace Moza
 			glGenTextures(1, &m_RendererID);
 			glBindTexture(GL_TEXTURE_2D, m_RendererID);
 
-			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 			glTexImage2D(GL_TEXTURE_2D, 0, MozaToOpenGLTextureFormat(m_Format), m_Width, m_Height, 0, srgb ? GL_SRGB8 : MozaToOpenGLTextureFormat(m_Format), GL_UNSIGNED_BYTE, m_ImageData);
 			glGenerateMipmap(GL_TEXTURE_2D);
@@ -209,6 +209,44 @@ namespace Moza
 			delete[] faces[i];
 
 		stbi_image_free(m_ImageData);
+	}
+
+	OpenGLTextureCube::OpenGLTextureCube(const std::vector<std::string> textures_faces)
+	{
+		int width, height, channels;
+		stbi_set_flip_vertically_on_load(false);
+
+		//load texture
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+
+		//texture parameters
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		//send to opengl
+		for (GLuint i = 0; i < textures_faces.size(); i++)
+		{
+			m_ImageData = stbi_load(textures_faces[i].c_str(), &width, &height, &channels, 4);
+
+			m_Width = width;
+			m_Height = height;
+			m_Format = TextureFormat::RGBA;
+
+			if (m_ImageData) {
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_ImageData);
+				stbi_image_free(m_ImageData);
+			}
+			else
+			{
+				stbi_image_free(m_ImageData);
+			}
+		}
+
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
 	OpenGLTextureCube::~OpenGLTextureCube()

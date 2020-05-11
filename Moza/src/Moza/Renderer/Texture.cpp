@@ -42,4 +42,16 @@ namespace Moza
 		MZ_CORE_ASSERT(false, "Unknown RendererAPI");
 		return nullptr;
 	}
+
+	Ref<TextureCube> TextureCube::Create(const std::vector<std::string> textures_faces)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLTextureCube>(textures_faces);
+		}
+
+		MZ_CORE_ASSERT(false, "Unknown RendererAPI");
+		return nullptr;
+	}
 }

@@ -129,17 +129,12 @@ namespace Moza
 	{
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(false);
-		{
-			MZ_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
-
-			m_ImageData = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb);
-		}
-		MZ_CORE_ASSERT(m_ImageData, "Failed to load image!");
+		m_ImageData = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb);
 
 		m_Width = width;
 		m_Height = height;
 		m_Format = TextureFormat::RGB;
-		
+
 		uint32_t faceWidth = m_Width / 4;
 		uint32_t faceHeight = m_Height / 3;
 		MZ_CORE_ASSERT(faceWidth == faceHeight, "Non-square faces!");
@@ -186,6 +181,7 @@ namespace Moza
 			faceIndex++;
 		}
 
+
 		glGenTextures(1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
 
@@ -193,6 +189,7 @@ namespace Moza
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 		auto format = MozaToOpenGLTextureFormat(m_Format);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, format, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faces[2]);
@@ -212,7 +209,6 @@ namespace Moza
 			delete[] faces[i];
 
 		stbi_image_free(m_ImageData);
-
 	}
 
 	OpenGLTextureCube::~OpenGLTextureCube()

@@ -24,6 +24,9 @@ private:
 	Moza::Ref<Moza::Mesh> m_Mesh;
 	Moza::Ref<Moza::Mesh> m_SphereMesh;
 	Moza::Ref<Moza::Texture2D> m_BRDFLUT;
+	Moza::Ref<Moza::Texture2D> m_Test;
+
+	Moza::Ref<Moza::Texture2D> m_CheckerboardTex;
 
 	struct AlbedoInput
 	{
@@ -58,6 +61,7 @@ private:
 	RoughnessInput m_RoughnessInput;
 
 	Moza::Ref<Moza::Framebuffer> m_Framebuffer, m_FinalPresentBuffer;
+	Moza::Ref<Moza::VertexArray> m_VertexArray;
 	Moza::Ref<Moza::VertexBuffer> m_VertexBuffer;
 	Moza::Ref<Moza::IndexBuffer> m_IndexBuffer;
 	Moza::Ref<Moza::TextureCube> m_EnvironmentCubeMap, m_EnvironmentIrradiance;

@@ -2,9 +2,9 @@
 #version 430
 			
 layout(location = 0) in vec3 a_Position;
-layout(location = 4) in float a_TexCoord;
+layout(location = 1) in vec2 a_TexCoord;
 
-out vec3 v_TexCoprd;
+out vec2 v_TexCoord;
 
 void main()
 {
@@ -18,7 +18,7 @@ void main()
 
 layout(location = 0) out vec4 color;
 
-in vec3 v_TexCoprd;
+in vec2 v_TexCoord;
 
 uniform sampler2D u_Texture;
 uniform float u_Exposure;
@@ -28,15 +28,16 @@ void main()
 	const float gamma = 2.2;
 	const float pureWhite = 1.0;
 
-	vec3 color = texture(u_Texture, v_TexCoord).rgb * u_Exposure;
+	vec3 texColor = texture(u_Texture, v_TexCoord).rgb * u_Exposure;
 
 	// Reinhard Tonemapping operator
-	float luminance = dot(color, vec3(0.2126, 0.7152, 0.0722));
+	float luminance = dot(texColor, vec3(0.2126, 0.7152, 0.0722));
 	float mappedLuminance = (luminance * (1.0 + luminance / (pureWhite * pureWhite))) / (1.0 * luminance);
 
 	// Scale color by ratio of average Luminances
-	vec3 mappedColor = (mappedLuminance / luminance) * color;
+	vec3 mappedColor = (mappedLuminance / luminance) * texColor;
 
 	// Gamma Correction
 	color = vec4(pow(mappedColor, vec3(1.0 / gamma)), 1.0);
+	color = vec4(texColor, 1.0);
 }

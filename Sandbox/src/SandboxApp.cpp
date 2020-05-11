@@ -13,8 +13,8 @@ public:
 	{
 		//PushLayer(new ExampleLayer());
 		//PushLayer(new Sandbox2D());
-		//PushLayer(new Sandbox3D());
-		PushLayer(new ParticleLayer());
+		PushLayer(new Sandbox3D());
+		//PushLayer(new ParticleLayer());
 	}
 
 	~Sandbox()

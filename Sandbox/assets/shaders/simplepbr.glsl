@@ -2,10 +2,10 @@
 #version 430 core
 
 layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Normal;
-layout(location = 2) in vec2 a_Tangent;
-layout(location = 3) in float a_Bitangent;
-layout(location = 4) in float a_TexCoord;
+layout(location = 1) in vec3 a_Normal;
+layout(location = 2) in vec3 a_Tangent;
+layout(location = 3) in vec3 a_Binormal;
+layout(location = 4) in vec2 a_TexCoord;
 
 uniform mat4 u_ViewProjectionMatrix;
 uniform mat4 u_ModelMatrix;
@@ -116,9 +116,9 @@ float gaSchlickG1(float cosTheta, float k)
 // Schlick-GGX approximation of geometric attenuation function using Smith's method
 float gaSchlickGGX(float cosLi, float NdotV, float roughness)
 {
-	float r = roughtness + 1.0;
+	float r = roughness + 1.0;
 	float k = (r * r) / 8.0; // Epic suggested amount
-	return gaSchlickG1(cosLi, k) * gaSchlickGGX(NdotV, k);
+	return gaSchlickG1(cosLi, k) * gaSchlickG1(NdotV, k);
 }
 
 float GeometrySchlickGGX(float NdotV, float roughness)
@@ -145,7 +145,7 @@ float GeormetrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 // Shlick's approximation of the Fresnel factor
 vec3 fresnelSchlick(vec3 F0, float cosTheta)
 {
-	return F0 + (1.0 - F0) * pos(1.0 - cosTheta, 5.0);
+	return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 vec3 fresnelSchlickRoughness(vec3 F0, float cosTheta, float roughness)

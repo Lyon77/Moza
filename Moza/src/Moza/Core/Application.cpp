@@ -13,6 +13,11 @@
 #include <Glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+
+#include <commdlg.h>
+
 namespace Moza
 {
 	Application* Application::s_Instance = nullptr;
@@ -80,6 +85,25 @@ namespace Moza
 
 	std::string Application::OpenFile(const std::string& filter) const
 	{
+		OPENFILENAMEA ofn;
+
+		CHAR szFile[260] = { 0 };
+
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
+		ofn.lStructSize = sizeof(OPENFILENAME);
+		ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)m_Window->GetNativeWindow());
+		ofn.lpstrFile = szFile;
+		ofn.nMaxFile = sizeof(szFile);
+		ofn.lpstrFilter = "All\0*.*\0";
+		ofn.nFilterIndex = 1;
+		ofn.lpstrFileTitle = NULL;
+		ofn.nMaxFileTitle = 0;
+		ofn.lpstrInitialDir = NULL;
+		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+		if (GetOpenFileNameA(&ofn) == TRUE)
+			return ofn.lpstrFile;
+
 		return std::string();
 	}
 

@@ -88,6 +88,7 @@ project "Moza"
 
 		defines
 		{
+            "HZ_BUILD_DLL"
 		}
 
 	filter "configurations:Debug"

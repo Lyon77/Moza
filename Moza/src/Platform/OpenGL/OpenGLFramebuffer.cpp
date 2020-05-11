@@ -55,10 +55,7 @@ void Moza::OpenGLFrameBuffer::Resize(uint32_t width, uint32_t height)
 
 	glGenTextures(1, &m_DepthAttachment);
 	glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
-	glTexImage2D(
-		GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, m_Width, m_Height, 0,
-		GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL
-	);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, m_Width, m_Height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
 

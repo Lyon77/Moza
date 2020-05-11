@@ -47,7 +47,7 @@ namespace Moza
 		: m_FilePath(filename)
 	{
 		LogStream::Initialize();
-
+		
 		MZ_CORE_INFO("Loading mesh: {0}", filename.c_str());
 
 		Assimp::Importer importer;
@@ -63,7 +63,7 @@ namespace Moza
 
 		m_Vertices.reserve(mesh->mNumVertices);
 
-		// Grab Vertices
+		// Extract vertices from model
 		for (size_t i = 0; i < m_Vertices.capacity(); i++)
 		{
 			Vertex vertex;
@@ -88,7 +88,7 @@ namespace Moza
 			{ ShaderDataType::Float3, "a_Normal" },
 			{ ShaderDataType::Float3, "a_Tangent" },
 			{ ShaderDataType::Float3, "a_Binormal" },
-			{ ShaderDataType::Float2, "a_Texcoord" }
+			{ ShaderDataType::Float2, "a_TexCoord" }
 		});
 
 		// Extract indices from model
@@ -99,6 +99,8 @@ namespace Moza
 			m_Indices.push_back({ mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] });
 		}
 
+		MZ_CORE_INFO(m_Indices.size());
+
 		m_IndexBuffer = IndexBuffer::Create((uint32_t*)m_Indices.data(), m_Indices.size() * 3); // IndexBuffer is always in uint32_t
 
 		m_VertexArray = VertexArray::Create();
@@ -108,6 +110,9 @@ namespace Moza
 
 	void Mesh::Render()
 	{
+		m_VertexArray->Bind();
+		m_VertexBuffer->Bind();
+		m_IndexBuffer->Bind();
 		RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount());
 	}
 }

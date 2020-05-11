@@ -267,6 +267,8 @@ namespace Moza
 			glDeleteShader(id);
 		}
 
+		m_RendererID = program;
+
 		// Bind default texture unit
 		UploadUniformInt("u_Texture", 0);
 

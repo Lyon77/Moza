@@ -2,6 +2,8 @@
 
 #include <imgui/imgui.h>
 
+#include <gl/GL.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -22,6 +24,84 @@ static void ImGuiShowHelpMarker(const char* desc)
 	}
 }
 
+enum class PropertyFlag
+{
+	None = 0, ColorProperty = 1
+};
+
+void Property(const std::string& name, bool& value)
+{
+	ImGui::Text(name.c_str());
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(-1);
+
+	std::string id = "##" + name;
+	ImGui::Checkbox(id.c_str(), &value);
+
+	ImGui::PopItemWidth();
+	ImGui::NextColumn();
+}
+
+void Property(const std::string& name, float& value, float min = -1.0f, float max = 1.0f, PropertyFlag flags = PropertyFlag::None)
+{
+	ImGui::Text(name.c_str());
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(-1);
+
+	std::string id = "##" + name;
+	ImGui::SliderFloat(id.c_str(), &value, min, max);
+
+	ImGui::PopItemWidth();
+	ImGui::NextColumn();
+}
+
+void Property(const std::string& name, glm::vec3& value, float min = -1.0f, float max = 1.0f, PropertyFlag flags = PropertyFlag::None)
+{
+	ImGui::Text(name.c_str());
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(-1);
+
+	std::string id = "##" + name;
+	if ((int)flags & (int)PropertyFlag::ColorProperty)
+		ImGui::ColorEdit3(id.c_str(), glm::value_ptr(value), ImGuiColorEditFlags_NoInputs);
+	else
+		ImGui::SliderFloat3(id.c_str(), glm::value_ptr(value), min, max);
+
+	ImGui::PopItemWidth();
+	ImGui::NextColumn();
+}
+
+void Property(const std::string& name, glm::vec3& value, PropertyFlag flags)
+{
+	Property(name, value, -1.0f, 1.0f, flags);
+}
+
+void Property(const std::string& name, glm::vec4& value, float min = -1.0f, float max = 1.0f, PropertyFlag flags = PropertyFlag::None)
+{
+	ImGui::Text(name.c_str());
+	ImGui::NextColumn();
+	ImGui::PushItemWidth(-1);
+
+	std::string id = "##" + name;
+	if ((int)flags & (int)PropertyFlag::ColorProperty)
+		ImGui::ColorEdit4(id.c_str(), glm::value_ptr(value), ImGuiColorEditFlags_NoInputs);
+	else
+		ImGui::SliderFloat4(id.c_str(), glm::value_ptr(value), min, max);
+
+	ImGui::PopItemWidth();
+	ImGui::NextColumn();
+}
+
+void Property(const std::string& name, glm::vec4& value, PropertyFlag flags)
+{
+	Property(name, value, -1.0f, 1.0f, flags);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+// Sandbox3D
+//////////////////////////////////////////////////////////////////////////////////
+
+
 Sandbox3D::Sandbox3D()
 	: m_ClearColor{ 0.1f, 0.1f, 0.1f, 1.0f }, m_Scene(Scene::Spheres),
 	m_Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f))
@@ -35,18 +115,12 @@ void Sandbox3D::OnAttach()
 	m_SimplePBRShader = Moza::Shader::Create("assets/shaders/simplepbr.glsl");
 	m_QuadShader = Moza::Shader::Create("assets/shaders/quad.glsl");
 	m_HDRShader = Moza::Shader::Create("assets/shaders/hdr.glsl");
+	m_SkyShader = Moza::Shader::Create("assets/shaders/skybox.glsl");
 	m_Mesh = Moza::CreateRef<Moza::Mesh>("assets/meshes/cerberus.fbx");
 	m_SphereMesh = Moza::CreateRef<Moza::Mesh>("assets/models/Sphere.fbx");
 
 	m_QuadShader->Bind();
 	m_QuadShader->SetInt("u_Texture", 0);
-	m_QuadShader->SetInt("u_AlbedoTexture", 1);
-	m_QuadShader->SetInt("u_NormalTexture", 2);
-	m_QuadShader->SetInt("u_MetalnessTexture", 3);
-	m_QuadShader->SetInt("u_RoughnessTexture", 4);
-	m_QuadShader->SetInt("u_EnvRadianceTex", 10);
-	m_QuadShader->SetInt("u_EnvIrradianceTex", 11);
-	m_QuadShader->SetInt("u_BRDFLUTTexture", 15);
 	m_QuadShader->UnBind();
 
 	m_SimplePBRShader->Bind();
@@ -96,7 +170,6 @@ void Sandbox3D::OnAttach()
 	// VertexArray
 	m_VertexArray = Moza::VertexArray::Create();
 
-	//The Quad
 	m_VertexBuffer = Moza::VertexBuffer::Create((float*)data, 4 * sizeof(QuadVertex));
 
 	m_VertexBuffer->SetLayout({
@@ -110,6 +183,79 @@ void Sandbox3D::OnAttach()
 
 	m_IndexBuffer = Moza::IndexBuffer::Create(indices, 6);
 	m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+
+	float skyboxVertices[] = {
+		// positions 
+
+		//Back
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+
+		 //Left
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+
+		//Right
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+
+		 //Front
+		 -1.0f, -1.0f,  1.0f,
+		 -1.0f,  1.0f,  1.0f,
+		  1.0f,  1.0f,  1.0f,
+		  1.0f, -1.0f,  1.0f,
+
+		  //Top
+		  -1.0f,  1.0f, -1.0f,
+		   1.0f,  1.0f, -1.0f,
+		   1.0f,  1.0f,  1.0f,
+		  -1.0f,  1.0f,  1.0f,
+
+		  //Bottom
+		  -1.0f, -1.0f, -1.0f,
+		  -1.0f, -1.0f,  1.0f,
+		   1.0f, -1.0f,  1.0f,
+		   1.0f, -1.0f, -1.0f
+	};
+
+	uint32_t skyBoxIndicies[] = {
+		0, 2, 1,
+		2, 0, 3,
+
+		4, 5, 6,
+		6, 7, 4,
+
+		8, 10, 9,
+		10, 8, 11,
+
+		12, 13, 14,
+		14, 15, 12,
+
+		16, 17, 18,
+		18, 19, 16,
+
+		20, 22, 21,
+		22, 20, 23
+	};
+
+	m_SkyVertexArray = Moza::VertexArray::Create();
+
+	m_SkyVertexBuffer = Moza::VertexBuffer::Create((float*)skyboxVertices, 3 * 4 * 6 * sizeof(float));
+
+	m_SkyVertexBuffer->SetLayout({
+		{ Moza::ShaderDataType::Float3, "a_Position" }
+	});
+
+	m_SkyVertexArray->AddVertexBuffer(m_SkyVertexBuffer);
+
+	m_SkyIndexBuffer = Moza::IndexBuffer::Create(skyBoxIndicies, 6 * 6);
+	m_SkyVertexArray->SetIndexBuffer(m_SkyIndexBuffer);
 
 	m_Light.Direction = { -0.5, -0.5, 1.0f };
 	m_Light.Radiance = { 1.0f, 1.0f, 1.0f };
@@ -129,24 +275,36 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 		MZ_PROFILE_SCOPE("Camera::OnUpdate");
 		m_Camera.Update();
 	}
-
-	auto viewProjection = m_Camera.GetProjectionMatrix() * m_Camera.GetViewMatrix();
 	
 	{
 		MZ_PROFILE_SCOPE("RendererDraw");
 
+		glm::mat4 viewProjection = m_Camera.GetProjectionMatrix() * m_Camera.GetViewMatrix();
+		
 		m_Framebuffer->Bind();
 		Moza::RendererCommand::SetClearColor({ m_ClearColor[0], m_ClearColor[1], m_ClearColor[2], m_ClearColor[3] });
 		Moza::RendererCommand::Clear();
 
+		
 		m_QuadShader->SetMat4("u_InverseVP", glm::inverse(viewProjection));
 		m_QuadShader->Bind();
-		m_EnvironmentIrradiance->Bind(0);
+		m_EnvironmentCubeMap->Bind(0);
 		m_VertexArray->Bind();
 		m_VertexBuffer->Bind();
 		m_IndexBuffer->Bind();
-		
+
 		Moza::RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);
+
+		/*glDepthFunc(GL_LEQUAL);
+		m_SkyShader->SetMat4("u_VP", viewProjection);
+		m_SkyShader->Bind();
+		m_EnvironmentCubeMap->Bind(0);
+		m_SkyVertexArray->Bind();
+		m_SkyVertexBuffer->Bind();
+		m_SkyIndexBuffer->Bind();
+		glDepthFunc(GL_LESS);
+		
+		Moza::RendererCommand::DrawIndexed(m_SkyVertexArray, m_SkyIndexBuffer->GetCount(), false);*/
 
 		m_SimplePBRShader->Bind();
 		
@@ -277,36 +435,28 @@ void Sandbox3D::OnImGuiRender()
 
 	// Editor Panel ------------------------------------------------------------------------------
 	ImGui::Begin("Settings");
-	/*
-	if (ImGui::TreeNode("Shaders"))
-	{
-		auto& shaders = Moza::Shader::s_AllShaders;
-		for (auto& shader : shaders)
-		{
-			if (ImGui::TreeNode(shader->GetName().c_str()))
-			{
-				std::string buttonName = "Reload##" + shader->GetName();
-				if (ImGui::Button(buttonName.c_str()))
-					shader->Reload();
-				ImGui::TreePop();
-			}
-		}
-		ImGui::TreePop();
-	}
-	*/
+	ImGui::ColorEdit4("Clear Color", m_ClearColor);
 
+	ImGui::Begin("Model");
 	ImGui::RadioButton("Spheres", (int*)&m_Scene, (int)Scene::Spheres);
 	ImGui::SameLine();
 	ImGui::RadioButton("Model", (int*)&m_Scene, (int)Scene::Model);
+	ImGui::End();
 
-	ImGui::ColorEdit4("Clear Color", m_ClearColor);
+	ImGui::Begin("Environment");
+	ImGui::Columns(2);
+	ImGui::AlignTextToFramePadding();
 
-	ImGui::SliderFloat3("Light Dir", glm::value_ptr(m_Light.Direction), -1, 1);
-	ImGui::ColorEdit3("Light Radiance", glm::value_ptr(m_Light.Radiance));
-	ImGui::SliderFloat("Light Multiplier", &m_LightMultiplier, 0.0f, 5.0f);
-	ImGui::SliderFloat("Exposure", &m_Exposure, 0.0f, 10.0f);
-	auto cameraForward = m_Camera.GetForwardDirection();
-	ImGui::Text("Camera Forward: %.2f, %.2f, %.2f", cameraForward.x, cameraForward.y, cameraForward.z);
+	Property("Light Direction", m_Light.Direction);
+	Property("Light Radiance", m_Light.Radiance, PropertyFlag::ColorProperty);
+	Property("Light Multiplier", m_LightMultiplier, 0.0f, 5.0f);
+	Property("Exposure", m_Exposure, 0.0f, 5.0f);
+
+	Property("Radiance Prefiltering", m_RadiancePrefilter);
+	Property("Env Map Rotation", m_EnvMapRotation, -360.0f, 360.0f);
+
+	ImGui::Columns(1);
+	ImGui::End();
 
 	ImGui::Separator();
 	{
@@ -322,12 +472,6 @@ void Sandbox3D::OnImGuiRender()
 				m_Mesh.reset(new Moza::Mesh(filename));
 		}
 	}
-	ImGui::Separator();
-
-	ImGui::Text("Shader Parameters");
-	ImGui::Checkbox("Radiance Prefiltering", &m_RadiancePrefilter);
-	ImGui::SliderFloat("Env Map Rotation", &m_EnvMapRotation, -360.0f, 360.0f);
-
 	ImGui::Separator();
 
 	// Textures ------------------------------------------------------------------------
@@ -463,6 +607,24 @@ void Sandbox3D::OnImGuiRender()
 	}
 
 	ImGui::Separator();
+
+	/*
+	if (ImGui::TreeNode("Shaders"))
+	{
+		auto& shaders = Moza::Shader::s_AllShaders;
+		for (auto& shader : shaders)
+		{
+			if (ImGui::TreeNode(shader->GetName().c_str()))
+			{
+				std::string buttonName = "Reload##" + shader->GetName();
+				if (ImGui::Button(buttonName.c_str()))
+					shader->Reload();
+				ImGui::TreePop();
+			}
+		}
+		ImGui::TreePop();
+	}
+	*/
 
 	ImGui::End();
 

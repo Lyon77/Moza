@@ -64,6 +64,13 @@ private:
 	Moza::Ref<Moza::IndexBuffer> m_IndexBuffer;
 	Moza::Ref<Moza::TextureCube> m_EnvironmentCubeMap, m_EnvironmentIrradiance;
 
+	//------------------------------
+	Moza::Ref<Moza::Shader> m_SkyShader;
+	Moza::Ref<Moza::VertexArray> m_SkyVertexArray;
+	Moza::Ref<Moza::VertexBuffer> m_SkyVertexBuffer;
+	Moza::Ref<Moza::IndexBuffer> m_SkyIndexBuffer;
+	//-------------------------------
+
 	Moza::Camera m_Camera;
 
 	float m_ClearColor[4];

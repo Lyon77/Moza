@@ -132,8 +132,7 @@ project "Sandbox"
 
 	links
 	{
-		"Moza",
-		"Moza/vendor/assimp/win64/assimp.lib"
+		"Moza"
 	}
 
 	filter "system:windows"
@@ -149,12 +148,28 @@ project "Sandbox"
 			"/nodefaultlib:libcmt.lib"
 		}
 
+		links
+		{
+			"Moza/vendor/assimp/bin/Debug/assimp-vc141-mtd.lib"
+		}
+
+
 	filter "configurations:Release"
 		defines "MZ_RELEASE"
 		runtime "Release"
 		optimize "on"
 
+		links
+		{
+			"Moza/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
+		}
+
 	filter "configurations:Dist"
 		defines "MZ_DIST"
 		runtime "Release"
 		optimize "on"
+
+		links
+		{
+			"Moza/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
+		}

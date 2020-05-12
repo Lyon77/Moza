@@ -273,7 +273,7 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 	// update Camera
 	{
 		MZ_PROFILE_SCOPE("Camera::OnUpdate");
-		m_Camera.Update();
+		m_Camera.Update(ts);
 	}
 	
 	{

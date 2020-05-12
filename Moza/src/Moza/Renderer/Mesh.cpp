@@ -99,8 +99,6 @@ namespace Moza
 			m_Indices.push_back({ mesh->mFaces[i].mIndices[0], mesh->mFaces[i].mIndices[1], mesh->mFaces[i].mIndices[2] });
 		}
 
-		MZ_CORE_INFO(m_Indices.size());
-
 		m_IndexBuffer = IndexBuffer::Create((uint32_t*)m_Indices.data(), m_Indices.size() * 3); // IndexBuffer is always in uint32_t
 
 		m_VertexArray = VertexArray::Create();

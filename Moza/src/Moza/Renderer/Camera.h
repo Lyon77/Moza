@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Moza/Core/Timestep.h>
+
 #include <glm/glm.hpp>
 
 namespace Moza
@@ -10,7 +12,7 @@ namespace Moza
 		Camera(const glm::mat4& projectionMatrix);
 
 		void Focus();
-		void Update();
+		void Update(Timestep ts);
 
 		inline float GetDistance() const { return m_Distance; }
 		inline void SetDistance(float distance) { m_Distance = distance; }

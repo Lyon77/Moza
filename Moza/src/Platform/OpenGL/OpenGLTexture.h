@@ -9,7 +9,7 @@ namespace Moza
 	class OpenGLTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(TextureFormat format, uint32_t width, uint32_t height);
+		OpenGLTexture2D(TextureFormat format, uint32_t width, uint32_t height, TextureWrap wrap);
 		OpenGLTexture2D(const std::string& path, bool srgb);
 		virtual ~OpenGLTexture2D();
 
@@ -17,12 +17,17 @@ namespace Moza
 		virtual uint32_t GetWidth() const override { return m_Width; }
 		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual const std::string& GetPath() const override { return m_Path; }
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
 		virtual void SetData(void* data, uint32_t size) override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
 
-		virtual uint32_t GetRendererID() const override { return m_RendererID; }
+		virtual void Lock() override;
+		virtual void Unlock() override;
+
+		virtual void Resize(uint32_t width, uint32_t height) override;
+		virtual Buffer GetWriteableBuffer() override;
 
 		virtual bool operator==(const Texture& other) const override
 		{
@@ -31,9 +36,11 @@ namespace Moza
 	private:
 		std::string m_Path;
 		TextureFormat m_Format;
+		TextureWrap m_Wrap;
 		uint32_t m_Width, m_Height;
 		uint32_t m_RendererID;
-		unsigned char* m_ImageData;
+		Buffer m_ImageData;
+		bool m_Locked = false;
 	};
 
 	class OpenGLTextureCube : public TextureCube

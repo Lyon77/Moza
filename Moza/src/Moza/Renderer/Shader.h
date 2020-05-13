@@ -1,7 +1,10 @@
 #pragma once
 
-#include <string>
+#include "Moza/Core/Buffer.h"
 
+#include "Moza/Renderer/ShaderUniform.h"
+
+#include <string>
 #include <glm/glm.hpp>
 
 namespace Moza
@@ -9,7 +12,12 @@ namespace Moza
 	class Shader
 	{
 	public:
+		using ShaderReloadedCallback = std::function<void()>;
+
 		virtual ~Shader() = default;
+
+		virtual void Reload() = 0;
+		virtual void AddShaderReloadedCallback(const ShaderReloadedCallback& callback) = 0;
 
 		virtual void Bind() const = 0;
 		virtual void UnBind() const = 0;
@@ -24,8 +32,20 @@ namespace Moza
 
 		virtual const std::string& GetName() const = 0;
 
+		virtual void SetVSMaterialUniformBuffer(Buffer buffer) = 0;
+		virtual void SetPSMaterialUniformBuffer(Buffer buffer) = 0;
+
+		virtual const ShaderUniformBufferList& GetVSRendererUniforms() const = 0;
+		virtual const ShaderUniformBufferList& GetPSRendererUniforms() const = 0;
+		virtual const ShaderUniformBufferDeclaration& GetVSMaterialUniformBuffer() const = 0;
+		virtual const ShaderUniformBufferDeclaration& GetPSMaterialUniformBuffer() const = 0;
+
+		virtual const ShaderResourceList& GetResources() const = 0;
+
+		//// Temporary, before we have an asset manager
+		//static std::vector<Shader*> s_AllShaders;
+
 		static Ref<Shader> Create(const std::string& filePath);
-		static Ref<Shader> Create(const std::string& name, std::string & vertexSrc, const std::string & fragmentSrc);
 	};
 
 	class ShaderLibrary

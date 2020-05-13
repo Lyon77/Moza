@@ -18,18 +18,6 @@ namespace Moza
 		return nullptr;
 	}
 
-	Ref<Shader> Shader::Create(const std::string& name, std::string & vertexSrc, const std::string & fragmentSrc)
-	{
-		switch (Renderer::GetAPI())
-		{
-			case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
-		}
-
-		MZ_CORE_ASSERT(false, "Unknown RendererAPI");
-		return nullptr;
-	}
-
 	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
 	{
 		MZ_CORE_ASSERT(!Exists(name), "Shader already exists!");

@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="src\Moza.h" />
     <ClInclude Include="src\Moza\Core\Application.h" />
+    <ClInclude Include="src\Moza\Core\Buffer.h" />
     <ClInclude Include="src\Moza\Core\Core.h" />
     <ClInclude Include="src\Moza\Core\EntryPoint.h" />
     <ClInclude Include="src\Moza\Core\Input.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="src\Moza\Renderer\Camera.h" />
     <ClInclude Include="src\Moza\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Moza\Renderer\Material.h" />
     <ClInclude Include="src\Moza\Renderer\Mesh.h" />
     <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Moza\Renderer\OrthographicCameraController.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="src\Moza\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Moza\Renderer\RendererCommand.h" />
     <ClInclude Include="src\Moza\Renderer\Shader.h" />
+    <ClInclude Include="src\Moza\Renderer\ShaderUniform.h" />
     <ClInclude Include="src\Moza\Renderer\Texture.h" />
     <ClInclude Include="src\Moza\Renderer\VertexArray.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
@@ -183,6 +186,7 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShaderUniform.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
@@ -570,6 +574,7 @@
     <ClCompile Include="src\Moza\Renderer\Camera.cpp" />
     <ClCompile Include="src\Moza\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Moza\Renderer\GraphicsContext.cpp" />
+    <ClCompile Include="src\Moza\Renderer\Material.cpp" />
     <ClCompile Include="src\Moza\Renderer\Mesh.cpp" />
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Moza\Renderer\OrthographicCameraController.cpp" />
@@ -586,6 +591,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShaderUniform.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />

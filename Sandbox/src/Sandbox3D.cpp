@@ -123,6 +123,10 @@ void Sandbox3D::OnAttach()
 	m_QuadShader->SetInt("u_Texture", 0);
 	m_QuadShader->UnBind();
 
+	m_HDRShader->Bind();
+	m_HDRShader->SetInt("u_Texture", 0);
+	m_HDRShader->UnBind();
+
 	m_SimplePBRShader->Bind();
 	m_SimplePBRShader->SetInt("u_Texture", 0);
 	m_SimplePBRShader->SetInt("u_AlbedoTexture", 1);
@@ -286,8 +290,8 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 		Moza::RendererCommand::Clear();
 
 		
-		m_QuadShader->SetMat4("u_InverseVP", glm::inverse(viewProjection));
 		m_QuadShader->Bind();
+		m_QuadShader->SetMat4("u_InverseVP", glm::inverse(viewProjection));
 		m_EnvironmentCubeMap->Bind(0);
 		m_VertexArray->Bind();
 		m_VertexBuffer->Bind();

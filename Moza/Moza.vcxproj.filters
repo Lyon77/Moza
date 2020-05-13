@@ -1296,6 +1296,10 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Material.h" />
+    <ClInclude Include="src\Moza\Renderer\ShaderUniform.h" />
+    <ClInclude Include="src\Moza\Core\Buffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShaderUniform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Core\Application.cpp">
@@ -1397,5 +1401,7 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Material.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShaderUniform.cpp" />
   </ItemGroup>
 </Project>

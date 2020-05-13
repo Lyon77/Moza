@@ -29,17 +29,18 @@ namespace Moza
 	//////////////////////////////////////////////////////////////////////////////////
 
 
-	OpenGLTexture2D::OpenGLTexture2D(TextureFormat format, uint32_t width, uint32_t height)
-		: m_Format(format), m_Width(width), m_Height(height)
+	OpenGLTexture2D::OpenGLTexture2D(TextureFormat format, uint32_t width, uint32_t height, TextureWrap wrap)
+		: m_Format(format), m_Width(width), m_Height(height), m_Wrap(wrap)
 	{
 		MZ_PROFILE_FUNCTION();
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 
-		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
-		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		GLenum textureWrap = m_Wrap == TextureWrap::Clamp ? GL_CLAMP_TO_EDGE : GL_REPEAT;
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, textureWrap);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, textureWrap);
 
 		glTextureStorage2D(m_RendererID, 1, GL_RGBA8, m_Width, m_Height); // Check the RGBA8
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -57,7 +58,7 @@ namespace Moza
 		{
 			MZ_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
 
-			m_ImageData = stbi_load(path.c_str(), &width, &height, &channels, srgb ? STBI_rgb : STBI_rgb_alpha);
+			m_ImageData.Data = stbi_load(path.c_str(), &width, &height, &channels, srgb ? STBI_rgb : STBI_rgb_alpha);
 		}
 		MZ_CORE_ASSERT(m_ImageData, "Failed to load image!");
 
@@ -74,7 +75,7 @@ namespace Moza
 			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, levels > 1 ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, GL_RGB, GL_UNSIGNED_BYTE, m_ImageData);
+			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, GL_RGB, GL_UNSIGNED_BYTE, m_ImageData.Data);
 			glGenerateTextureMipmap(m_RendererID);
 		}
 		else
@@ -87,13 +88,13 @@ namespace Moza
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-			glTexImage2D(GL_TEXTURE_2D, 0, MozaToOpenGLTextureFormat(m_Format), m_Width, m_Height, 0, srgb ? GL_SRGB8 : MozaToOpenGLTextureFormat(m_Format), GL_UNSIGNED_BYTE, m_ImageData);
+			glTexImage2D(GL_TEXTURE_2D, 0, MozaToOpenGLTextureFormat(m_Format), m_Width, m_Height, 0, srgb ? GL_SRGB8 : MozaToOpenGLTextureFormat(m_Format), GL_UNSIGNED_BYTE, m_ImageData.Data);
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		stbi_image_free(m_ImageData);
+		stbi_image_free(m_ImageData.Data);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
@@ -118,6 +119,33 @@ namespace Moza
 		MZ_PROFILE_FUNCTION();
 
 		glBindTextureUnit(slot, m_RendererID);
+	}
+
+	void OpenGLTexture2D::Lock()
+	{
+		m_Locked = true;
+	}
+
+	void OpenGLTexture2D::Unlock()
+	{
+		m_Locked = false;
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, MozaToOpenGLTextureFormat(m_Format), GL_UNSIGNED_BYTE, m_ImageData.Data);
+	}
+
+	void OpenGLTexture2D::Resize(uint32_t width, uint32_t height)
+	{
+		MZ_CORE_ASSERT(m_Locked, "Texture must be locked!");
+
+		m_ImageData.Allocate(width * height * Texture::GetBPP(m_Format));
+#if MZ_DEBUG
+		m_ImageData.ZeroInitialize();
+#endif
+	}
+
+	Buffer OpenGLTexture2D::GetWriteableBuffer()
+	{
+		MZ_CORE_ASSERT(m_Locked, "Texture must be locked!");
+		return m_ImageData;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -260,8 +288,7 @@ namespace Moza
 	{
 		MZ_PROFILE_FUNCTION();
 
-		glActiveTexture(GL_TEXTURE0 + slot);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+		glBindTextureUnit(slot, m_RendererID);
 	}
 
 }

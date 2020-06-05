@@ -144,6 +144,9 @@
     <ClInclude Include="src\Moza\Renderer\Shader.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\SubTexture2D.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Texture.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
@@ -1284,7 +1287,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Moza\Renderer\SubTexture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Core\Application.cpp">
@@ -1338,6 +1340,9 @@
     <ClCompile Include="src\Moza\Renderer\Shader.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\SubTexture2D.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Texture.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
@@ -1374,6 +1379,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Moza\Renderer\SubTexture2D.cpp" />
   </ItemGroup>
 </Project>

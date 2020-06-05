@@ -61,14 +61,14 @@ namespace Moza
 		dispatcher.Dispatch<WindowResizeEvent>(MZ_BIND_EVENT_FN(Application::OnWindowResize));
 
 		//events are triggered from the last layer to the first
-		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin(); )
+		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{
-			//REWORD this line
-			(*--it)->OnEvent(e);
-
 			//if a layer interacts with event, make sure other layers don't interact with it
 			if (e.Handled)
 				break;
+
+			//REWORD this line
+			(*--it)->OnEvent(e);
 		}
 	}
 
@@ -103,6 +103,11 @@ namespace Moza
 			}
 			m_Window->OnUpdate();
 		}
+	}
+
+	void Application::Close()
+	{
+		m_Running = false;
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)

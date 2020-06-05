@@ -28,6 +28,7 @@
 #include "Moza/Renderer/Texture.h"
 #include "Moza/Renderer/VertexArray.h"
 #include "Moza/Renderer/Mesh.h"
+#include "Moza/Renderer/Material.h"
 
 #include "Moza/Renderer/Camera.h"
 #include "Moza/Renderer/OrthographicCamera.h"

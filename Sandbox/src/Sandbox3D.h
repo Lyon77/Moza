@@ -20,11 +20,19 @@ private:
 	Moza::Ref<Moza::Shader> m_SimplePBRShader;
 	Moza::Ref<Moza::Shader> m_QuadShader;
 	Moza::Ref<Moza::Shader> m_HDRShader;
+	Moza::Ref<Moza::Shader> m_GridShader;
 	Moza::Ref<Moza::Mesh> m_Mesh;
-	Moza::Ref<Moza::Mesh> m_SphereMesh;
+	Moza::Ref<Moza::Mesh> m_SphereMesh, m_PlaneMesh;
 	Moza::Ref<Moza::Texture2D> m_BRDFLUT;
 
 	Moza::Ref<Moza::Texture2D> m_CheckerboardTex;
+
+	Moza::Ref<Moza::Material> m_PBRMaterial;
+	std::vector<Moza::Ref<Moza::MaterialInstance>> m_MetalSphereMaterialInstances;
+	std::vector<Moza::Ref<Moza::MaterialInstance>> m_DielectricSphereMaterialInstances;
+
+	float m_GridScale = 16.025f, m_GridSize = 0.025f;
+	float m_MeshScale = 1.0f;
 
 	struct AlbedoInput
 	{

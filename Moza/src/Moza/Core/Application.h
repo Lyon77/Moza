@@ -42,6 +42,7 @@ namespace Moza
 		bool m_Minimized = false;
 		LayerStack m_LayerStack;
 		float m_LastFrameTime = 0.0f;
+		Timestep m_TimeStep;
 
 		static Application* s_Instance;
 	};

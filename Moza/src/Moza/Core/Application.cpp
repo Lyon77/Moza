@@ -75,6 +75,7 @@ namespace Moza
 		ImGui::Text("Vendor: %s", vendor.c_str());
 		ImGui::Text("Renderer: %s", renderer.c_str());
 		ImGui::Text("Version: %s", version.c_str());
+		ImGui::Text("Frame Time: %.2fms\n", m_TimeStep.GetMilliseconds());
 		ImGui::End();
 
 		for (Layer* layer : m_LayerStack)
@@ -136,7 +137,7 @@ namespace Moza
 			MZ_PROFILE_SCOPE("RunLoop");
 
 			float time = (float) glfwGetTime(); // Platform::GetTime() in the future
-			Timestep timestep = time - m_LastFrameTime;
+			m_TimeStep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
 			if (!m_Minimized)
@@ -145,7 +146,7 @@ namespace Moza
 
 				//update each layer from begining to end
 				for (Layer* layer : m_LayerStack)
-					layer->OnUpdate(timestep);
+					layer->OnUpdate(m_TimeStep);
 			}
 
 			RenderImGui();

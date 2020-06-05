@@ -103,7 +103,7 @@ void Property(const std::string& name, glm::vec4& value, PropertyFlag flags)
 
 
 Sandbox3D::Sandbox3D()
-	: m_ClearColor{ 0.1f, 0.1f, 0.1f, 1.0f }, m_Scene(Scene::Spheres),
+	: m_ClearColor{ 0.1f, 0.1f, 0.1f, 1.0f }, m_Scene(Scene::Model),
 	m_Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f))
 {
 }
@@ -115,9 +115,12 @@ void Sandbox3D::OnAttach()
 	m_SimplePBRShader = Moza::Shader::Create("assets/shaders/simplepbr.glsl");
 	m_QuadShader = Moza::Shader::Create("assets/shaders/quad.glsl");
 	m_HDRShader = Moza::Shader::Create("assets/shaders/hdr.glsl");
+	m_GridShader = Moza::Shader::Create("assets/shaders/grid.glsl");
 	m_SkyShader = Moza::Shader::Create("assets/shaders/skybox.glsl");
-	m_Mesh = Moza::CreateRef<Moza::Mesh>("assets/meshes/cerberus.fbx");
-	m_SphereMesh = Moza::CreateRef<Moza::Mesh>("assets/models/Sphere.fbx");
+	
+	m_Mesh = Moza::CreateRef<Moza::Mesh>("assets/models/m1911/m1911.fbx");
+	m_SphereMesh = Moza::CreateRef<Moza::Mesh>("assets/models/Sphere1m.fbx");
+	m_PlaneMesh = Moza::CreateRef<Moza::Mesh>("assets/models/Plane1m.fbx");
 
 	m_QuadShader->Bind();
 	m_QuadShader->SetInt("u_Texture", 0);
@@ -148,8 +151,36 @@ void Sandbox3D::OnAttach()
 	m_Framebuffer = Moza::Framebuffer::Create(1280, 720, Moza::FramebufferFormat::RGBA16F);
 	m_FinalPresentBuffer = Moza::Framebuffer::Create(1280, 720, Moza::FramebufferFormat::RGBA8);
 
+	m_PBRMaterial = Moza::CreateRef<Moza::Material>(m_SimplePBRShader);
+
 	// Quad
-	float x = -1, y = -1;
+	float x = -4.0f, y = -1.0f;
+	float roughness = 0.0f;
+	for (int i = 0; i < 8; i++)
+	{
+		Moza::Ref<Moza::MaterialInstance> mi = Moza::CreateRef<Moza::MaterialInstance>(m_PBRMaterial);
+		mi->Set("u_Metalness", 1.0f);
+		mi->Set("u_Roughness", roughness);
+		mi->Set("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, 0.0f)));
+		x += 1.1f;
+		roughness += 0.15f;
+		m_MetalSphereMaterialInstances.push_back(mi);
+	}
+
+	x = -4.0f;
+	roughness = 0.0f;
+	for (int i = 0; i < 8; i++)
+	{
+		Moza::Ref<Moza::MaterialInstance> mi = Moza::CreateRef<Moza::MaterialInstance>(m_PBRMaterial);
+		mi->Set("u_Metalness", 1.0f);
+		mi->Set("u_Roughness", roughness);
+		mi->Set("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 1.2f, 0.0f)));
+		x += 1.1f;
+		roughness += 0.15f;
+		m_DielectricSphereMaterialInstances.push_back(mi);
+	}
+
+	x = -1;
 	float width = 2, height = 2;
 	struct QuadVertex
 	{
@@ -289,13 +320,14 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 		Moza::RendererCommand::SetClearColor({ m_ClearColor[0], m_ClearColor[1], m_ClearColor[2], m_ClearColor[3] });
 		Moza::RendererCommand::Clear();
 
+		// TODO:
+		// Renderer::BeginScene(m_Camera);
+		// Renderer::EndScene();
 		
 		m_QuadShader->Bind();
 		m_QuadShader->SetMat4("u_InverseVP", glm::inverse(viewProjection));
 		m_EnvironmentCubeMap->Bind(0);
 		m_VertexArray->Bind();
-		m_VertexBuffer->Bind();
-		m_IndexBuffer->Bind();
 
 		Moza::RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);
 
@@ -340,42 +372,88 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 		if (m_RoughnessInput.TextureMap)
 			m_RoughnessInput.TextureMap->Bind(4);
 
+		/*m_SimplePBRShader->Bind();
+		m_PBRMaterial->Set("u_ViewProjectionMatrix", viewProjection);
+		m_PBRMaterial->Set("u_ModelMatrix", glm::mat4(1.0f));
+		m_PBRMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
+		m_PBRMaterial->Set("u_Metalness", m_MetalnessInput.Value);
+		m_PBRMaterial->Set("u_Roughness", m_RoughnessInput.Value);
+		m_PBRMaterial->Set("lights.Direction", m_Light.Direction);
+		m_PBRMaterial->Set("lights.Radiance", m_Light.Radiance * m_LightMultiplier);
+		m_PBRMaterial->Set("u_CameraPosition", m_Camera.GetPosition());
+		m_PBRMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
+		m_PBRMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		m_PBRMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		m_PBRMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		m_PBRMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		m_PBRMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
+
+		m_PBRMaterial->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
+		m_PBRMaterial->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
+		m_PBRMaterial->Set("u_BRDFLUTTexture", m_BRDFLUT);
+
+		if (m_AlbedoInput.TextureMap)
+			m_PBRMaterial->Set("u_AlbedoTexture", m_AlbedoInput.TextureMap);
+		if (m_NormalInput.TextureMap)
+			m_PBRMaterial->Set("u_NormalTexture", m_NormalInput.TextureMap);
+		if (m_MetalnessInput.TextureMap)
+			m_PBRMaterial->Set("u_MetalnessTexture", m_MetalnessInput.TextureMap);
+		if (m_RoughnessInput.TextureMap)
+			m_PBRMaterial->Set("u_RoughnessTexture", m_RoughnessInput.TextureMap);*/
+
 		if (m_Scene == Scene::Spheres)
 		{
 			// Metals
-			float roughness = 0.0f;
-			float x = -88.0f;
+			//float roughness = 0.0f;
+			//float x = -88.0f;
 
 			for (int i = 0; i < 8; i++)
 			{
-				m_SimplePBRShader->SetMat4("u_ModelMatrix", glm::translate(glm:: mat4(1.0f), glm::vec3(x, 0.0f, 0.0f)));
-				m_SimplePBRShader->SetFloat("u_Roughness", roughness);
-				m_SimplePBRShader->SetFloat("u_Metalness", 1.0f);
-				m_SphereMesh->Render();
-
-				roughness += 0.15f;
-				x += 22.0f;
+				//m_SimplePBRShader->SetMat4("u_ModelMatrix", glm::translate(glm:: mat4(1.0f), glm::vec3(x, 0.0f, 0.0f)));
+				//m_SimplePBRShader->SetFloat("u_Roughness", roughness);
+				//m_SimplePBRShader->SetFloat("u_Metalness", 1.0f);
+				//m_SphereMesh->Render(ts, m_SimplePBRShader.get());
+				//
+				//roughness += 0.15f;
+				//x += 22.0f;
+				m_MetalSphereMaterialInstances[i]->Bind();
+				m_SphereMesh->Render(ts, m_SimplePBRShader.get());
 			}
 
 			// Dielectrics
-			roughness = 0.0f;
-			x = -88.0f;
+			//roughness = 0.0f;
+			//x = -88.0f;
 
 			for (int i = 0; i < 8; i++)
 			{
-				m_SimplePBRShader->SetMat4("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 22.0f, 0.0f)));
-				m_SimplePBRShader->SetFloat("u_Roughness", roughness);
-				m_SimplePBRShader->SetFloat("u_Metalness", 0.0f);
-				m_SphereMesh->Render();
+				//m_SimplePBRShader->SetMat4("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 22.0f, 0.0f)));
+				//m_SimplePBRShader->SetFloat("u_Roughness", roughness);
+				//m_SimplePBRShader->SetFloat("u_Metalness", 0.0f);
+				//m_SphereMesh->Render(ts, m_SimplePBRShader.get());
+				//
+				//roughness += 0.15f;
+				//x += 22.0f;
 
-				roughness += 0.15f;
-				x += 22.0f;
+				m_DielectricSphereMaterialInstances[i]->Bind();
+				m_SphereMesh->Render(ts, m_SimplePBRShader.get());
 			}
 		}
 		else if (m_Scene == Scene::Model)
 		{
-			m_Mesh->Render();
+			//m_Mesh->Render(ts, m_SimplePBRShader.get());
+			if (m_Mesh)
+			{
+				m_PBRMaterial->Bind();
+				m_Mesh->Render(ts, m_SimplePBRShader.get());
+			}
+
 		}
+
+		m_GridShader->Bind();
+		m_GridShader->SetMat4("u_MVP", viewProjection * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+		m_GridShader->SetFloat("u_Scale", m_GridScale);
+		m_GridShader->SetFloat("u_Res", m_GridSize);
+		m_PlaneMesh->Render(ts, m_GridShader.get());
 
 		m_Framebuffer->Unbind();
 
@@ -455,6 +533,8 @@ void Sandbox3D::OnImGuiRender()
 	Property("Light Radiance", m_Light.Radiance, PropertyFlag::ColorProperty);
 	Property("Light Multiplier", m_LightMultiplier, 0.0f, 5.0f);
 	Property("Exposure", m_Exposure, 0.0f, 5.0f);
+
+	Property("Mesh Scale", m_MeshScale, 0.0f, 2.0f);
 
 	Property("Radiance Prefiltering", m_RadiancePrefilter);
 	Property("Env Map Rotation", m_EnvMapRotation, -360.0f, 360.0f);
@@ -672,6 +752,9 @@ void Sandbox3D::OnImGuiRender()
 	}
 
 	ImGui::End();
+
+	if (m_Mesh)
+		m_Mesh->OnImGuiRender();
 
 }
 

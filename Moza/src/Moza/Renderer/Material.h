@@ -21,10 +21,10 @@ namespace Moza
 		void Set(const std::string& name, const T& value)
 		{
 			auto decl = FindUniformDeclaration(name);
-			// HZ_CORE_ASSERT(decl, "Could not find uniform with name '{0}'", name);
-			MZ_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
+			MZ_CORE_ASSERT(decl, "Could not find uniform with name '{0}'", name);
+			//MZ_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
 			auto& buffer = GetUniformBufferTarget(decl);
-			buffer.Write((byte*)&value, decl->GetSize(), decl->GetOffset());
+			buffer.Write((unsigned char*)&value, decl->GetSize(), decl->GetOffset());
 
 			for (auto mi : m_MaterialInstances)
 				mi->OnMaterialValueUpdated(decl);
@@ -83,9 +83,9 @@ namespace Moza
 		{
 			auto decl = m_Material->FindUniformDeclaration(name);
 			// HZ_CORE_ASSERT(decl, "Could not find uniform with name '{0}'", name);
-			HZ_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
+			MZ_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
 			auto& buffer = GetUniformBufferTarget(decl);
-			buffer.Write((byte*)&value, decl->GetSize(), decl->GetOffset());
+			buffer.Write((unsigned char*)&value, decl->GetSize(), decl->GetOffset());
 
 			m_OverriddenValues.insert(name);
 		}

@@ -2,7 +2,7 @@
 #version 430
 
 layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec2 a_TexCoord;
+layout(location = 4) in vec2 a_TexCoord;
 
 uniform mat4 u_MVP;
 
@@ -21,18 +21,23 @@ void main()
 
 layout(location = 0) out vec4 color;
 
-in vec2 v_TexCoord;
-
-//uniform sampler2D u_Texture;
+uniform sampler2D u_Texture;
 uniform float u_Scale;
 uniform float u_Res;
+
+in vec2 v_TexCoord;
+
+/*void main()
+{
+	color = texture(u_Texture, v_TexCoord * 8.0);
+}*/
 
 float grid(vec2 st, float res)
 {
 	vec2 grid = fract(st);
 	return step(res, grid.x) * step(res, grid.y);
 }
-
+ 
 void main()
 {
 	float scale = u_Scale;

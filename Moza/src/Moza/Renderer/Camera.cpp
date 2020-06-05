@@ -16,11 +16,11 @@ namespace Moza
 	Camera::Camera(const glm::mat4& projectionMatrix)
 		: m_ProjectionMatrix(projectionMatrix), m_ViewMatrix(glm::mat4(1.0f))
 	{
-		m_PanSpeed = 0.10f;
-		m_RotationSpeed = 0.2f;
+		m_PanSpeed = 0.15f;
+		m_RotationSpeed = 0.3f;
 		m_ZoomSpeed = 1.0f;
 
-		m_Position = { -100, -100, -100 };
+		m_Position = { -5, 5, 5 };
 		m_Rotation = glm::vec3(90.0f, 0.0f, 0.0f);
 
 		m_FocalPoint = glm::vec3(0.0f);

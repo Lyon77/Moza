@@ -63,6 +63,9 @@
     <ClInclude Include="src\Moza\Core\Application.h">
       <Filter>src\Moza\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Core\Buffer.h">
+      <Filter>src\Moza\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Core\Core.h">
       <Filter>src\Moza\Core</Filter>
     </ClInclude>
@@ -126,6 +129,9 @@
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\Material.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Mesh.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
@@ -153,6 +159,9 @@
     <ClInclude Include="src\Moza\Renderer\Shader.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Moza\Renderer\ShaderUniform.h">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Moza\Renderer\Texture.h">
       <Filter>src\Moza\Renderer</Filter>
     </ClInclude>
@@ -172,6 +181,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShaderUniform.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
@@ -1296,10 +1308,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Moza\Renderer\Material.h" />
-    <ClInclude Include="src\Moza\Renderer\ShaderUniform.h" />
-    <ClInclude Include="src\Moza\Core\Buffer.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLShaderUniform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Moza\Core\Application.cpp">
@@ -1333,6 +1341,9 @@
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\GraphicsContext.cpp">
+      <Filter>src\Moza\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Moza\Renderer\Material.cpp">
       <Filter>src\Moza\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Moza\Renderer\Mesh.cpp">
@@ -1383,6 +1394,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShaderUniform.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1401,7 +1415,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Moza\Renderer\Material.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLShaderUniform.cpp" />
   </ItemGroup>
 </Project>

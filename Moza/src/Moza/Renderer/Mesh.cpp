@@ -196,8 +196,6 @@ namespace Moza
 
 		m_VertexArray->Bind();
 
-
-
 		for (Submesh& submesh : m_Submeshes)
 		{
 			// Assign Transformation Uniforms
@@ -209,7 +207,7 @@ namespace Moza
 					shader->SetMat4(uniformName, m_BoneTransforms[i]);
 				}
 			}
-
+			
 			glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
 		}
 

@@ -116,7 +116,6 @@ void Sandbox3D::OnAttach()
 	m_QuadShader = Moza::Shader::Create("assets/shaders/quad.glsl");
 	m_HDRShader = Moza::Shader::Create("assets/shaders/hdr.glsl");
 	m_GridShader = Moza::Shader::Create("assets/shaders/grid.glsl");
-	m_SkyShader = Moza::Shader::Create("assets/shaders/skybox.glsl");
 	
 	m_Mesh = Moza::CreateRef<Moza::Mesh>("assets/models/m1911/m1911.fbx");
 	m_SphereMesh = Moza::CreateRef<Moza::Mesh>("assets/models/Sphere1m.fbx");
@@ -219,79 +218,6 @@ void Sandbox3D::OnAttach()
 	m_IndexBuffer = Moza::IndexBuffer::Create(indices, 6);
 	m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
-	float skyboxVertices[] = {
-		// positions 
-
-		//Back
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-
-		 //Left
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-
-		//Right
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-
-		 //Front
-		 -1.0f, -1.0f,  1.0f,
-		 -1.0f,  1.0f,  1.0f,
-		  1.0f,  1.0f,  1.0f,
-		  1.0f, -1.0f,  1.0f,
-
-		  //Top
-		  -1.0f,  1.0f, -1.0f,
-		   1.0f,  1.0f, -1.0f,
-		   1.0f,  1.0f,  1.0f,
-		  -1.0f,  1.0f,  1.0f,
-
-		  //Bottom
-		  -1.0f, -1.0f, -1.0f,
-		  -1.0f, -1.0f,  1.0f,
-		   1.0f, -1.0f,  1.0f,
-		   1.0f, -1.0f, -1.0f
-	};
-
-	uint32_t skyBoxIndicies[] = {
-		0, 2, 1,
-		2, 0, 3,
-
-		4, 5, 6,
-		6, 7, 4,
-
-		8, 10, 9,
-		10, 8, 11,
-
-		12, 13, 14,
-		14, 15, 12,
-
-		16, 17, 18,
-		18, 19, 16,
-
-		20, 22, 21,
-		22, 20, 23
-	};
-
-	m_SkyVertexArray = Moza::VertexArray::Create();
-
-	m_SkyVertexBuffer = Moza::VertexBuffer::Create((float*)skyboxVertices, 3 * 4 * 6 * sizeof(float));
-
-	m_SkyVertexBuffer->SetLayout({
-		{ Moza::ShaderDataType::Float3, "a_Position" }
-	});
-
-	m_SkyVertexArray->AddVertexBuffer(m_SkyVertexBuffer);
-
-	m_SkyIndexBuffer = Moza::IndexBuffer::Create(skyBoxIndicies, 6 * 6);
-	m_SkyVertexArray->SetIndexBuffer(m_SkyIndexBuffer);
-
 	m_Light.Direction = { -0.5, -0.5, 1.0f };
 	m_Light.Radiance = { 1.0f, 1.0f, 1.0f };
 }
@@ -332,17 +258,7 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 		
 		Moza::RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);
 		
-		///*glDepthFunc(GL_LEQUAL);
-		//m_SkyShader->SetMat4("u_VP", viewProjection);
-		//m_SkyShader->Bind();
-		//m_EnvironmentCubeMap->Bind(0);
-		//m_SkyVertexArray->Bind();
-		//m_SkyVertexBuffer->Bind();
-		//m_SkyIndexBuffer->Bind();
-		//glDepthFunc(GL_LESS);
-		//
-		//Moza::RendererCommand::DrawIndexed(m_SkyVertexArray, m_SkyIndexBuffer->GetCount(), false);*/
-		//
+
 		//m_SimplePBRShader->Bind();
 		//
 		//m_SimplePBRShader->SetMat4("u_ViewProjectionMatrix", viewProjection);

@@ -26,8 +26,6 @@ private:
 	Moza::Ref<Moza::Texture2D> m_SpriteSheet;
 	Moza::Ref<Moza::SubTexture2D> m_Stairs;
 
-	Moza::Ref<Moza::Framebuffer> m_Framebuffer;
-
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 
 	uint32_t m_MapWidth, m_MapHeight;

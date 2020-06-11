@@ -16,7 +16,7 @@ namespace Moza
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Moza Engine");
 		virtual ~Application();
 
 		void Run();

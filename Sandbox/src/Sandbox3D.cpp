@@ -327,7 +327,7 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 		
 		m_QuadShader->Bind();
 		m_QuadShader->SetMat4("u_InverseVP", glm::inverse(viewProjection));
-		m_EnvironmentCubeMap->Bind(0);
+		m_EnvironmentIrradiance->Bind(0);
 		m_VertexArray->Bind();
 		
 		Moza::RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);

@@ -32,6 +32,6 @@ void main()
 {
 	color = textureLod(u_Texture, v_Position, 0.0);
 
-	vec3 envColor = texture(u_Texture, v_TexCoord).rgb;
-	color = vec4(envColor, 1.0);
+	//vec3 envColor = texture(u_Texture, v_TexCoord).rgb;
+	//color = vec4(envColor, 1.0);
 }

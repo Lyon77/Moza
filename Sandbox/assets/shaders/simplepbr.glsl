@@ -53,7 +53,7 @@ const int LightCount = 1;
 
 const vec3 Fdielectric = vec3(0.04);
 
-struct Light
+struct Light 
 {
 	vec3 Direction;
 	vec3 Radiance;
@@ -71,6 +71,8 @@ in VertexOutput
 layout(location = 0) out vec4 color;
 
 uniform Light lights;
+uniform vec3 lightDir;
+uniform vec3 lightRad;
 uniform vec3 u_CameraPosition;
 
 // PBR texture inputs
@@ -292,6 +294,7 @@ vec3 IBL(vec3 F0, vec3 Lr)
 
 void main()
 {
+
 	// Standard PBR inputs
 	m_Params.Albedo = u_AlbedoTexToggle > 0.5 ? texture(u_AlbedoTexture, vs_Input.TexCoord).rgb : u_AlbedoColor; 
 	m_Params.Metalness = u_MetalnessTexToggle > 0.5 ? texture(u_MetalnessTexture, vs_Input.TexCoord).r : u_Metalness;
@@ -319,4 +322,5 @@ void main()
 	vec3 iblContribution = IBL(F0, Lr);
 
 	color = vec4(lightContribution + iblContribution, 1.0);
+	//color = vec4(vs_Input.WorldPosition, 1.0);
 }

@@ -22,7 +22,6 @@ namespace Moza
 		{
 			auto decl = FindUniformDeclaration(name);
 			MZ_CORE_ASSERT(decl, "Could not find uniform with name '{0}'", name);
-			//MZ_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
 			auto& buffer = GetUniformBufferTarget(decl);
 			buffer.Write((unsigned char*)&value, decl->GetSize(), decl->GetOffset());
 

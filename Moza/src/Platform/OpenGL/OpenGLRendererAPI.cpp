@@ -5,8 +5,25 @@
 
 namespace Moza
 {
+	static void OpenGLLogMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+	{
+		if (severity != GL_DEBUG_SEVERITY_NOTIFICATION)
+		{
+			MZ_CORE_ERROR("{0}", message);
+			MZ_CORE_ASSERT(false, "");
+		}
+		else
+		{
+			// HZ_CORE_TRACE("{0}", message);
+		}
+	}
+
 	void OpenGLRendererAPI::Init()
 	{
+		glDebugMessageCallback(OpenGLLogMessage, nullptr);
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -15,6 +32,7 @@ namespace Moza
 		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 		glFrontFace(GL_CCW);
 
+		LoadRequiredAssets();
 	}
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4 & color)
 	{
@@ -39,5 +57,9 @@ namespace Moza
 
 		if (!depthTest)
 			glEnable(GL_DEPTH_TEST);
+	}
+
+	void OpenGLRendererAPI::LoadRequiredAssets()
+	{
 	}
 }

@@ -79,7 +79,7 @@ namespace Moza
 		inline const ShaderUniformBufferDeclaration& GetPSMaterialUniformBuffer() const override { return *m_PSMaterialUniformBuffer; }
 		inline const ShaderResourceList& GetResources() const override { return m_Resources; }
 	private:
-		uint32_t m_RendererID;
+		uint32_t m_RendererID = 0;
 		std::string m_Name, m_AssetPath;
 		bool m_Loaded = false;
 

@@ -14,5 +14,7 @@ namespace Moza
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0, bool depthTest = true) override;
 
+	private:
+		virtual void LoadRequiredAssets() override;
 	};
 }

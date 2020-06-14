@@ -179,6 +179,13 @@ namespace Moza
 		m_Context->SwapBuffers();
 	}
 
+	std::pair<float, float> WindowsWindow::GetWindowPos() const
+	{
+		int x, y;
+		glfwGetWindowPos(m_Window, &x, &y);
+		return { x, y };
+	}
+
 	void WindowsWindow::SetVSync(bool enabled)
 	{
 		MZ_PROFILE_FUNCTION();

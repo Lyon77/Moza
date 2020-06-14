@@ -24,6 +24,8 @@ namespace Moza
 		inline static API GetAPI() { return s_API; }
 		static Scope<RendererAPI> Create();
 	private:
+		virtual void LoadRequiredAssets() = 0;
+
 		static API s_API;
 	};
 

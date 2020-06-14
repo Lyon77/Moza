@@ -414,14 +414,10 @@ void Sandbox3D::OnImGuiRender()
 	}
 
 	// Editor Panel ------------------------------------------------------------------------------
-	ImGui::Begin("Settings");
-	ImGui::ColorEdit4("Clear Color", m_ClearColor);
-
 	ImGui::Begin("Model");
 	ImGui::RadioButton("Spheres", (int*)&m_Scene, (int)Scene::Spheres);
 	ImGui::SameLine();
 	ImGui::RadioButton("Model", (int*)&m_Scene, (int)Scene::Model);
-	ImGui::End();
 
 	ImGui::Begin("Environment");
 	ImGui::Columns(2);

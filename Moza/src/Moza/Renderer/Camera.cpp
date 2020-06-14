@@ -17,7 +17,7 @@ namespace Moza
 		: m_ProjectionMatrix(projectionMatrix), m_ViewMatrix(glm::mat4(1.0f))
 	{
 		m_PanSpeed = 0.15f;
-		m_RotationSpeed = 0.3f;
+		m_RotationSpeed = 0.2f;
 		m_ZoomSpeed = 1.0f;
 
 		m_Position = { -5, 5, 5 };

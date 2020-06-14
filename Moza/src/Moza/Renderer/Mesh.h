@@ -144,8 +144,8 @@ namespace Moza
 		// Animation
 		float m_AnimationTime = 0.0f;
 		float m_WorldTime = 0.0f;
-		float m_TimeMultiplier = 0.0f;
-		bool m_AnimationPlaying = false;
+		float m_TimeMultiplier = 1.0f;
+		bool m_AnimationPlaying = true;
 
 		std::string m_FilePath;
 	};

@@ -22,7 +22,9 @@ out VertexOutput
 	vec2 TexCoord;
 	mat3 WorldNormals;
 	vec3 Binormal;
-} vs_Output;
+} vs_Input;
+
+out vec3 test;
 
 void main()
 {
@@ -32,19 +34,20 @@ void main()
     boneTransform += u_BoneTransforms[a_BoneIndices[3]] * a_BoneWeights[3];
 
 	vec4 localPosition = boneTransform * vec4(a_Position, 1.0);
-
 	
-	vs_Output.WorldPosition = vec3(mat4(u_ModelMatrix * boneTransform) * vec4(a_Position, 1.0));
-	vs_Output.Normal = mat3(boneTransform) * a_Normal;
-	vs_Output.TexCoord = vec2(a_TexCoord.x, 1.0 - a_TexCoord.y);
-	vs_Output.WorldNormals = mat3(u_ModelMatrix) * mat3(a_Tangent, a_Binormal, a_Normal);
-	vs_Output.Binormal = mat3(boneTransform) * a_Binormal;
+	vs_Input.WorldPosition = vec3(mat4(u_ModelMatrix * boneTransform) * vec4(a_Position, 1.0));
+	vs_Input.Normal = mat3(boneTransform) * a_Normal;
+	vs_Input.TexCoord = vec2(a_TexCoord.x, 1.0 - a_TexCoord.y);
+	vs_Input.WorldNormals = mat3(u_ModelMatrix) * mat3(a_Tangent, a_Binormal, a_Normal);
+	vs_Input.Binormal = mat3(boneTransform) * a_Binormal;
 
 	gl_Position = u_ViewProjectionMatrix * u_ModelMatrix * localPosition;
 }
 
 #type fragment
 #version 430 core
+
+in vec3 test;
 
 const float PI = 3.141592;
 const float Epsilon = 0.00001;
@@ -322,5 +325,5 @@ void main()
 	vec3 iblContribution = IBL(F0, Lr);
 
 	color = vec4(lightContribution + iblContribution, 1.0);
-	//color = vec4(vs_Input.WorldPosition, 1.0);
+	//color = vec4(test, 1.0);
 }

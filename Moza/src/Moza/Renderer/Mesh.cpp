@@ -135,6 +135,7 @@ namespace Moza
 				
 				if (m_BoneMapping.find(boneName) == m_BoneMapping.end())
 				{
+					// Allocate an index for a new bone
 					boneIndex = m_BoneCount;
 					m_BoneCount++;
 					BoneInfo bi;
@@ -191,9 +192,11 @@ namespace Moza
 		}
 
 		// Load Transform
-		if (m_Scene->mAnimations)
+		if (m_Scene->mAnimations) {
 			BoneTransform(m_AnimationTime);
+		}
 
+		shader->Bind();
 		m_VertexArray->Bind();
 
 		for (Submesh& submesh : m_Submeshes)
@@ -210,8 +213,6 @@ namespace Moza
 			
 			glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
 		}
-
-		//RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount());
 	}
 
 	void Mesh::OnImGuiRender()
@@ -352,16 +353,16 @@ namespace Moza
 
 		uint32_t PositionIndex = FindPosition(animationTime, nodeAnim);
 		uint32_t NextPositionIndex = (PositionIndex + 1);
-		MZ_CORE_ASSERT(NextPositionIndex < nodeAnim->mNumPositionKeys, "No next Position");
+		MZ_CORE_ASSERT(NextPositionIndex < nodeAnim->mNumPositionKeys, "No next translation");
 		float DeltaTime = (float)(nodeAnim->mPositionKeys[NextPositionIndex].mTime - nodeAnim->mPositionKeys[PositionIndex].mTime);
-		float Factor = (animationTime - (float)nodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
-		if (Factor < 0.0f)
-			Factor = 0.0f;
-		MZ_CORE_ASSERT(Factor <= 1.0f, "Factor must be below 1.0f");
+		float factor = (animationTime - (float)nodeAnim->mPositionKeys[PositionIndex].mTime) / DeltaTime;
+		if (factor < 0.0f)
+			factor = 0.0f;
+		//MZ_CORE_ASSERT(factor <= 1.0f, "Factor must be below 1.0f");
 		const aiVector3D& Start = nodeAnim->mPositionKeys[PositionIndex].mValue;
 		const aiVector3D& End = nodeAnim->mPositionKeys[NextPositionIndex].mValue;
 		aiVector3D Delta = End - Start;
-		auto aiVec = Start + Factor * Delta;
+		auto aiVec = Start + factor * Delta;
 		return { aiVec.x, aiVec.y, aiVec.z };
 	}
 
@@ -378,14 +379,14 @@ namespace Moza
 		uint32_t NextRotationIndex = (RotationIndex + 1);
 		MZ_CORE_ASSERT(NextRotationIndex < nodeAnim->mNumRotationKeys, "No next Rotation");
 		float DeltaTime = (float)(nodeAnim->mRotationKeys[NextRotationIndex].mTime - nodeAnim->mRotationKeys[RotationIndex].mTime);
-		float Factor = (animationTime - (float)nodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
-		if (Factor < 0.0f)
-			Factor = 0.0f;
-		MZ_CORE_ASSERT(Factor <= 1.0f, "Factor must be below 1.0f");
+		float factor = (animationTime - (float)nodeAnim->mRotationKeys[RotationIndex].mTime) / DeltaTime;
+		if (factor < 0.0f)
+			factor = 0.0f;
+		//MZ_CORE_ASSERT(factor <= 1.0f, "Factor must be below 1.0f");
 		const aiQuaternion& StartRotationQ = nodeAnim->mRotationKeys[RotationIndex].mValue;
 		const aiQuaternion& EndRotationQ = nodeAnim->mRotationKeys[NextRotationIndex].mValue;
 		auto q = aiQuaternion();
-		aiQuaternion::Interpolate(q, StartRotationQ, EndRotationQ, Factor);
+		aiQuaternion::Interpolate(q, StartRotationQ, EndRotationQ, factor);
 		q = q.Normalize();
 		return glm::quat(q.w, q.x, q.y, q.z);
 	}
@@ -406,7 +407,7 @@ namespace Moza
 		float factor = (animationTime - (float)nodeAnim->mScalingKeys[index].mTime) / deltaTime;
 		if (factor < 0.0f)
 			factor = 0.0f;
-		MZ_CORE_ASSERT(factor <= 1.0f, "Factor must be below 1.0f");
+		//MZ_CORE_ASSERT(factor <= 1.0f, "Factor must be below 1.0f");
 		const auto& start = nodeAnim->mScalingKeys[index].mValue;
 		const auto& end = nodeAnim->mScalingKeys[nextIndex].mValue;
 		auto delta = end - start;

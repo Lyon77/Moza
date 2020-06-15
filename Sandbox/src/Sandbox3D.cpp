@@ -517,7 +517,10 @@ void Sandbox3D::OnImGuiRender()
 		{
 			std::string filename = Moza::Application::Get().OpenFile("");
 			if (filename != "")
+			{
 				m_Mesh.reset(new Moza::Mesh(filename));
+				m_MeshMaterial.reset(new Moza::MaterialInstance(m_Mesh->GetMaterial()));
+			}
 		}
 	}
 	ImGui::Separator();
@@ -682,6 +685,7 @@ void Sandbox3D::OnImGuiRender()
 	m_Framebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 	m_FinalPresentBuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 	m_Camera.SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), viewportSize.x, viewportSize.y, 0.1f, 10000.0f));
+	m_Camera.SetViewportSize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 	ImGui::Image((void*)m_FinalPresentBuffer->GetColorAttachmentRendererID(), viewportSize, { 0, 1 }, { 1, 0 });
 	ImGui::End();
 	ImGui::PopStyleVar();

@@ -13,10 +13,16 @@
 
 namespace Moza
 { 
+	struct ApplicationProps
+	{
+		std::string Name;
+		uint32_t WindowWidth, WindowHeight;
+	};
+
 	class Application
 	{
 	public:
-		Application();
+		Application(const ApplicationProps& props = { "Hazel Engine", 1280, 720 });
 		virtual ~Application();
 
 		void Run();

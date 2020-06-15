@@ -1,6 +1,6 @@
 workspace "Moza"
 	architecture "x86_64"
-	startproject "Sandbox"
+	startproject "Mozaball"
 
 	configurations
 	{
@@ -105,6 +105,75 @@ project "Moza"
 		defines "MZ_DIST"
 		runtime "Release"
 		optimize "on"
+
+project "Mozaball"
+	location "Mozaball"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Moza/vendor/spdlog/include",
+		"Moza/src",
+		"Moza/vendor",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"Moza"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+	filter "configurations:Debug"
+		defines "MZ_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+		linkoptions
+		{
+			"/nodefaultlib:libcmt.lib"
+		}
+
+		links
+		{
+			"Moza/vendor/assimp/bin/Debug/assimp-vc141-mtd.lib"
+		}
+
+
+	filter "configurations:Release"
+		defines "MZ_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+		links
+		{
+			"Moza/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
+		}
+
+	filter "configurations:Dist"
+		defines "MZ_DIST"
+		runtime "Release"
+		optimize "on"
+
+		links
+		{
+			"Moza/vendor/assimp/bin/Release/assimp-vc141-mt.lib"
+		}
+
 
 project "Sandbox"
 	location "SandBox"

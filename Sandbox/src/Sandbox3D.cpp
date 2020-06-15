@@ -1,6 +1,7 @@
 #include "Sandbox3D.h"
 
 #include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 
 #include <gl/GL.h>
 
@@ -112,12 +113,19 @@ void Sandbox3D::OnAttach()
 {
 	MZ_PROFILE_FUNCTION();
 
-	m_SimplePBRShader = Moza::Shader::Create("assets/shaders/simplepbr.glsl");
+	m_DynamicPBRShader = Moza::Shader::Create("assets/shaders/MozaPBR_Anim.glsl");
+	m_StaticPBRShader = Moza::Shader::Create("assets/shaders/MozaPBR_Static.glsl");
 	m_QuadShader = Moza::Shader::Create("assets/shaders/quad.glsl");
 	m_HDRShader = Moza::Shader::Create("assets/shaders/hdr.glsl");
+
 	m_GridShader = Moza::Shader::Create("assets/shaders/grid.glsl");
+	m_GridMaterial = Moza::MaterialInstance::Create(Moza::Material::Create(m_GridShader));
+	m_GridMaterial->Set("u_Scale", m_GridScale);
+	m_GridMaterial->Set("u_Res", m_GridSize);
 	
 	m_Mesh = Moza::CreateRef<Moza::Mesh>("assets/models/m1911/m1911.fbx");
+	m_MeshMaterial = Moza::MaterialInstance::Create(m_Mesh->GetMaterial());
+
 	m_SphereMesh = Moza::CreateRef<Moza::Mesh>("assets/models/Sphere1m.fbx");
 	m_PlaneMesh = Moza::CreateRef<Moza::Mesh>("assets/models/Plane1m.obj");
 
@@ -129,16 +137,27 @@ void Sandbox3D::OnAttach()
 	m_HDRShader->SetInt("u_Texture", 0);
 	m_HDRShader->UnBind();
 
-	m_SimplePBRShader->Bind();
-	m_SimplePBRShader->SetInt("u_Texture", 0);
-	m_SimplePBRShader->SetInt("u_AlbedoTexture", 1);
-	m_SimplePBRShader->SetInt("u_NormalTexture", 2);
-	m_SimplePBRShader->SetInt("u_MetalnessTexture", 3);
-	m_SimplePBRShader->SetInt("u_RoughnessTexture", 4);
-	m_SimplePBRShader->SetInt("u_EnvRadianceTex", 10);
-	m_SimplePBRShader->SetInt("u_EnvIrradianceTex", 11);
-	m_SimplePBRShader->SetInt("u_BRDFLUTTexture", 15);
-	m_SimplePBRShader->UnBind();
+	m_DynamicPBRShader->Bind();
+	m_DynamicPBRShader->SetInt("u_Texture", 0);
+	m_DynamicPBRShader->SetInt("u_AlbedoTexture", 1);
+	m_DynamicPBRShader->SetInt("u_NormalTexture", 2);
+	m_DynamicPBRShader->SetInt("u_MetalnessTexture", 3);
+	m_DynamicPBRShader->SetInt("u_RoughnessTexture", 4);
+	m_DynamicPBRShader->SetInt("u_EnvRadianceTex", 10);
+	m_DynamicPBRShader->SetInt("u_EnvIrradianceTex", 11);
+	m_DynamicPBRShader->SetInt("u_BRDFLUTTexture", 15);
+	m_DynamicPBRShader->UnBind();
+
+	m_StaticPBRShader->Bind();
+	m_StaticPBRShader->SetInt("u_Texture", 0);
+	m_StaticPBRShader->SetInt("u_AlbedoTexture", 1);
+	m_StaticPBRShader->SetInt("u_NormalTexture", 2);
+	m_StaticPBRShader->SetInt("u_MetalnessTexture", 3);
+	m_StaticPBRShader->SetInt("u_RoughnessTexture", 4);
+	m_StaticPBRShader->SetInt("u_EnvRadianceTex", 10);
+	m_StaticPBRShader->SetInt("u_EnvIrradianceTex", 11);
+	m_StaticPBRShader->SetInt("u_BRDFLUTTexture", 15);
+	m_StaticPBRShader->UnBind();
 
 	// Enviroment
 	m_EnvironmentCubeMap = Moza::TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Radiance.tga");
@@ -150,14 +169,12 @@ void Sandbox3D::OnAttach()
 	m_Framebuffer = Moza::Framebuffer::Create(1280, 720, Moza::FramebufferFormat::RGBA16F);
 	m_FinalPresentBuffer = Moza::Framebuffer::Create(1280, 720, Moza::FramebufferFormat::RGBA8);
 
-	m_PBRMaterial = Moza::CreateRef<Moza::Material>(m_SimplePBRShader);
-
 	// Quad
 	float x = -4.0f, y = -1.0f;
 	float roughness = 0.0f;
 	for (int i = 0; i < 8; i++)
 	{
-		Moza::Ref<Moza::MaterialInstance> mi = Moza::CreateRef<Moza::MaterialInstance>(m_PBRMaterial);
+		Moza::Ref<Moza::MaterialInstance> mi = Moza::MaterialInstance::Create(m_SphereMesh->GetMaterial());
 		mi->Set("u_Metalness", 1.0f);
 		mi->Set("u_Roughness", roughness);
 		mi->Set("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, 0.0f)));
@@ -170,8 +187,8 @@ void Sandbox3D::OnAttach()
 	roughness = 0.0f;
 	for (int i = 0; i < 8; i++)
 	{
-		Moza::Ref<Moza::MaterialInstance> mi = Moza::CreateRef<Moza::MaterialInstance>(m_PBRMaterial);
-		mi->Set("u_Metalness", 1.0f);
+		Moza::Ref<Moza::MaterialInstance> mi = Moza::MaterialInstance::Create(m_SphereMesh->GetMaterial());
+		mi->Set("u_Metalness", 0.0f);
 		mi->Set("u_Roughness", roughness);
 		mi->Set("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 1.2f, 0.0f)));
 		x += 1.1f;
@@ -259,22 +276,22 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 		Moza::RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);
 		
 
-		m_SimplePBRShader->Bind();
+		m_DynamicPBRShader->Bind();
 		
-		m_SimplePBRShader->SetMat4("u_ViewProjectionMatrix", viewProjection);
-		m_SimplePBRShader->SetMat4("u_ModelMatrix", glm::mat4(1.0f));
-		m_SimplePBRShader->SetFloat3("u_AlbedoColor", m_AlbedoInput.Color);
-		m_SimplePBRShader->SetFloat("u_Metalness", m_MetalnessInput.Value);
-		m_SimplePBRShader->SetFloat("u_Roughness", m_RoughnessInput.Value);
-		m_SimplePBRShader->SetFloat3("lights.Direction", m_Light.Direction);
-		m_SimplePBRShader->SetFloat3("lights.Radiance", m_Light.Radiance * m_LightMultiplier);
-		m_SimplePBRShader->SetFloat3("u_CameraPosition", m_Camera.GetPosition());
-		m_SimplePBRShader->SetFloat("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
-		m_SimplePBRShader->SetFloat("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
-		m_SimplePBRShader->SetFloat("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
-		m_SimplePBRShader->SetFloat("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
-		m_SimplePBRShader->SetFloat("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
-		m_SimplePBRShader->SetFloat("u_EnvMapRotation", m_EnvMapRotation);
+		m_DynamicPBRShader->SetMat4("u_ViewProjectionMatrix", viewProjection);
+		m_DynamicPBRShader->SetMat4("u_ModelMatrix", glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale)));
+		m_DynamicPBRShader->SetFloat3("u_AlbedoColor", m_AlbedoInput.Color);
+		m_DynamicPBRShader->SetFloat("u_Metalness", m_MetalnessInput.Value);
+		m_DynamicPBRShader->SetFloat("u_Roughness", m_RoughnessInput.Value);
+		m_DynamicPBRShader->SetFloat3("lights.Direction", m_Light.Direction);
+		m_DynamicPBRShader->SetFloat3("lights.Radiance", m_Light.Radiance * m_LightMultiplier);
+		m_DynamicPBRShader->SetFloat3("u_CameraPosition", m_Camera.GetPosition());
+		m_DynamicPBRShader->SetFloat("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
+		m_DynamicPBRShader->SetFloat("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		m_DynamicPBRShader->SetFloat("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		m_DynamicPBRShader->SetFloat("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		m_DynamicPBRShader->SetFloat("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		m_DynamicPBRShader->SetFloat("u_EnvMapRotation", m_EnvMapRotation);
 		
 		m_EnvironmentCubeMap->Bind(10);
 		m_EnvironmentIrradiance->Bind(11);
@@ -288,61 +305,114 @@ void Sandbox3D::OnUpdate(Moza::Timestep ts)
 			m_MetalnessInput.TextureMap->Bind(3);
 		if (m_RoughnessInput.TextureMap)
 			m_RoughnessInput.TextureMap->Bind(4);
+
+		m_StaticPBRShader->Bind();
+		m_StaticPBRShader->SetMat4("u_ViewProjectionMatrix", viewProjection);
+		m_StaticPBRShader->SetFloat3("u_AlbedoColor", m_AlbedoInput.Color);
+		m_StaticPBRShader->SetFloat3("lights.Direction", m_Light.Direction);
+		m_StaticPBRShader->SetFloat3("lights.Radiance", m_Light.Radiance * m_LightMultiplier);
+		m_StaticPBRShader->SetFloat3("u_CameraPosition", m_Camera.GetPosition());
+		m_StaticPBRShader->SetFloat("u_RadiancePrefilter", 0.0f);
+		m_StaticPBRShader->SetFloat("u_AlbedoTexToggle", 0.0f);
+		m_StaticPBRShader->SetFloat("u_NormalTexToggle", 0.0f);
+		m_StaticPBRShader->SetFloat("u_MetalnessTexToggle", 0.0f);
+		m_StaticPBRShader->SetFloat("u_RoughnessTexToggle", 0.0f);
+		m_StaticPBRShader->SetFloat("u_EnvMapRotation", m_EnvMapRotation);
 		
 
-		//m_PBRMaterial->Set("u_ViewProjectionMatrix", viewProjection);
-		//m_PBRMaterial->Set("u_ModelMatrix", glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale)));
+		//m_MeshMaterial->Set("u_ViewProjectionMatrix", viewProjection);
+		//m_MeshMaterial->Set("u_ModelMatrix", glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale)));
 		//
-		//m_PBRMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
-		//m_PBRMaterial->Set("u_Metalness", m_MetalnessInput.Value);
-		//m_PBRMaterial->Set("u_Roughness", m_RoughnessInput.Value);
-		//m_PBRMaterial->Set("lightDir", m_Light.Direction);
-		//m_PBRMaterial->Set("lightRad", m_Light.Radiance);
-		//m_PBRMaterial->Set("u_CameraPosition", m_Camera.GetPosition());
-		//m_PBRMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
-		//m_PBRMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
-		//m_PBRMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
-		//m_PBRMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
-		//m_PBRMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
-		//m_PBRMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
-		//
-		//m_PBRMaterial->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
-		//m_PBRMaterial->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
-		//m_PBRMaterial->Set("u_BRDFLUTTexture", m_BRDFLUT);
+		//m_MeshMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
+		//m_MeshMaterial->Set("u_Metalness", m_MetalnessInput.Value);
+		//m_MeshMaterial->Set("u_Roughness", m_RoughnessInput.Value);
+		//m_MeshMaterial->Set("lights", m_Light);
+		//m_MeshMaterial->Set("u_CameraPosition", m_Camera.GetPosition());
+		//m_MeshMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
+		//	
+		//m_MeshMaterial->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
+		//m_MeshMaterial->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
+		//m_MeshMaterial->Set("u_BRDFLUTTexture", m_BRDFLUT);
 		//
 		//if (m_AlbedoInput.TextureMap)
-		//	m_PBRMaterial->Set("u_AlbedoTexture", m_AlbedoInput.TextureMap);
+		//	m_MeshMaterial->Set("u_AlbedoTexture", m_AlbedoInput.TextureMap);
 		//if (m_NormalInput.TextureMap)
-		//	m_PBRMaterial->Set("u_NormalTexture", m_NormalInput.TextureMap);
+		//	m_MeshMaterial->Set("u_NormalTexture", m_NormalInput.TextureMap);
 		//if (m_MetalnessInput.TextureMap)
-		//	m_PBRMaterial->Set("u_MetalnessTexture", m_MetalnessInput.TextureMap);
+		//	m_MeshMaterial->Set("u_MetalnessTexture", m_MetalnessInput.TextureMap);
 		//if (m_RoughnessInput.TextureMap)
-		//	m_PBRMaterial->Set("u_RoughnessTexture", m_RoughnessInput.TextureMap);
+		//	m_MeshMaterial->Set("u_RoughnessTexture", m_RoughnessInput.TextureMap);
+		//
+		//m_SphereMesh->GetMaterial()->Set("u_AlbedoColor", m_AlbedoInput.Color);
+		//m_SphereMesh->GetMaterial()->Set("u_Metalness", m_MetalnessInput.Value);
+		//m_SphereMesh->GetMaterial()->Set("u_Roughness", m_RoughnessInput.Value);
+		//m_SphereMesh->GetMaterial()->Set("u_ViewProjectionMatrix", viewProjection);
+		//m_SphereMesh->GetMaterial()->Set("u_ModelMatrix", glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale)));
+		//m_SphereMesh->GetMaterial()->Set("lights", m_Light);
+		//m_SphereMesh->GetMaterial()->Set("u_CameraPosition", m_Camera.GetPosition());
+		//m_SphereMesh->GetMaterial()->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
+		//m_SphereMesh->GetMaterial()->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		//m_SphereMesh->GetMaterial()->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		//m_SphereMesh->GetMaterial()->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		//m_SphereMesh->GetMaterial()->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		//m_SphereMesh->GetMaterial()->Set("u_EnvMapRotation", m_EnvMapRotation);
+		//m_SphereMesh->GetMaterial()->Set("u_EnvRadianceTex", m_EnvironmentCubeMap);
+		//m_SphereMesh->GetMaterial()->Set("u_EnvIrradianceTex", m_EnvironmentIrradiance);
+		//m_SphereMesh->GetMaterial()->Set("u_BRDFLUTTexture", m_BRDFLUT);
 		
 		if (m_Scene == Scene::Spheres)
 		{
-			// Metal
+			//// Metal
+			//for (int i = 0; i < 8; i++)
+			//{
+			//	m_SphereMesh->Render(ts, glm::mat4(1.0f), m_MetalSphereMaterialInstances[i]);
+			//}
+			//
+			//// Dielectrics
+			//for (int i = 0; i < 8; i++)
+			//{
+			//	m_SphereMesh->Render(ts, glm::mat4(1.0f), m_DielectricSphereMaterialInstances[i]);
+			//}
+
+			// Quad
+			m_StaticPBRShader->Bind();
+
+			float x = -4.0f, y = -1.0f;
+			float roughness = 0.0f;
 			for (int i = 0; i < 8; i++)
 			{
-				m_MetalSphereMaterialInstances[i]->Bind();
-				m_SphereMesh->Render(ts, m_SimplePBRShader.get());
+				m_StaticPBRShader->SetFloat("u_Metalness", 1.0f);
+				m_StaticPBRShader->SetFloat("u_Roughness", roughness);
+				m_StaticPBRShader->SetMat4("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, 0.0f)));
+				x += 1.1f;
+				roughness += 0.15f;
+				m_SphereMesh->Render(ts, m_StaticPBRShader.get());
 			}
-		
-			// Dielectrics
+			
+			x = -4.0f;
+			roughness = 0.0f;
 			for (int i = 0; i < 8; i++)
 			{
-				m_DielectricSphereMaterialInstances[i]->Bind();
-				m_SphereMesh->Render(ts, m_SimplePBRShader.get());
+				m_StaticPBRShader->SetFloat("u_Metalness", 0.0f);
+				m_StaticPBRShader->SetFloat("u_Roughness", roughness);
+				m_StaticPBRShader->SetMat4("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 1.2f, 0.0f)));
+				x += 1.1f;
+				roughness += 0.15f;
+				m_SphereMesh->Render(ts, m_StaticPBRShader.get());
 			}
 		}
 		else if (m_Scene == Scene::Model)
 		{
-			//m_Mesh->Render(ts, m_SimplePBRShader.get());
 			if (m_Mesh)
 			{
-				//m_PBRMaterial->Bind();
-				m_SimplePBRShader->Bind();
-				m_Mesh->Render(ts, m_SimplePBRShader.get());
+				m_DynamicPBRShader->Bind();
+				m_Mesh->Render(ts, m_DynamicPBRShader.get());
+				//m_Mesh->Render(ts, glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale)), m_MeshMaterial);
 			}
 		
 		}

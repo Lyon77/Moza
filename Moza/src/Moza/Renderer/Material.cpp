@@ -23,6 +23,11 @@ namespace Moza
 		BindTextures();
 	}
 
+	Ref<Material> Material::Create(const Ref<Shader>& shader)
+	{
+		return CreateRef<Material>(shader);
+	}
+
 	void Material::BindTextures() const
 	{
 		for (size_t i = 0; i < m_Textures.size(); i++)
@@ -91,8 +96,8 @@ namespace Moza
 	{
 		switch (uniformDeclaration->GetDomain())
 		{
-			case ShaderDomain::Vertex:    return m_VSUniformStorageBuffer;
-			case ShaderDomain::Pixel:     return m_PSUniformStorageBuffer;
+		case ShaderDomain::Vertex:    return m_VSUniformStorageBuffer;
+		case ShaderDomain::Pixel:     return m_PSUniformStorageBuffer;
 		}
 
 		MZ_CORE_ASSERT(false, "Invalid uniform declaration domain! Material does not support this shader type.");
@@ -125,6 +130,11 @@ namespace Moza
 			if (texture)
 				texture->Bind(i);
 		}
+	}
+
+	Ref<MaterialInstance> MaterialInstance::Create(const Ref<Material>& material)
+	{
+		return CreateRef<MaterialInstance>(material);
 	}
 
 	void MaterialInstance::AllocateStorage()

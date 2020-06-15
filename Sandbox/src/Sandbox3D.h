@@ -16,8 +16,8 @@ public:
 	void OnEvent(Moza::Event& e) override;
 
 private:
-	Moza::Ref<Moza::Shader> m_PBRShader;
-	Moza::Ref<Moza::Shader> m_SimplePBRShader;
+	Moza::Ref<Moza::Shader> m_DynamicPBRShader;
+	Moza::Ref<Moza::Shader> m_StaticPBRShader;
 	Moza::Ref<Moza::Shader> m_QuadShader;
 	Moza::Ref<Moza::Shader> m_HDRShader;
 	Moza::Ref<Moza::Shader> m_GridShader;
@@ -27,7 +27,8 @@ private:
 
 	Moza::Ref<Moza::Texture2D> m_CheckerboardTex;
 
-	Moza::Ref<Moza::Material> m_PBRMaterial;
+	Moza::Ref<Moza::MaterialInstance> m_MeshMaterial;
+	Moza::Ref<Moza::MaterialInstance> m_GridMaterial;
 	std::vector<Moza::Ref<Moza::MaterialInstance>> m_MetalSphereMaterialInstances;
 	std::vector<Moza::Ref<Moza::MaterialInstance>> m_DielectricSphereMaterialInstances;
 

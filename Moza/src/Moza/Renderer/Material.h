@@ -48,6 +48,8 @@ namespace Moza
 			Set(name, (const Ref<Texture>&)texture);
 		}
 
+		static Ref<Material> Create(const Ref<Shader>& shader);
+
 	private:
 		void BindTextures() const;
 
@@ -81,6 +83,8 @@ namespace Moza
 		void Set(const std::string& name, const T& value)
 		{
 			auto decl = m_Material->FindUniformDeclaration(name);
+			if (!decl)
+				return;
 			// HZ_CORE_ASSERT(decl, "Could not find uniform with name '{0}'", name);
 			MZ_CORE_ASSERT(decl, "Could not find uniform with name 'x'");
 			auto& buffer = GetUniformBufferTarget(decl);
@@ -107,6 +111,9 @@ namespace Moza
 		{
 			Set(name, (const Ref<Texture>&)texture);
 		}
+
+		static Ref<MaterialInstance> Create(const Ref<Material>& material);
+
 	private:
 		void AllocateStorage();
 		void OnShaderReloaded();

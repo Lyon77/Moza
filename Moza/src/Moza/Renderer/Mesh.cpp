@@ -1,6 +1,8 @@
 #include "mzpch.h"
 #include "Moza/Renderer/Mesh.h"
 
+#include "Moza/Renderer/Renderer.h"
+
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
@@ -72,6 +74,9 @@ namespace Moza
 		if (!scene || !scene->HasMeshes())
 			MZ_CORE_ERROR("Failed to load mesh file: {0}", filename);
 
+		m_IsAnimated = scene->mAnimations != nullptr;
+		m_MeshShader = m_IsAnimated ? Renderer::GetShaderLibrary()->Get("MozaPBR_Anim") : Renderer::GetShaderLibrary()->Get("MozaPBR_Static");
+		m_Material = CreateRef<Material>(m_MeshShader);
 		m_InverseTransform = glm::inverse(aiMatrix4x4ToGlm(scene->mRootNode->mTransformation));
 
 		uint32_t vertexCount = 0;
@@ -96,21 +101,45 @@ namespace Moza
 			MZ_CORE_ASSERT(mesh->HasNormals(), "Meshes require normals.");
 
 			// Vertices
-			for (size_t i = 0; i < mesh->mNumVertices; i++)
+			if (m_IsAnimated)
 			{
-				Vertex vertex;
-				vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
-				vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
-
-				if (mesh->HasTangentsAndBitangents())
+				for (size_t i = 0; i < mesh->mNumVertices; i++)
 				{
-					vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
-					vertex.Binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
-				}
+					AnimatedVertex vertex;
+					vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+					vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
 
-				if (mesh->HasTextureCoords(0))
-					vertex.TexCoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
-				m_Vertices.push_back(vertex);
+					if (mesh->HasTangentsAndBitangents())
+					{
+						vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
+						vertex.Binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
+					}
+
+					if (mesh->HasTextureCoords(0))
+						vertex.TexCoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+
+					m_AnimatedVertices.push_back(vertex);
+				}
+			}
+			else
+			{
+				for (size_t i = 0; i < mesh->mNumVertices; i++)
+				{
+					Vertex vertex;
+					vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+					vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
+
+					if (mesh->HasTangentsAndBitangents())
+					{
+						vertex.Tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z };
+						vertex.Binormal = { mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z };
+					}
+
+					if (mesh->HasTextureCoords(0))
+						vertex.TexCoord = { mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y };
+
+					m_StaticVertices.push_back(vertex);
+				}
 			}
 
 			// Indices
@@ -121,54 +150,79 @@ namespace Moza
 			}
 		}
 
+		MZ_CORE_TRACE("NODES:");
+		MZ_CORE_TRACE("-----------------------------");
+		TraverseNodes(scene->mRootNode);
+		MZ_CORE_TRACE("-----------------------------");
+
 		//Bones
-		for (size_t m = 0; m < scene->mNumMeshes; m++)
+		if (m_IsAnimated)
 		{
-			aiMesh* mesh = scene->mMeshes[m];
-			Submesh& submesh = m_Submeshes[m];
-
-			for (size_t i = 0; i < mesh->mNumBones; i++)
+			for (size_t m = 0; m < scene->mNumMeshes; m++)
 			{
-				aiBone* bone = mesh->mBones[i];
-				std::string boneName(bone->mName.data);
-				int boneIndex = 0;
-				
-				if (m_BoneMapping.find(boneName) == m_BoneMapping.end())
-				{
-					// Allocate an index for a new bone
-					boneIndex = m_BoneCount;
-					m_BoneCount++;
-					BoneInfo bi;
-					m_BoneInfo.push_back(bi);
-					m_BoneInfo[boneIndex].BoneOffset = aiMatrix4x4ToGlm(bone->mOffsetMatrix);
-					m_BoneMapping[boneName] = boneIndex;
-				}
-				else
-				{
-					MZ_CORE_TRACE("Found existing bone in map");
-					boneIndex = m_BoneMapping[boneName];
-				}
+				aiMesh* mesh = scene->mMeshes[m];
+				Submesh& submesh = m_Submeshes[m];
 
-				for (size_t j = 0; j < bone->mNumWeights; j++)
+				for (size_t i = 0; i < mesh->mNumBones; i++)
 				{
-					int VertexID = submesh.BaseVertex + bone->mWeights[j].mVertexId;
-					float Weight = bone->mWeights[j].mWeight;
-					m_Vertices[VertexID].AddBoneData(boneIndex, Weight);
+					aiBone* bone = mesh->mBones[i];
+					std::string boneName(bone->mName.data);
+					int boneIndex = 0;
+
+					if (m_BoneMapping.find(boneName) == m_BoneMapping.end())
+					{
+						// Allocate an index for a new bone
+						boneIndex = m_BoneCount;
+						m_BoneCount++;
+						BoneInfo bi;
+						m_BoneInfo.push_back(bi);
+						m_BoneInfo[boneIndex].BoneOffset = aiMatrix4x4ToGlm(bone->mOffsetMatrix);
+						m_BoneMapping[boneName] = boneIndex;
+					}
+					else
+					{
+						MZ_CORE_TRACE("Found existing bone in map");
+						boneIndex = m_BoneMapping[boneName];
+					}
+
+					for (size_t j = 0; j < bone->mNumWeights; j++)
+					{
+						int VertexID = submesh.BaseVertex + bone->mWeights[j].mVertexId;
+						float Weight = bone->mWeights[j].mWeight;
+						m_AnimatedVertices[VertexID].AddBoneData(boneIndex, Weight);
+					}
 				}
 			}
 		}
+		
+		if (m_IsAnimated)
+			m_VertexBuffer = VertexBuffer::Create((float*)m_AnimatedVertices.data(), m_AnimatedVertices.size() * sizeof(AnimatedVertex));
+		else
+			m_VertexBuffer = VertexBuffer::Create((float*)m_StaticVertices.data(), m_StaticVertices.size() * sizeof(Vertex));
 
-		m_VertexBuffer = VertexBuffer::Create((float*)m_Vertices.data(), m_Vertices.size() * sizeof(Vertex));
-
-		m_VertexBuffer->SetLayout({
-			{ ShaderDataType::Float3, "a_Position" },
-			{ ShaderDataType::Float3, "a_Normal" },
-			{ ShaderDataType::Float3, "a_Tangent" },
-			{ ShaderDataType::Float3, "a_Binormal" },
-			{ ShaderDataType::Float2, "a_TexCoord" },
-			{ ShaderDataType::Int4, "a_BoneIndices" },
-			{ ShaderDataType::Float4, "a_BoneWeights" }
-		});
+		if (m_IsAnimated)
+		{
+			m_VertexBuffer->SetLayout({
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float3, "a_Normal" },
+				{ ShaderDataType::Float3, "a_Tangent" },
+				{ ShaderDataType::Float3, "a_Binormal" },
+				{ ShaderDataType::Float2, "a_TexCoord" },
+				{ ShaderDataType::Int4, "a_BoneIndices" },
+				{ ShaderDataType::Float4, "a_BoneWeights" }
+				});
+		}
+		else
+		{
+			m_VertexBuffer->SetLayout({
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float3, "a_Normal" },
+				{ ShaderDataType::Float3, "a_Tangent" },
+				{ ShaderDataType::Float3, "a_Binormal" },
+				{ ShaderDataType::Float2, "a_TexCoord" }
+				});
+		}
+		
 
 		m_IndexBuffer = IndexBuffer::Create((uint32_t*)m_Indices.data(), m_Indices.size() * 3); // IndexBuffer is always in uint32_t
 
@@ -182,17 +236,17 @@ namespace Moza
 	void Mesh::Render(Timestep ts, Shader* shader)
 	{
 		// Perform Animation Calculation
-		if (m_AnimationPlaying && m_Scene->mAnimations)
+		if (m_IsAnimated)
 		{
-			m_WorldTime += ts;
+			if (m_AnimationPlaying)
+			{
+				m_WorldTime += ts;
 
-			float ticksPerSecond = (float)(m_Scene->mAnimations[0]->mTicksPerSecond != 0 ? m_Scene->mAnimations[0]->mTicksPerSecond : 25.0f) * m_TimeMultiplier;
-			m_AnimationTime += ts * ticksPerSecond;
-			m_AnimationTime = fmod(m_AnimationTime, (float)m_Scene->mAnimations[0]->mDuration);
-		}
+				float ticksPerSecond = (float)(m_Scene->mAnimations[0]->mTicksPerSecond != 0 ? m_Scene->mAnimations[0]->mTicksPerSecond : 25.0f) * m_TimeMultiplier;
+				m_AnimationTime += ts * ticksPerSecond;
+				m_AnimationTime = fmod(m_AnimationTime, (float)m_Scene->mAnimations[0]->mDuration);
+			}
 
-		// Load Transform
-		if (m_Scene->mAnimations) {
 			BoneTransform(m_AnimationTime);
 		}
 
@@ -202,7 +256,7 @@ namespace Moza
 		for (Submesh& submesh : m_Submeshes)
 		{
 			// Assign Transformation Uniforms
-			if (m_Scene->mAnimations)
+			if (m_IsAnimated)
 			{
 				for (size_t i = 0; i < m_BoneTransforms.size(); i++)
 				{
@@ -215,19 +269,70 @@ namespace Moza
 		}
 	}
 
+	void Mesh::Render(Timestep ts, Ref<MaterialInstance> materialInstance)
+	{
+		Render(ts, glm::mat4(1.0f), materialInstance);
+	}
+
+	void Mesh::Render(Timestep ts, const glm::mat4& transform, Ref<MaterialInstance> materialInstance)
+	{
+		// Perform Animation Calculation
+		if (m_IsAnimated)
+		{
+			if (m_AnimationPlaying)
+			{
+				m_WorldTime += ts;
+
+				float ticksPerSecond = (float)(m_Scene->mAnimations[0]->mTicksPerSecond != 0 ? m_Scene->mAnimations[0]->mTicksPerSecond : 25.0f) * m_TimeMultiplier;
+				m_AnimationTime += ts * ticksPerSecond;
+				m_AnimationTime = fmod(m_AnimationTime, (float)m_Scene->mAnimations[0]->mDuration);
+			}
+			
+			BoneTransform(m_AnimationTime);
+		}
+		
+		if (materialInstance)
+			materialInstance->Bind();
+
+		m_VertexArray->Bind();
+
+		bool materialOverride = !!materialInstance;
+
+		for (Submesh& submesh : m_Submeshes)
+		{
+			// Assign Transformation Uniforms
+			if (m_IsAnimated)
+			{
+				for (size_t i = 0; i < m_BoneTransforms.size(); i++)
+				{
+					std::string uniformName = std::string("u_BoneTransforms[") + std::to_string(i) + std::string("]");
+					m_MeshShader->SetMat4(uniformName, m_BoneTransforms[i]);
+				}
+			}
+
+			if (!materialOverride)
+				m_MeshShader->SetMat4("u_ModelMatrix", transform * submesh.Transform);
+			glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
+		}
+	}
+
 	void Mesh::OnImGuiRender()
 	{
 		ImGui::Begin("Mesh Debug");
 		if (ImGui::CollapsingHeader(m_FilePath.c_str()))
 		{
-			if (ImGui::CollapsingHeader("Animation"))
+			if (m_IsAnimated)
 			{
-				if (ImGui::Button(m_AnimationPlaying ? "Pause" : "Play"))
-					m_AnimationPlaying = !m_AnimationPlaying;
+				if (ImGui::CollapsingHeader("Animation"))
+				{
+					if (ImGui::Button(m_AnimationPlaying ? "Pause" : "Play"))
+						m_AnimationPlaying = !m_AnimationPlaying;
 
-				ImGui::SliderFloat("##AnimationTime", &m_AnimationTime, 0.0f, (float)m_Scene->mAnimations[0]->mDuration);
-				ImGui::DragFloat("Time Scale", &m_TimeMultiplier, 0.05f, 0.0f, 10.0f);
+					ImGui::SliderFloat("##AnimationTime", &m_AnimationTime, 0.0f, (float)m_Scene->mAnimations[0]->mDuration);
+					ImGui::DragFloat("Time Scale", &m_TimeMultiplier, 0.05f, 0.0f, 10.0f);
+				}
 			}
+			
 		}
 
 		ImGui::End();
@@ -239,16 +344,33 @@ namespace Moza
 		MZ_CORE_TRACE("------------------------------------------------------");
 		MZ_CORE_TRACE("Vertex Buffer Dump");
 		MZ_CORE_TRACE("Mesh: {0}", m_FilePath);
-		for (size_t i = 0; i < m_Vertices.size(); i++)
+		if (m_IsAnimated)
 		{
-			auto& vertex = m_Vertices[i];
-			MZ_CORE_TRACE("Vertex: {0}", i);
-			MZ_CORE_TRACE("Position: {0}, {1}, {2}", vertex.Position.x, vertex.Position.y, vertex.Position.z);
-			MZ_CORE_TRACE("Normal: {0}, {1}, {2}", vertex.Normal.x, vertex.Normal.y, vertex.Normal.z);
-			MZ_CORE_TRACE("Binormal: {0}, {1}, {2}", vertex.Binormal.x, vertex.Binormal.y, vertex.Binormal.z);
-			MZ_CORE_TRACE("Tangent: {0}, {1}, {2}", vertex.Tangent.x, vertex.Tangent.y, vertex.Tangent.z);
-			MZ_CORE_TRACE("TexCoord: {0}, {1}", vertex.TexCoord.x, vertex.TexCoord.y);
-			MZ_CORE_TRACE("--");
+			for (size_t i = 0; i < m_AnimatedVertices.size(); i++)
+			{
+				auto& vertex = m_AnimatedVertices[i];
+				MZ_CORE_TRACE("Vertex: {0}", i);
+				MZ_CORE_TRACE("Position: {0}, {1}, {2}", vertex.Position.x, vertex.Position.y, vertex.Position.z);
+				MZ_CORE_TRACE("Normal: {0}, {1}, {2}", vertex.Normal.x, vertex.Normal.y, vertex.Normal.z);
+				MZ_CORE_TRACE("Binormal: {0}, {1}, {2}", vertex.Binormal.x, vertex.Binormal.y, vertex.Binormal.z);
+				MZ_CORE_TRACE("Tangent: {0}, {1}, {2}", vertex.Tangent.x, vertex.Tangent.y, vertex.Tangent.z);
+				MZ_CORE_TRACE("TexCoord: {0}, {1}", vertex.TexCoord.x, vertex.TexCoord.y);
+				MZ_CORE_TRACE("--");
+			}
+		}
+		else
+		{
+			for (size_t i = 0; i < m_StaticVertices.size(); i++)
+			{
+				auto& vertex = m_StaticVertices[i];
+				MZ_CORE_TRACE("Vertex: {0}", i);
+				MZ_CORE_TRACE("Position: {0}, {1}, {2}", vertex.Position.x, vertex.Position.y, vertex.Position.z);
+				MZ_CORE_TRACE("Normal: {0}, {1}, {2}", vertex.Normal.x, vertex.Normal.y, vertex.Normal.z);
+				MZ_CORE_TRACE("Binormal: {0}, {1}, {2}", vertex.Binormal.x, vertex.Binormal.y, vertex.Binormal.z);
+				MZ_CORE_TRACE("Tangent: {0}, {1}, {2}", vertex.Tangent.x, vertex.Tangent.y, vertex.Tangent.z);
+				MZ_CORE_TRACE("TexCoord: {0}, {1}", vertex.TexCoord.x, vertex.TexCoord.y);
+				MZ_CORE_TRACE("--");
+			}
 		}
 		MZ_CORE_TRACE("------------------------------------------------------");
 	}
@@ -292,6 +414,27 @@ namespace Moza
 
 		for (uint32_t i = 0; i < pNode->mNumChildren; i++)
 			ReadNodeHierarchy(AnimationTime, pNode->mChildren[i], transform);
+	}
+
+	void Mesh::TraverseNodes(aiNode* node, int level)
+	{
+		std::string levelText;
+		for (int i = 0; i < level; i++)
+			levelText += "-";
+
+		MZ_CORE_TRACE("{0}Node name: {1}", levelText, std::string(node->mName.data));
+
+		for (uint32_t i = 0; i < node->mNumMeshes; i++)
+		{
+			uint32_t mesh = node->mMeshes[i];
+			m_Submeshes[mesh].Transform = aiMatrix4x4ToGlm(node->mTransformation);
+		}
+
+		for (uint32_t i = 0; i < node->mNumChildren; i++)
+		{
+			aiNode* child = node->mChildren[i];
+			TraverseNodes(child, level + 1);
+		}
 	}
 
 	const aiNodeAnim* Mesh::FindNodeAnim(const aiAnimation* animation, const std::string& nodeName)

@@ -6,16 +6,20 @@
 
 namespace Moza
 {
+	std::vector<Ref<Shader>> Shader::s_AllShaders;
+
 	Ref<Shader> Shader::Create(const std::string& filePath)
 	{
+		Ref<Shader> result = nullptr;
+
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(filePath);
+			case RendererAPI::API::OpenGL:  result = CreateRef<OpenGLShader>(filePath);
 		}
 
-		MZ_CORE_ASSERT(false, "Unknown RendererAPI");
-		return nullptr;
+		s_AllShaders.push_back(result);
+		return result;
 	}
 
 	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
@@ -30,21 +34,19 @@ namespace Moza
 		Add(name, shader);
 	}
 
-	Ref<Shader> ShaderLibrary::Load(const std::string & filePath)
+	void ShaderLibrary::Load(const std::string & filePath)
 	{
 		auto shader = Shader::Create(filePath);
 		Add(shader);
-		return shader;
 	}
 
-	Ref<Shader> ShaderLibrary::Load(const std::string & name, std::string & filePath)
+	void ShaderLibrary::Load(const std::string & name, std::string & filePath)
 	{
 		auto shader = Shader::Create(filePath);
 		Add(name, shader);
-		return shader;
 	}
 
-	Ref<Shader> ShaderLibrary::Get(const std::string & name)
+	Ref<Shader>& ShaderLibrary::Get(const std::string & name)
 	{
 		MZ_CORE_ASSERT(Exists(name), "Shader not found!");
 		return m_Shaders[name];

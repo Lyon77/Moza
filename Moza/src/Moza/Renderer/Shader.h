@@ -42,10 +42,10 @@ namespace Moza
 
 		virtual const ShaderResourceList& GetResources() const = 0;
 
-		//// Temporary, before we have an asset manager
-		//static std::vector<Shader*> s_AllShaders;
-
 		static Ref<Shader> Create(const std::string& filePath);
+
+		// Temporary, before we have an asset manager
+		static std::vector<Ref<Shader>> s_AllShaders;
 	};
 
 	class ShaderLibrary
@@ -53,10 +53,10 @@ namespace Moza
 	public:
 		void Add(const std::string& name, const Ref<Shader>& shader);
 		void Add(const Ref<Shader>& shader);
-		Ref<Shader> Load(const std::string& filePath);
-		Ref<Shader> Load(const std::string& name, std::string& filePath);
+		void Load(const std::string& filePath);
+		void Load(const std::string& name, std::string& filePath);
 
-		Ref<Shader> Get(const std::string& name);
+		Ref<Shader>& Get(const std::string& name);
 
 		bool Exists(const std::string name) const;
 	private:

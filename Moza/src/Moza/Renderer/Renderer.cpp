@@ -4,6 +4,7 @@
 
 namespace Moza
 {
+	Renderer* Renderer::s_Instance = new Renderer();
 	Scope<Renderer::SceneData> Renderer::s_SceneData = CreateScope<Renderer::SceneData>();
 
 	void Renderer::BeginScene(OrthographicCamera& camera)
@@ -19,8 +20,13 @@ namespace Moza
 	{
 		MZ_PROFILE_FUNCTION();
 
+		s_Instance->m_ShaderLibrary = CreateScope<ShaderLibrary>();
+
 		RendererCommand::Init();
 		Renderer2D::Init();
+
+		Renderer::GetShaderLibrary()->Load("assets/shaders/MozaPBR_Static.glsl");
+		Renderer::GetShaderLibrary()->Load("assets/shaders/MozaPBR_Anim.glsl");
 	}
 
 	void Renderer::Shutdown()

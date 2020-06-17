@@ -172,7 +172,13 @@ namespace Moza
 		}
 
 		m_Minimized = false;
-		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		
+		auto& fbs = FramebufferPool::GetGlobal()->GetAll();
+		for (auto& fb : fbs)
+		{
+			if (auto fbp = fb.lock())
+				fbp->Resize(e.GetWidth(), e.GetHeight());
+		}
 
 		return false;
 	}

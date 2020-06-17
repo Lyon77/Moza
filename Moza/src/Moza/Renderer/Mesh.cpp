@@ -309,8 +309,8 @@ namespace Moza
 				}
 			}
 
-			if (!materialOverride)
-				m_MeshShader->SetMat4("u_ModelMatrix", transform * submesh.Transform);
+			/*if (!materialOverride)
+				m_MeshShader->SetMat4("u_ModelMatrix", transform * submesh.Transform);*/
 			glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
 		}
 	}

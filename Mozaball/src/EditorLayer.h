@@ -27,6 +27,7 @@ namespace Moza
 		Ref<Mesh> m_Mesh;
 		Ref<Mesh> m_SphereMesh, m_PlaneMesh;
 		Ref<Texture2D> m_BRDFLUT;
+		Ref<RenderPass> m_GeoPass, m_CompositePass;
 
 		Ref<Texture2D> m_CheckerboardTex;
 
@@ -70,7 +71,6 @@ namespace Moza
 		};
 		RoughnessInput m_RoughnessInput;
 
-		Ref<Framebuffer> m_Framebuffer, m_FinalPresentBuffer;
 		Ref<VertexArray> m_QuadVertexArray;
 		Ref<TextureCube> m_EnvironmentCubeMap, m_EnvironmentIrradiance;
 

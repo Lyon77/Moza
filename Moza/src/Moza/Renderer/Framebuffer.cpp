@@ -7,14 +7,14 @@
 
 namespace Moza
 {
-	Ref<Framebuffer> Framebuffer::Create(uint32_t width, uint32_t height, FramebufferFormat format)
+	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 	{
-		Moza::Framebuffer* result = nullptr;
+		Ref<Framebuffer> result = nullptr;
 
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLFrameBuffer>(width, height, format);
+			case RendererAPI::API::OpenGL:  return CreateRef<OpenGLFrameBuffer>(spec);
 		}
 	}
 
@@ -33,7 +33,7 @@ namespace Moza
 		return std::weak_ptr<Framebuffer>();
 	}
 
-	void FramebufferPool::Add(Framebuffer* framebuffer)
+	void FramebufferPool::Add(std::weak_ptr<Framebuffer> framebuffer)
 	{
 		m_Pool.push_back(framebuffer);
 	}

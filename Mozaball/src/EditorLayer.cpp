@@ -215,8 +215,26 @@ namespace Moza
 
 		m_CheckerboardTex = Texture2D::Create("assets/textures/Checkerboard.png");
 
-		m_Framebuffer = Framebuffer::Create(1280, 720, FramebufferFormat::RGBA16F);
-		m_FinalPresentBuffer = Framebuffer::Create(1280, 720, FramebufferFormat::RGBA8);
+		// Render Passes
+		FramebufferSpecification geoFramebufferSpec;
+		geoFramebufferSpec.Width = 1280;
+		geoFramebufferSpec.Height = 720;
+		geoFramebufferSpec.Format = FramebufferFormat::RGBA16F;
+		geoFramebufferSpec.ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+
+		RenderPassSpecification geoRenderPassSpec;
+		geoRenderPassSpec.TargetFramebuffer = Moza::Framebuffer::Create(geoFramebufferSpec);
+		m_GeoPass = RenderPass::Create(geoRenderPassSpec);
+
+		FramebufferSpecification compFramebufferSpec;
+		compFramebufferSpec.Width = 1280;
+		compFramebufferSpec.Height = 720;
+		compFramebufferSpec.Format = FramebufferFormat::RGBA8;
+		compFramebufferSpec.ClearColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+
+		RenderPassSpecification compRenderPassSpec;
+		compRenderPassSpec.TargetFramebuffer = Moza::Framebuffer::Create(compFramebufferSpec);
+		m_CompositePass = RenderPass::Create(compRenderPassSpec);
 
 		// Quad
 		float x = -4.0f, y = -1.0f;
@@ -310,7 +328,7 @@ namespace Moza
 
 			glm::mat4 viewProjection = m_Camera.GetProjectionMatrix() * m_Camera.GetViewMatrix();
 
-			m_Framebuffer->Bind();
+			Renderer::BeginRenderPass(m_GeoPass);
 			RendererCommand::SetClearColor({ m_ClearColor[0], m_ClearColor[1], m_ClearColor[2], m_ClearColor[3] });
 			RendererCommand::Clear();
 
@@ -474,17 +492,17 @@ namespace Moza
 			m_GridShader->SetFloat("u_Res", m_GridSize);
 			m_PlaneMesh->Render(ts, m_GridShader.get());
 
-			m_Framebuffer->Unbind();
+			Renderer::EndRenderPass();
 
 			// Render to final Buffer
-			m_FinalPresentBuffer->Bind();
+			Renderer::BeginRenderPass(m_CompositePass);
 			m_HDRShader->Bind();
 			m_HDRShader->SetFloat("u_Exposure", m_Exposure);
-			m_Framebuffer->BindTexture();
+			m_GeoPass->GetSpecification().TargetFramebuffer->BindTexture();
 			m_QuadVertexArray->Bind();
 			RendererCommand::DrawIndexed(m_QuadVertexArray, m_QuadVertexArray->GetIndexBuffer()->GetCount(), false);
 
-			m_FinalPresentBuffer->Unbind();
+			Renderer::EndRenderPass();
 		}
 	}
 
@@ -548,6 +566,7 @@ namespace Moza
 		Property("Exposure", m_Exposure, 0.0f, 5.0f);
 
 		Property("Mesh Scale", m_MeshScale, 0.0f, 2.0f);
+		m_Transform = glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale));
 
 		Property("Radiance Prefiltering", m_RadiancePrefilter);
 		Property("Env Map Rotation", m_EnvMapRotation, -360.0f, 360.0f);
@@ -732,11 +751,11 @@ namespace Moza
 		ImGui::Begin("Viewport");
 
 		auto viewportSize = ImGui::GetContentRegionAvail();
-		m_Framebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-		m_FinalPresentBuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+		m_GeoPass->GetSpecification().TargetFramebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
+		m_CompositePass->GetSpecification().TargetFramebuffer->Resize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
 		m_Camera.SetProjectionMatrix(glm::perspectiveFov(glm::radians(45.0f), viewportSize.x, viewportSize.y, 0.1f, 10000.0f));
 		m_Camera.SetViewportSize((uint32_t)viewportSize.x, (uint32_t)viewportSize.y);
-		ImGui::Image((void*)m_FinalPresentBuffer->GetColorAttachmentRendererID(), viewportSize, { 0, 1 }, { 1, 0 });
+		ImGui::Image((void*)m_CompositePass->GetSpecification().TargetFramebuffer->GetColorAttachmentRendererID(), viewportSize, { 0, 1 }, { 1, 0 });
 		
 		// Gizmos
 		if (m_GizmoType != -1)

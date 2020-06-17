@@ -179,6 +179,7 @@
     <ClInclude Include="src\Moza\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Moza\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Moza\Renderer\RendererCommand.h" />
+    <ClInclude Include="src\Moza\Renderer\RenderPass.h" />
     <ClInclude Include="src\Moza\Renderer\Shader.h" />
     <ClInclude Include="src\Moza\Renderer\ShaderUniform.h" />
     <ClInclude Include="src\Moza\Renderer\Texture.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRenderPass.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShaderUniform.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
@@ -586,6 +588,7 @@
     <ClCompile Include="src\Moza\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Moza\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Moza\Renderer\RendererCommand.cpp" />
+    <ClCompile Include="src\Moza\Renderer\RenderPass.cpp" />
     <ClCompile Include="src\Moza\Renderer\Shader.cpp" />
     <ClCompile Include="src\Moza\Renderer\Texture.cpp" />
     <ClCompile Include="src\Moza\Renderer\VertexArray.cpp" />
@@ -593,6 +596,7 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRenderPass.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShaderUniform.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />

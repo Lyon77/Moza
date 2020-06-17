@@ -165,6 +165,7 @@
     <ClInclude Include="src\Moza\Events\KeyEvent.h" />
     <ClInclude Include="src\Moza\Events\MouseEvent.h" />
     <ClInclude Include="src\Moza\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Moza\ImGui\ImGuizmo.h" />
     <ClInclude Include="src\Moza\Renderer\Buffer.h" />
     <ClInclude Include="src\Moza\Renderer\Camera.h" />
     <ClInclude Include="src\Moza\Renderer\Framebuffer.h" />
@@ -571,6 +572,7 @@
     <ClCompile Include="src\Moza\Core\Random.cpp" />
     <ClCompile Include="src\Moza\ImGui\ImGuiBuilder.cpp" />
     <ClCompile Include="src\Moza\ImGui\ImGuiLayer.cpp" />
+    <ClCompile Include="src\Moza\ImGui\ImGuizmo.cpp" />
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Moza\Renderer\Camera.cpp" />
     <ClCompile Include="src\Moza\Renderer\Framebuffer.cpp" />

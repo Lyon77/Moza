@@ -16,6 +16,7 @@ namespace Moza
 		void OnUpdate(Timestep ts) override;
 		virtual void OnImGuiRender() override;
 		void OnEvent(Event& e) override;
+		bool OnKeyPressedEvent(KeyPressedEvent& e);
 
 	private:
 		Ref<Shader> m_DynamicPBRShader;
@@ -97,5 +98,10 @@ namespace Moza
 			Spheres = 0, Model = 1
 		};
 		Scene m_Scene;
+
+
+		// Gizmo
+		int m_GizmoType = -1; // -1 = no gizmo
+		glm::mat4 m_Transform;
 	};
 }

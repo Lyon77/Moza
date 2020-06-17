@@ -2,6 +2,7 @@
 #include "Moza/ImGui/ImGuiLayer.h"
 
 #include <imgui.h>
+#include "Moza/ImGui/ImGuizmo.h"
 #include <examples/imgui_impl_glfw.h>
 #include <examples/imgui_impl_opengl3.h>
 
@@ -82,6 +83,7 @@ namespace Moza
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiLayer::End()

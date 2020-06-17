@@ -43,32 +43,18 @@
 	#error "Unknown platform!"
 #endif // End of platform detection
 
-#ifdef MZ_DEBUG
-	#if defined(MZ_PLATFORM_WINDOWS)
-		#define MZ_DEBUGBREAK() __debugbreak()
-	#elif defined(MZ_PLATFORM_LINUX)
-		#include <signal.h>
-		#define MZ_DEBUGBREAK() raise(SIGTRAP)
-	#else
-		#error "Platform doesn't support debugbreak yet!"
-	#endif
-	#define MZ_ENABLE_ASSERTS
-#else
-	#define MZ_DEBUGBREAK()
+#ifndef MZ_PLATFORM_WINDOWS
+	#error Moza only supports Windows!
 #endif
 
-#ifdef MZ_ENABLE_ASSERTS
-	#define MZ_ASSERT(x, ...) { if(!(x)) {MZ_ERROR("Assertion Failed: {0}", __VA_ARGS__); MZ_DEBUGBREAK(); } }
-	#define MZ_CORE_ASSERT(x, ...) { if(!(x)) {MZ_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); MZ_DEBUGBREAK(); } }
-#else
-	#define MZ_ASSERT(x, ...)
-	#define MZ_CORE_ASSERT(x, ...)
-#endif // MZ_ENABLE_ASSERTS
-
+// __VA_ARGS__ expansion to get past MSVC "bug"
+#define MZ_EXPAND_VARGS(x) x
 
 #define BIT(x) (1 << x)
 
 #define MZ_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+
+#include "Assert.h"
 
 namespace Moza
 {

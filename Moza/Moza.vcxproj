@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="src\Moza.h" />
     <ClInclude Include="src\Moza\Core\Application.h" />
+    <ClInclude Include="src\Moza\Core\Assert.h" />
     <ClInclude Include="src\Moza\Core\Buffer.h" />
     <ClInclude Include="src\Moza\Core\Core.h" />
     <ClInclude Include="src\Moza\Core\EntryPoint.h" />

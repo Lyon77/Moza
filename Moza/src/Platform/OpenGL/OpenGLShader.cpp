@@ -133,6 +133,13 @@ namespace Moza
 		Reload();
 	}
 
+	Ref<OpenGLShader> OpenGLShader::CreateFromString(const std::string& source)
+	{
+		Ref<OpenGLShader> shader = CreateRef<OpenGLShader>();
+		shader->Load(source);
+		return shader;
+	}
+
 	OpenGLShader::~OpenGLShader()
 	{
 		MZ_PROFILE_FUNCTION();
@@ -142,9 +149,14 @@ namespace Moza
 
 	void OpenGLShader::Reload()
 	{
+		std::string source = ReadFile(m_AssetPath);
+		Load(source);
+	}
+
+	void OpenGLShader::Load(const std::string & source)
+	{
 		MZ_PROFILE_FUNCTION();
 
-		std::string source = ReadFile(m_AssetPath);
 		m_ShaderSource = PreProcess(source);
 		Parse();
 

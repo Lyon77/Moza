@@ -14,7 +14,9 @@ namespace Moza
 	class OpenGLShader : public Shader
 	{
 	public:
+		OpenGLShader() = default;
 		OpenGLShader(const std::string& filePath);
+		static Ref<OpenGLShader> CreateFromString(const std::string& source);
 		~OpenGLShader();
 
 		virtual void Reload() override;
@@ -38,6 +40,8 @@ namespace Moza
 
 		virtual const std::string& GetName() const override { return m_Name; };
 	private:
+		void Load(const std::string& source);
+
 		std::string ReadFile(const std::string& filePath);
 		std::unordered_map<GLenum, std::string> PreProcess(const std::string& source);
 		

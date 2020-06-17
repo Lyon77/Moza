@@ -222,21 +222,21 @@ namespace Moza
 		data[3].TexCoord = glm::vec2(0, 1);
 
 		// VertexArray
-		m_VertexArray = VertexArray::Create();
+		m_QuadVertexArray = VertexArray::Create();
 
-		m_VertexBuffer = VertexBuffer::Create((float*)data, 4 * sizeof(QuadVertex));
+		auto quadVB = VertexBuffer::Create((float*)data, 4 * sizeof(QuadVertex));
 
-		m_VertexBuffer->SetLayout({
+		quadVB->SetLayout({
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float2, "a_TexCoord" }
 			});
 
-		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+		m_QuadVertexArray->AddVertexBuffer(quadVB);
 
 		uint32_t* indices = new uint32_t[6]{ 0, 1, 2, 2, 3, 0, };
 
-		m_IndexBuffer = IndexBuffer::Create(indices, 6);
-		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+		auto quadIB = IndexBuffer::Create(indices, 6);
+		m_QuadVertexArray->SetIndexBuffer(quadIB);
 
 		m_Light.Direction = { -0.5, -0.5, 1.0f };
 		m_Light.Radiance = { 1.0f, 1.0f, 1.0f };
@@ -274,9 +274,9 @@ namespace Moza
 			m_QuadShader->Bind();
 			m_QuadShader->SetMat4("u_InverseVP", glm::inverse(viewProjection));
 			m_EnvironmentIrradiance->Bind(0);
-			m_VertexArray->Bind();
+			m_QuadVertexArray->Bind();
 
-			RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);
+			RendererCommand::DrawIndexed(m_QuadVertexArray, m_QuadVertexArray->GetIndexBuffer()->GetCount(), false);
 
 
 			m_DynamicPBRShader->Bind();
@@ -433,10 +433,8 @@ namespace Moza
 			m_HDRShader->Bind();
 			m_HDRShader->SetFloat("u_Exposure", m_Exposure);
 			m_Framebuffer->BindTexture();
-			m_VertexArray->Bind();
-			m_VertexBuffer->Bind();
-			m_IndexBuffer->Bind();
-			RendererCommand::DrawIndexed(m_VertexArray, m_IndexBuffer->GetCount(), false);
+			m_QuadVertexArray->Bind();
+			RendererCommand::DrawIndexed(m_QuadVertexArray, m_QuadVertexArray->GetIndexBuffer()->GetCount(), false);
 
 			m_FinalPresentBuffer->Unbind();
 		}

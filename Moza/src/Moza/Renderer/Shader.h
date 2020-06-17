@@ -43,6 +43,7 @@ namespace Moza
 		virtual const ShaderResourceList& GetResources() const = 0;
 
 		static Ref<Shader> Create(const std::string& filePath);
+		static Ref<Shader> CreateFromString(const std::string& source);
 
 		// Temporary, before we have an asset manager
 		static std::vector<Ref<Shader>> s_AllShaders;

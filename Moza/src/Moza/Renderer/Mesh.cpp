@@ -195,14 +195,12 @@ namespace Moza
 			}
 		}
 		
-		if (m_IsAnimated)
-			m_VertexBuffer = VertexBuffer::Create((float*)m_AnimatedVertices.data(), m_AnimatedVertices.size() * sizeof(AnimatedVertex));
-		else
-			m_VertexBuffer = VertexBuffer::Create((float*)m_StaticVertices.data(), m_StaticVertices.size() * sizeof(Vertex));
+		m_VertexArray = VertexArray::Create();
 
 		if (m_IsAnimated)
 		{
-			m_VertexBuffer->SetLayout({
+			auto vb = VertexBuffer::Create((float*)m_AnimatedVertices.data(), m_AnimatedVertices.size() * sizeof(AnimatedVertex));
+			vb->SetLayout({
 				{ ShaderDataType::Float3, "a_Position" },
 				{ ShaderDataType::Float3, "a_Normal" },
 				{ ShaderDataType::Float3, "a_Tangent" },
@@ -211,24 +209,25 @@ namespace Moza
 				{ ShaderDataType::Int4, "a_BoneIndices" },
 				{ ShaderDataType::Float4, "a_BoneWeights" }
 				});
+			m_VertexArray->AddVertexBuffer(vb);
 		}
 		else
 		{
-			m_VertexBuffer->SetLayout({
+			auto vb = VertexBuffer::Create((float*)m_StaticVertices.data(), m_StaticVertices.size() * sizeof(Vertex));
+			vb->SetLayout({
 				{ ShaderDataType::Float3, "a_Position" },
 				{ ShaderDataType::Float3, "a_Normal" },
 				{ ShaderDataType::Float3, "a_Tangent" },
 				{ ShaderDataType::Float3, "a_Binormal" },
 				{ ShaderDataType::Float2, "a_TexCoord" }
 				});
+			m_VertexArray->AddVertexBuffer(vb);
 		}
 		
 
-		m_IndexBuffer = IndexBuffer::Create((uint32_t*)m_Indices.data(), m_Indices.size() * 3); // IndexBuffer is always in uint32_t
-
-		m_VertexArray = VertexArray::Create();
-		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
-		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
+		auto ib = IndexBuffer::Create((uint32_t*)m_Indices.data(), m_Indices.size() * 3); // IndexBuffer is always in uint32_t
+		
+		m_VertexArray->SetIndexBuffer(ib);
 
 		m_Scene = scene;
 	}

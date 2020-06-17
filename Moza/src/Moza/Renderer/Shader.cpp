@@ -22,6 +22,20 @@ namespace Moza
 		return result;
 	}
 
+	Ref<Shader> Shader::CreateFromString(const std::string& source)
+	{
+		Ref<Shader> result = nullptr;
+
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::None:    MZ_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
+		case RendererAPI::API::OpenGL:  result = OpenGLShader::CreateFromString(source);
+		}
+
+		s_AllShaders.push_back(result);
+		return result;
+	}
+
 	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
 	{
 		MZ_CORE_ASSERT(!Exists(name), "Shader already exists!");

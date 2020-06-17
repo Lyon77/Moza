@@ -70,9 +70,7 @@ namespace Moza
 		RoughnessInput m_RoughnessInput;
 
 		Ref<Framebuffer> m_Framebuffer, m_FinalPresentBuffer;
-		Ref<VertexArray> m_VertexArray;
-		Ref<VertexBuffer> m_VertexBuffer;
-		Ref<IndexBuffer> m_IndexBuffer;
+		Ref<VertexArray> m_QuadVertexArray;
 		Ref<TextureCube> m_EnvironmentCubeMap, m_EnvironmentIrradiance;
 
 		Camera m_Camera;

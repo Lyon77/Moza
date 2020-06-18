@@ -232,9 +232,8 @@ namespace Moza
 		m_Scene = scene;
 	}
 
-	void Mesh::Render(Timestep ts, Shader* shader)
+	void Mesh::OnUpdate(Timestep ts)
 	{
-		// Perform Animation Calculation
 		if (m_IsAnimated)
 		{
 			if (m_AnimationPlaying)
@@ -248,7 +247,10 @@ namespace Moza
 
 			BoneTransform(m_AnimationTime);
 		}
+	}
 
+	void Mesh::Render(Timestep ts, Shader* shader)
+	{
 		shader->Bind();
 		m_VertexArray->Bind();
 
@@ -264,53 +266,6 @@ namespace Moza
 				}
 			}
 			
-			glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
-		}
-	}
-
-	void Mesh::Render(Timestep ts, Ref<MaterialInstance> materialInstance)
-	{
-		Render(ts, glm::mat4(1.0f), materialInstance);
-	}
-
-	void Mesh::Render(Timestep ts, const glm::mat4& transform, Ref<MaterialInstance> materialInstance)
-	{
-		// Perform Animation Calculation
-		if (m_IsAnimated)
-		{
-			if (m_AnimationPlaying)
-			{
-				m_WorldTime += ts;
-
-				float ticksPerSecond = (float)(m_Scene->mAnimations[0]->mTicksPerSecond != 0 ? m_Scene->mAnimations[0]->mTicksPerSecond : 25.0f) * m_TimeMultiplier;
-				m_AnimationTime += ts * ticksPerSecond;
-				m_AnimationTime = fmod(m_AnimationTime, (float)m_Scene->mAnimations[0]->mDuration);
-			}
-			
-			BoneTransform(m_AnimationTime);
-		}
-		
-		if (materialInstance)
-			materialInstance->Bind();
-
-		m_VertexArray->Bind();
-
-		bool materialOverride = !!materialInstance;
-
-		for (Submesh& submesh : m_Submeshes)
-		{
-			// Assign Transformation Uniforms
-			if (m_IsAnimated)
-			{
-				for (size_t i = 0; i < m_BoneTransforms.size(); i++)
-				{
-					std::string uniformName = std::string("u_BoneTransforms[") + std::to_string(i) + std::string("]");
-					m_MeshShader->SetMat4(uniformName, m_BoneTransforms[i]);
-				}
-			}
-
-			/*if (!materialOverride)
-				m_MeshShader->SetMat4("u_ModelMatrix", transform * submesh.Transform);*/
 			glDrawElementsBaseVertex(GL_TRIANGLES, submesh.IndexCount, GL_UNSIGNED_INT, (void*)(sizeof(uint32_t) * submesh.BaseIndex), submesh.BaseVertex);
 		}
 	}
@@ -415,14 +370,8 @@ namespace Moza
 			ReadNodeHierarchy(AnimationTime, pNode->mChildren[i], transform);
 	}
 
-	void Mesh::TraverseNodes(aiNode* node, int level)
+	void Mesh::TraverseNodes(aiNode* node)
 	{
-		std::string levelText;
-		for (int i = 0; i < level; i++)
-			levelText += "-";
-
-		MZ_CORE_TRACE("{0}Node name: {1}", levelText, std::string(node->mName.data));
-
 		for (uint32_t i = 0; i < node->mNumMeshes; i++)
 		{
 			uint32_t mesh = node->mMeshes[i];
@@ -430,10 +379,7 @@ namespace Moza
 		}
 
 		for (uint32_t i = 0; i < node->mNumChildren; i++)
-		{
-			aiNode* child = node->mChildren[i];
-			TraverseNodes(child, level + 1);
-		}
+			TraverseNodes(node->mChildren[i]);
 	}
 
 	const aiNodeAnim* Mesh::FindNodeAnim(const aiAnimation* animation, const std::string& nodeName)

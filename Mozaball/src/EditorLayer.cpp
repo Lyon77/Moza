@@ -328,10 +328,11 @@ namespace Moza
 
 			glm::mat4 viewProjection = m_Camera.GetProjectionMatrix() * m_Camera.GetViewMatrix();
 
+			m_Mesh->OnUpdate(ts);
+
 			Renderer::BeginRenderPass(m_GeoPass);
 			RendererCommand::SetClearColor({ m_ClearColor[0], m_ClearColor[1], m_ClearColor[2], m_ClearColor[3] });
 			RendererCommand::Clear();
-
 
 			// TODO:
 			// Renderer::BeginScene(m_Camera);
@@ -481,7 +482,7 @@ namespace Moza
 				{
 					m_DynamicPBRShader->Bind();
 					m_Mesh->Render(ts, m_DynamicPBRShader.get());
-					//m_Mesh->Render(ts, glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale)), m_MeshMaterial);
+					//Renderer::SubmitMesh(m_Mesh, glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale)), m_MeshMaterial);
 				}
 
 			}

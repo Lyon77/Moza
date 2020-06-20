@@ -11,3 +11,4 @@ bin-int/
 
 # Profiling
 Sandbox/*.json
+Mozaball/*.json

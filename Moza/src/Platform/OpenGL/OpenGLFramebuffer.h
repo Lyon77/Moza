@@ -10,7 +10,7 @@ namespace Moza
 		OpenGLFramebuffer(const FramebufferSpecification& spec);
 		virtual ~OpenGLFramebuffer();
 
-		void Resize();
+		virtual void Resize(uint32_t width, uint32_t height) override;
 
 		virtual void Bind() override;
 		virtual void Unbind() override;
@@ -19,8 +19,8 @@ namespace Moza
 
 		virtual const FramebufferSpecification& GetSpecification() const override {	return m_Specification;	};
 	private:
-		uint32_t m_RendererID;
-		uint32_t m_ColorAttachment, m_DepthAttachment;
+		uint32_t m_RendererID = 0;
+		uint32_t m_ColorAttachment = 0, m_DepthAttachment = 0;
 		FramebufferSpecification m_Specification;
 	};
 }

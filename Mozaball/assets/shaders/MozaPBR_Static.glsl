@@ -8,7 +8,7 @@ layout(location = 3) in vec3 a_Binormal;
 layout(location = 4) in vec2 a_TexCoord;
 
 uniform mat4 u_ViewProjectionMatrix;
-uniform mat4 u_ModelMatrix;
+uniform mat4 u_Transform;
 
 out VertexOutput
 {
@@ -16,18 +16,20 @@ out VertexOutput
 	vec3 Normal;
 	vec2 TexCoord;
 	mat3 WorldNormals;
+	mat3 WorldTransform;
 	vec3 Binormal;
 } vs_Input;
 
 void main()
 {	
-	vs_Input.WorldPosition = vec3(u_ModelMatrix * vec4(a_Position, 1.0));
+	vs_Input.WorldPosition = vec3(u_Transform * vec4(a_Position, 1.0));
 	vs_Input.Normal = a_Normal;
 	vs_Input.TexCoord = vec2(a_TexCoord.x, 1.0 - a_TexCoord.y);
-	vs_Input.WorldNormals = mat3(u_ModelMatrix) * mat3(a_Tangent, a_Binormal, a_Normal);
+	vs_Input.WorldNormals = mat3(u_Transform) * mat3(a_Tangent, a_Binormal, a_Normal);
+	vs_Input.WorldTransform = mat3(u_Transform);
 	vs_Input.Binormal = a_Binormal;
 
-	gl_Position = u_ViewProjectionMatrix * u_ModelMatrix * vec4(a_Position, 1.0);
+	gl_Position = u_ViewProjectionMatrix * u_Transform * vec4(a_Position, 1.0);
 }
 
 #type fragment
@@ -52,6 +54,7 @@ in VertexOutput
 	vec3 Normal;
 	vec2 TexCoord;
 	mat3 WorldNormals;
+	mat3 WorldTransform;
 	vec3 Binormal;
 } vs_Input;
 
@@ -266,12 +269,7 @@ vec3 IBL(vec3 F0, vec3 Lr)
 	int u_EnvRadianceTexLevels = textureQueryLevels(u_EnvRadianceTex);
 	float NoV = clamp(m_Params.NdotV, 0.0, 1.0);
 	vec3 R = 2.0 * dot(m_Params.View, m_Params.Normal) * m_Params.Normal - m_Params.View;
-	vec3 specularIrradiance = vec3(0.0);
-
-	if (u_RadiancePrefilter > 0.5)
-		specularIrradiance = PrefilterEnvMap(m_Params.Roughness * m_Params.Roughness, R) * u_RadiancePrefilter;
-	else
-		specularIrradiance = textureLod(u_EnvRadianceTex, RotateVectorAboutY(u_EnvMapRotation, Lr), sqrt(m_Params.Roughness) * u_EnvRadianceTexLevels).rgb * (1.0 - u_RadiancePrefilter);
+	vec3 specularIrradiance = textureLod(u_EnvRadianceTex, RotateVectorAboutY(u_EnvMapRotation, Lr), (m_Params.Roughness * m_Params.Roughness) * u_EnvRadianceTexLevels).rgb;
 
 	vec2 specularBRDF = texture(u_BRDFLUTTexture, vec2(m_Params.NdotV, 1.0 - m_Params.Roughness)).rg;
 	vec3 specularIBL = specularIrradiance * (F * specularBRDF.x + specularBRDF.y);

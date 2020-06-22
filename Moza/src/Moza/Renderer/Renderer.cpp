@@ -33,7 +33,6 @@ namespace Moza
 		SceneRenderer::Init();
 
 		// Create Fullscreen Quad
-		// Create fullscreen quad
 		float x = -1;
 		float y = -1;
 		float width = 2, height = 2;

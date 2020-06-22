@@ -348,7 +348,7 @@ namespace Moza
 			m_DynamicPBRShader->Bind();
 
 			m_DynamicPBRShader->SetMat4("u_ViewProjectionMatrix", viewProjection);
-			m_DynamicPBRShader->SetMat4("u_ModelMatrix", m_Transform);
+			m_DynamicPBRShader->SetMat4("u_Transform", m_Transform);
 			m_DynamicPBRShader->SetFloat3("u_AlbedoColor", m_AlbedoInput.Color);
 			m_DynamicPBRShader->SetFloat("u_Metalness", m_MetalnessInput.Value);
 			m_DynamicPBRShader->SetFloat("u_Roughness", m_RoughnessInput.Value);
@@ -457,7 +457,7 @@ namespace Moza
 				{
 					m_StaticPBRShader->SetFloat("u_Metalness", 1.0f);
 					m_StaticPBRShader->SetFloat("u_Roughness", roughness);
-					m_StaticPBRShader->SetMat4("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, 0.0f)));
+					m_StaticPBRShader->SetMat4("u_Transform", glm::translate(glm::mat4(1.0f), glm::vec3(x, 0.0f, 0.0f)));
 					x += 1.1f;
 					roughness += 0.15f;
 					m_SphereMesh->Render(ts, m_StaticPBRShader.get());
@@ -469,7 +469,7 @@ namespace Moza
 				{
 					m_StaticPBRShader->SetFloat("u_Metalness", 0.0f);
 					m_StaticPBRShader->SetFloat("u_Roughness", roughness);
-					m_StaticPBRShader->SetMat4("u_ModelMatrix", glm::translate(glm::mat4(1.0f), glm::vec3(x, 1.2f, 0.0f)));
+					m_StaticPBRShader->SetMat4("u_Transform", glm::translate(glm::mat4(1.0f), glm::vec3(x, 1.2f, 0.0f)));
 					x += 1.1f;
 					roughness += 0.15f;
 					m_SphereMesh->Render(ts, m_StaticPBRShader.get());
@@ -487,7 +487,8 @@ namespace Moza
 			}
 
 			m_GridShader->Bind();
-			m_GridShader->SetMat4("u_MVP", viewProjection * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+			m_GridShader->SetMat4("u_ViewProjection", viewProjection);
+			m_GridShader->SetMat4("u_Transform", glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
 			m_GridShader->SetFloat("u_Scale", m_GridScale);
 			m_GridShader->SetFloat("u_Res", m_GridSize);
 			m_PlaneMesh->Render(ts, m_GridShader.get());

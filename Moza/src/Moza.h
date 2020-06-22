@@ -20,6 +20,7 @@
 //--- Renderer ------------------------------
 #include "Moza/Renderer/Renderer.h"
 #include "Moza/Renderer/Renderer2D.h"
+#include "Moza/Renderer/SceneRenderer.h"
 #include "Moza/Renderer/RendererCommand.h"
 #include "Moza/Renderer/RenderPass.h"
 
@@ -36,4 +37,8 @@
 #include "Moza/Renderer/OrthographicCameraController.h"
 
 #include "Moza/Renderer/ParticleSystem.h"
+//--- Scene ---------------------------------
+#include "Moza/Scene/Entity.h"
+#include "Moza/Scene/Scene.h"
+
 //-------------------------------------------

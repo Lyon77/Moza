@@ -17,7 +17,10 @@ namespace Moza
 		virtual uint32_t GetWidth() const override { return m_Width; }
 		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual const std::string& GetPath() const override { return m_Path; }
+		virtual uint32_t GetMipLevelCount() const override;
 		virtual uint32_t GetRendererID() const override { return m_RendererID; }
+
+		virtual bool Loaded() const override { return m_Loaded; }
 
 		virtual void SetData(void* data, uint32_t size) override;
 
@@ -40,12 +43,15 @@ namespace Moza
 		uint32_t m_Width, m_Height;
 		uint32_t m_RendererID;
 		Buffer m_ImageData;
+		bool m_IsHDR = false;
 		bool m_Locked = false;
+		bool m_Loaded = false;
 	};
 
 	class OpenGLTextureCube : public TextureCube
 	{
 	public:
+		OpenGLTextureCube(TextureFormat format, uint32_t width, uint32_t height);
 		OpenGLTextureCube(const std::string& path);
 		OpenGLTextureCube(const std::vector<std::string> textures_faces);
 		virtual ~OpenGLTextureCube();
@@ -54,6 +60,7 @@ namespace Moza
 		virtual uint32_t GetWidth() const override { return m_Width; }
 		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual const std::string& GetPath() const override { return m_Path; }
+		virtual uint32_t GetMipLevelCount() const override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
 

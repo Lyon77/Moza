@@ -22,6 +22,8 @@ namespace Moza
 		virtual void Bind() const = 0;
 		virtual void UnBind() const = 0;
 
+		virtual uint32_t GetRendererID() const = 0;
+
 		virtual void SetInt(const std::string& name, int value) = 0;
 		virtual void SetIntArray(const std::string& name, int* values, uint32_t count) = 0;
 		virtual void SetFloat(const std::string& name, const float value) = 0;
@@ -34,6 +36,8 @@ namespace Moza
 
 		virtual void SetVSMaterialUniformBuffer(Buffer buffer) = 0;
 		virtual void SetPSMaterialUniformBuffer(Buffer buffer) = 0;
+		virtual bool HasVSMaterialUniformBuffer() const = 0;
+		virtual bool HasPSMaterialUniformBuffer() const = 0;
 
 		virtual const ShaderUniformBufferList& GetVSRendererUniforms() const = 0;
 		virtual const ShaderUniformBufferList& GetPSRendererUniforms() const = 0;

@@ -7,14 +7,21 @@ namespace Moza
 {
 	static void OpenGLLogMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 	{
-		if (severity != GL_DEBUG_SEVERITY_NOTIFICATION)
+		switch (severity)
 		{
-			MZ_CORE_ERROR("{0}", message);
-			MZ_CORE_ASSERT(false, "");
-		}
-		else
-		{
-			// HZ_CORE_TRACE("{0}", message);
+			case GL_DEBUG_SEVERITY_HIGH:
+				MZ_CORE_ERROR("[OpenGL Debug HIGH] {0}", message);
+				MZ_CORE_ASSERT(false, "GL_DEBUG_SEVERITY_HIGH");
+				break;
+			case GL_DEBUG_SEVERITY_MEDIUM:
+				MZ_CORE_WARN("[OpenGL Debug MEDIUM] {0}", message);
+				break;
+			case GL_DEBUG_SEVERITY_LOW:
+				MZ_CORE_INFO("[OpenGL Debug LOW] {0}", message);
+				break;
+			case GL_DEBUG_SEVERITY_NOTIFICATION:
+				// MZ_CORE_TRACE("[OpenGL Debug NOTIFICATION] {0}", message);
+				break;
 		}
 	}
 
@@ -34,18 +41,34 @@ namespace Moza
 
 		LoadRequiredAssets();
 	}
+
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4 & color)
 	{
 		glClearColor(color.r, color.g, color.b, color.a);
 	}
+
 	void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 	{
 		glViewport(x, y, width, height);
 	}
+
 	void OpenGLRendererAPI::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
+
+	void OpenGLRendererAPI::DrawIndexed(uint32_t indexCount, bool depthTest)
+	{
+		if (!depthTest)
+			glDisable(GL_DEPTH_TEST);
+
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		if (!depthTest)
+			glEnable(GL_DEPTH_TEST);
+	}
+
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount, bool depthTest)
 	{
 		if (!depthTest)

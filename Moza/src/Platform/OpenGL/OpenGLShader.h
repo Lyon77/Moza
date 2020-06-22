@@ -24,6 +24,7 @@ namespace Moza
 
 		virtual void Bind() const override;
 		virtual void UnBind() const override;
+		virtual uint32_t GetRendererID() const override { return m_RendererID; }
 
 		virtual void SetVSMaterialUniformBuffer(Buffer buffer) override;
 		virtual void SetPSMaterialUniformBuffer(Buffer buffer) override;
@@ -77,15 +78,18 @@ namespace Moza
 		void UploadUniformStruct(OpenGLShaderUniformDeclaration* uniform, unsigned char* buffer, uint32_t offset);
 		/////////////////////////////////////////////////////////////////////////////////////////
 
-		inline const ShaderUniformBufferList& GetVSRendererUniforms() const override { return m_VSRendererUniformBuffers; }
-		inline const ShaderUniformBufferList& GetPSRendererUniforms() const override { return m_PSRendererUniformBuffers; }
-		inline const ShaderUniformBufferDeclaration& GetVSMaterialUniformBuffer() const override { return *m_VSMaterialUniformBuffer; }
-		inline const ShaderUniformBufferDeclaration& GetPSMaterialUniformBuffer() const override { return *m_PSMaterialUniformBuffer; }
-		inline const ShaderResourceList& GetResources() const override { return m_Resources; }
+		virtual const ShaderUniformBufferList& GetVSRendererUniforms() const override { return m_VSRendererUniformBuffers; }
+		virtual const ShaderUniformBufferList& GetPSRendererUniforms() const override { return m_PSRendererUniformBuffers; }
+		virtual bool HasVSMaterialUniformBuffer() const override { return (bool)m_VSMaterialUniformBuffer; }
+		virtual bool HasPSMaterialUniformBuffer() const override { return (bool)m_PSMaterialUniformBuffer; }
+		virtual const ShaderUniformBufferDeclaration& GetVSMaterialUniformBuffer() const override { return *m_VSMaterialUniformBuffer; }
+		virtual const ShaderUniformBufferDeclaration& GetPSMaterialUniformBuffer() const override { return *m_PSMaterialUniformBuffer; }
+		virtual const ShaderResourceList& GetResources() const override { return m_Resources; }
 	private:
 		uint32_t m_RendererID = 0;
 		std::string m_Name, m_AssetPath;
 		bool m_Loaded = false;
+		bool m_IsCompute = false;
 
 		std::unordered_map<GLenum, std::string> m_ShaderSource;
 

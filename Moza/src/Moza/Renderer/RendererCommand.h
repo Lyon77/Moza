@@ -24,6 +24,11 @@ namespace Moza
 			s_RendererAPI->Clear();
 		};
 
+		inline static void DrawIndexed(uint32_t count = 0, bool depthTest = true)
+		{
+			s_RendererAPI->DrawIndexed(count, depthTest);
+		}
+
 		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0, bool depthTest = true)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray, count, depthTest);

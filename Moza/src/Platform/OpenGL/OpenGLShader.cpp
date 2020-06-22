@@ -12,6 +12,7 @@ namespace Moza
 	{
 		if (type == "vertex") return GL_VERTEX_SHADER;
 		if (type == "fragment" || type == "pixel") return GL_FRAGMENT_SHADER;
+		if (type == "compute") return GL_COMPUTE_SHADER;
 
 		MZ_CORE_ASSERT(false, "Unknown shader type!");
 		return 0;
@@ -158,14 +159,18 @@ namespace Moza
 		MZ_PROFILE_FUNCTION();
 
 		m_ShaderSource = PreProcess(source);
-		Parse();
+		if (!m_IsCompute)
+			Parse();
 
 		if (m_RendererID)
 			glDeleteShader(m_RendererID);
 
 		Compile();
-		//ResolveUniforms();
-		//ValidateUniforms();
+		if (!m_IsCompute)
+		{
+			ResolveUniforms();
+			ValidateUniforms();
+		}
 
 		if (m_Loaded)
 		{
@@ -316,6 +321,13 @@ namespace Moza
 			MZ_CORE_ASSERT(nextLinePos != std::string::npos, "Syntax error");
 			pos = source.find(typeToken, nextLinePos);
 			shaderSources[ShaderTypeFromString(type)] = (pos == std::string::npos) ? source.substr(nextLinePos) : source.substr(nextLinePos, pos - nextLinePos);
+			
+			// Compute shaders cannot contain other types
+			if (ShaderTypeFromString(type) == GL_COMPUTE_SHADER)
+			{
+				m_IsCompute = true;
+				break;
+			}
 		}
 
 		return shaderSources;

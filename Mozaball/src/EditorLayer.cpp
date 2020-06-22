@@ -15,7 +15,6 @@
 
 namespace Moza
 {
-
 	static void ImGuiShowHelpMarker(const char* desc)
 	{
 		ImGui::TextDisabled("(?)");
@@ -803,8 +802,8 @@ namespace Moza
 
 		ImGui::End();
 
-		if (m_Mesh)
-			m_Mesh->OnImGuiRender();
+		/*if (m_Mesh)
+			m_Mesh->OnImGuiRender();*/
 
 	}
 

@@ -11,17 +11,10 @@ namespace Moza
 		{
 			case TextureFormat::RGB:     return GL_RGB;
 			case TextureFormat::RGBA:    return GL_RGBA;
+			case TextureFormat::Float16: return GL_RGBA16F;
 		}
+		MZ_CORE_ASSERT(false, "Unknown texture format!");
 		return 0;
-	}
-
-	static int CalculateMipMapCount(int width, int height)
-	{
-		int levels = 1;
-		while ((width | height) >> levels) {
-			levels++;
-		}
-		return levels;
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -55,21 +48,34 @@ namespace Moza
 
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(false);
+		
+		if (stbi_is_hdr(path.c_str()))
 		{
-			MZ_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
-
-			m_ImageData.Data = stbi_load(path.c_str(), &width, &height, &channels, srgb ? STBI_rgb : STBI_rgb_alpha);
+			MZ_CORE_INFO("Loading HDR texture {0}, srgb={1}", path, srgb);
+			m_ImageData.Data = (unsigned char*)stbi_loadf(path.c_str(), &width, &height, &channels, 0);
+			m_IsHDR = true;
+			m_Format = TextureFormat::Float16;
 		}
-		MZ_CORE_ASSERT(m_ImageData, "Failed to load image!");
+		else
+		{
+			MZ_CORE_INFO("Loading texture {0}, srgb={1}", path, srgb);
+			m_ImageData.Data = stbi_load(path.c_str(), &width, &height, &channels, srgb ? STBI_rgb : STBI_rgb_alpha);
+			MZ_CORE_ASSERT(m_ImageData.Data, "Could not read image!");
+			m_Format = TextureFormat::RGBA;
+		}
+
+		if (!m_ImageData.Data)
+			return;
+
+		m_Loaded = true;
 
 		m_Width = width;
 		m_Height = height;
-		m_Format = TextureFormat::RGBA;
 
 		if (srgb)
 		{
 			glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-			int levels = CalculateMipMapCount(m_Width, m_Height);
+			int levels = Texture::CalculateMipMapCount(m_Width, m_Height);
 			
 			glTextureStorage2D(m_RendererID, levels, GL_SRGB8, m_Width, m_Height);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, levels > 1 ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
@@ -87,8 +93,13 @@ namespace Moza
 			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-			glTexImage2D(GL_TEXTURE_2D, 0, MozaToOpenGLTextureFormat(m_Format), m_Width, m_Height, 0, srgb ? GL_SRGB8 : MozaToOpenGLTextureFormat(m_Format), GL_UNSIGNED_BYTE, m_ImageData.Data);
+			GLenum internalFormat = MozaToOpenGLTextureFormat(m_Format);
+			GLenum format = srgb ? GL_SRGB8 : (m_IsHDR ? GL_RGB : MozaToOpenGLTextureFormat(m_Format)); // HDR = GL_RGB for now
+			GLenum type = internalFormat == GL_RGBA16F ? GL_FLOAT : GL_UNSIGNED_BYTE;
+			glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, format, type, m_ImageData.Data);
+
 			glGenerateMipmap(GL_TEXTURE_2D);
 
 			glBindTexture(GL_TEXTURE_2D, 0);
@@ -102,6 +113,11 @@ namespace Moza
 		MZ_PROFILE_FUNCTION();
 
 		glDeleteTextures(1, &m_RendererID);
+	}
+
+	uint32_t OpenGLTexture2D::GetMipLevelCount() const
+	{
+		return Texture::CalculateMipMapCount(m_Width, m_Height);
 	}
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
@@ -152,6 +168,25 @@ namespace Moza
 	// TextureCube
 	//////////////////////////////////////////////////////////////////////////////////
 
+
+	OpenGLTextureCube::OpenGLTextureCube(TextureFormat format, uint32_t width, uint32_t height)
+	{
+		m_Width = width;
+		m_Height = height;
+		m_Format = format;
+
+		uint32_t levels = Texture::CalculateMipMapCount(width, height);
+
+		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_RendererID);
+		glTextureStorage2D(m_RendererID, levels, MozaToOpenGLTextureFormat(m_Format), width, height);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, levels > 1 ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		// glTextureParameterf(m_RendererID, GL_TEXTURE_MAX_ANISOTROPY, 16);
+	}
 
 	OpenGLTextureCube::OpenGLTextureCube(const std::string& path)
 	{
@@ -282,6 +317,11 @@ namespace Moza
 		MZ_PROFILE_FUNCTION();
 
 		glDeleteTextures(1, &m_RendererID);
+	}
+
+	uint32_t OpenGLTextureCube::GetMipLevelCount() const
+	{
+		return Texture::CalculateMipMapCount(m_Width, m_Height);
 	}
 
 	void OpenGLTextureCube::Bind(uint32_t slot) const

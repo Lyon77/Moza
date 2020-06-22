@@ -18,6 +18,7 @@ namespace Moza
 		MZ_PROFILE_FUNCTION();
 
 		glfwMakeContextCurrent(m_WindowHandle);
+		glfwMaximizeWindow(m_WindowHandle);
 		//load glad
 		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 		MZ_CORE_ASSERT(status, "Failed to initialize Glad");

@@ -566,7 +566,6 @@ namespace Moza
 		Property("Exposure", m_Exposure, 0.0f, 5.0f);
 
 		Property("Mesh Scale", m_MeshScale, 0.0f, 2.0f);
-		m_Transform = glm::scale(glm::mat4(1.0f), glm::vec3(m_MeshScale));
 
 		Property("Radiance Prefiltering", m_RadiancePrefilter);
 		Property("Env Map Rotation", m_EnvMapRotation, -360.0f, 360.0f);

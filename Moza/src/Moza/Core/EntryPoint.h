@@ -14,11 +14,11 @@ int main(int argc, char** argv)
 	auto app = Moza::CreateApplication();
 	MZ_PROFILE_END_SESSION();
 
-	MZ_PROFILE_BEGIN_SESSION("Startup", "MozaProfile-Runtime.json");
+	MZ_PROFILE_BEGIN_SESSION("Run-time", "MozaProfile-Runtime.json");
 	app->Run();
 	MZ_PROFILE_END_SESSION();
 
-	MZ_PROFILE_BEGIN_SESSION("Startup", "MozaProfile-Shutdown.json");
+	MZ_PROFILE_BEGIN_SESSION("Shutdown", "MozaProfile-Shutdown.json");
 	delete app;
 	MZ_PROFILE_END_SESSION();
 }

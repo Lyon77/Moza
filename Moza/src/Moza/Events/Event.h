@@ -40,6 +40,8 @@ namespace Moza {
 	class Event
 	{
 	public:
+		virtual ~Event() = default;
+
 		bool Handled = false;
 
 		virtual EventType GetEventType() const = 0;

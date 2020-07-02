@@ -69,7 +69,8 @@ namespace Moza
 		// update Camera
 		{
 			MZ_PROFILE_SCOPE("CameraController::OnUpdate");
-			m_CameraController.OnUpdate(ts);
+			if (m_ViewportFocused)
+				m_CameraController.OnUpdate(ts);
 		}
 
 		// update Render
@@ -88,8 +89,8 @@ namespace Moza
 
 
 			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), { 0.8f, 0.2f, 0.3f, 1.0f });
-			Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+			Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), m_SquareColor);
+			Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 			Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, { 0.2f, 0.8f, 0.3f, 0.75f }, 2.0f);
 			Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f,  0.1f }, { 1.0f, 1.0f }, glm::radians(angle), m_CheckerboardTexture, { 0.7f, 0.2f, 0.3f, 0.75f }, 1.0f);
 
@@ -187,8 +188,14 @@ namespace Moza
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
+
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+
+		Application::Get().GetImGuiLayer()->SetBlockEvents(!(m_ViewportFocused && m_ViewportHovered));
+
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize))
+		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize) && m_ViewportSize.x > 0 && m_ViewportSize.y > 0)
 		{
 			m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };

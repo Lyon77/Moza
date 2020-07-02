@@ -12,7 +12,8 @@ namespace Moza
 	{
 		if (type == "vertex") return GL_VERTEX_SHADER;
 		if (type == "fragment" || type == "pixel") return GL_FRAGMENT_SHADER;
-		if (type == "compute") return GL_COMPUTE_SHADER;
+		if (type == "compute") 
+			return GL_COMPUTE_SHADER;
 
 		MZ_CORE_ASSERT(false, "Unknown shader type!");
 		return 0;
@@ -493,48 +494,46 @@ namespace Moza
 		// Get a program object.
 		GLuint program = glCreateProgram();
 
-		MZ_CORE_ASSERT(m_ShaderSource.size() <= 2, "We only support 2 shaders for now");
-		std::array<GLenum, 2> glShaderIDs;
-
-		int glShaderIDIndex = 0;
+		std::vector<GLuint> shaderRendererIDs;
 		for (auto& kv : m_ShaderSource)
 		{
 			GLenum type = kv.first;
 			const std::string& source = kv.second;
 
 			// Create an empty shader handle
-			GLuint shader = glCreateShader(type);
+			GLuint shaderRendererID = glCreateShader(type);
 
 			// Send the shader source code to GL
 			// Note that std::string's .c_str is NULL character terminated.
 			const GLchar* sourceCStr = source.c_str();
-			glShaderSource(shader, 1, &sourceCStr, 0);
+			glShaderSource(shaderRendererID, 1, &sourceCStr, 0);
 
 			// Compile the vertex shader
-			glCompileShader(shader);
+			glCompileShader(shaderRendererID);
 
 			GLint isCompiled = 0;
-			glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
+			glGetShaderiv(shaderRendererID, GL_COMPILE_STATUS, &isCompiled);
 			if (isCompiled == GL_FALSE)
 			{
 				GLint maxLength = 0;
-				glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+				glGetShaderiv(shaderRendererID, GL_INFO_LOG_LENGTH, &maxLength);
 
 				// The maxLength includes the NULL character
 				std::vector<GLchar> infoLog(maxLength);
-				glGetShaderInfoLog(shader, maxLength, &maxLength, &infoLog[0]);
+				glGetShaderInfoLog(shaderRendererID, maxLength, &maxLength, &infoLog[0]);
 
 				// We don't need the shader anymore.
-				glDeleteShader(shader);
+				glDeleteShader(shaderRendererID);
 
 				MZ_CORE_ERROR("{0}", infoLog.data());
 				MZ_CORE_ASSERT(false, "Shader compilation failure!");
 				break;
 			}
 
+			shaderRendererIDs.push_back(shaderRendererID);
+
 			// Attach our shaders to our program
-			glAttachShader(program, shader);
-			glShaderIDs[glShaderIDIndex++] = shader;
+			glAttachShader(program, shaderRendererID);
 		}
 
 		//Set m_RendererID now so that we know the shaders work
@@ -558,7 +557,7 @@ namespace Moza
 			// We don't need the program anymore.
 			glDeleteProgram(program);
 			// Don't leak shaders either.
-			for (auto id : glShaderIDs)
+			for (auto id : shaderRendererIDs)
 				glDeleteShader(id);
 
 			MZ_CORE_ERROR("{0}", infoLog.data());
@@ -567,7 +566,7 @@ namespace Moza
 		}
 
 		// Always detach shaders after a successful link.
-		for (auto id : glShaderIDs)
+		for (auto id : shaderRendererIDs)
 		{
 			glDetachShader(program, id);
 			glDeleteShader(id);

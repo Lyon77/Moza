@@ -2,6 +2,7 @@
 #include <Moza/Core/EntryPoint.h>
 
 #include "EditorLayer.h"
+#include "TestLayer.h"
 
 class Mozaball : public Moza::Application
 {
@@ -9,7 +10,8 @@ public:
 	Mozaball(const Moza::ApplicationProps& props)
 		: Application(props)
 	{
-		PushLayer(new Moza::EditorLayer());
+		//PushLayer(new Moza::EditorLayer());
+		PushLayer(new Moza::TestLayer());
 	}
 
 	~Mozaball()

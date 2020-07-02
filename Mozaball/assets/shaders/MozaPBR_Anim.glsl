@@ -75,8 +75,6 @@ in VertexOutput
 layout(location = 0) out vec4 color;
 
 uniform Light lights;
-uniform vec3 lightDir;
-uniform vec3 lightRad;
 uniform vec3 u_CameraPosition;
 
 // PBR texture inputs
@@ -99,7 +97,7 @@ uniform float u_Roughness;
 uniform float u_EnvMapRotation;
 
 // Toggles
-uniform float u_RadiancePrefilter;
+//uniform float u_RadiancePrefilter;
 uniform float u_AlbedoTexToggle;
 uniform float u_NormalTexToggle;
 uniform float u_MetalnessTexToggle;

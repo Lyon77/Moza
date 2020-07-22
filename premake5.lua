@@ -23,6 +23,7 @@ IncludeDir["Glad"] = "Moza/vendor/Glad/include"
 IncludeDir["ImGui"] = "Moza/vendor/imgui"
 IncludeDir["glm"] = "Moza/vendor/glm"
 IncludeDir["stb_image"] = "Moza/vendor/stb_image"
+IncludeDir["entt"] = "Moza/vendor/entt/include"
 
 group "Dependencies"
 	include "Moza/vendor/GLFW"
@@ -67,7 +68,8 @@ project "Moza"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -121,7 +123,8 @@ project "Sandbox"
 		"Moza/vendor/spdlog/include",
 		"Moza/src",
 		"Moza/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -168,7 +171,8 @@ project "Mozaball"
 		"Moza/vendor/spdlog/include",
 		"Moza/src",
 		"Moza/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links

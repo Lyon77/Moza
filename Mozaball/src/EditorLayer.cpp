@@ -54,6 +54,14 @@ namespace Moza
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
+
+		m_ActiveScene = CreateRef<Scene>();
+
+		auto square = m_ActiveScene->CreateEntity();
+		m_ActiveScene->Reg().emplace<TransformComponent>(square);
+		m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+
+		m_SquareEntity = square;
 	}
 
 	void EditorLayer::OnDetach()
@@ -65,6 +73,15 @@ namespace Moza
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
 		MZ_PROFILE_FUNCTION();
+
+		// Resize
+		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+		{
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+		}
 
 		// update Camera
 		{
@@ -84,15 +101,18 @@ namespace Moza
 
 		{
 			MZ_PROFILE_SCOPE("RendererDraw");
-			static float angle = 0.0f;
-			angle += ts * 20.0f;
-
 
 			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), m_SquareColor);
-			Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-			Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, { 0.2f, 0.8f, 0.3f, 0.75f }, 2.0f);
-			Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f,  0.1f }, { 1.0f, 1.0f }, glm::radians(angle), m_CheckerboardTexture, { 0.7f, 0.2f, 0.3f, 0.75f }, 1.0f);
+
+			m_ActiveScene->OnUpdate(ts);
+
+			//static float angle = 0.0f;
+			//angle += ts * 20.0f;
+			//
+			//Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), m_SquareColor);
+			//Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+			//Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, { 0.2f, 0.8f, 0.3f, 0.75f }, 2.0f);
+			//Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f,  0.1f }, { 1.0f, 1.0f }, glm::radians(angle), m_CheckerboardTexture, { 0.7f, 0.2f, 0.3f, 0.75f }, 1.0f);
 
 			/*
 			// Drawing the Sprite Map
@@ -183,7 +203,8 @@ namespace Moza
 		}
 
 		ImGui::Begin("Settings");
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+		auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
@@ -195,13 +216,9 @@ namespace Moza
 		Application::Get().GetImGuiLayer()->SetBlockEvents(!(m_ViewportFocused && m_ViewportHovered));
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize) && m_ViewportSize.x > 0 && m_ViewportSize.y > 0)
-		{
-			m_Framebuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-			m_CameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
-		}
+		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+
 		uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 }); // Flip the y axis
 		ImGui::End();

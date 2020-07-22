@@ -17,6 +17,9 @@
 
 #include "Moza/ImGui/ImGuiLayer.h"
 
+#include "Moza/Scene/Scene.h"
+#include "Moza/Scene/Components.h"
+
 //--- Renderer ------------------------------
 #include "Moza/Renderer/Renderer.h"
 #include "Moza/Renderer/Renderer2D.h"

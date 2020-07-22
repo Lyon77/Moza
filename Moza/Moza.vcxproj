@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>mzpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;MZ_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -99,7 +99,7 @@
       <PrecompiledHeaderFile>mzpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;MZ_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -124,7 +124,7 @@
       <PrecompiledHeaderFile>mzpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLFW_INCLUDE_NONE;MZ_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\entt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -177,6 +177,8 @@
     <ClInclude Include="src\Moza\Renderer\SubTexture2D.h" />
     <ClInclude Include="src\Moza\Renderer\Texture.h" />
     <ClInclude Include="src\Moza\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Moza\Scene\Components.h" />
+    <ClInclude Include="src\Moza\Scene\Scene.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
@@ -289,12 +291,48 @@
     <ClInclude Include="vendor\glm\glm\ext\matrix_float4x3_precision.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\matrix_float4x4.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\matrix_float4x4_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int2x2.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int2x2_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int2x3.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int2x3_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int2x4.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int2x4_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int3x2.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int3x2_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int3x3.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int3x3_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int3x4.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int3x4_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int4x2.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int4x2_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int4x3.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int4x3_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int4x4.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_int4x4_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\matrix_projection.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\matrix_projection.inl" />
     <ClInclude Include="vendor\glm\glm\ext\matrix_relational.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\matrix_relational.inl" />
     <ClInclude Include="vendor\glm\glm\ext\matrix_transform.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\matrix_transform.inl" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint2x2.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint2x2_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint2x3.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint2x3_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint2x4.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint2x4_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint3x2.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint3x2_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint3x3.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint3x3_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint3x4.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint3x4_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint4x2.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint4x2_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint4x3.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint4x3_sized.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint4x4.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\matrix_uint4x4_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\quaternion_common.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\quaternion_common.inl" />
     <ClInclude Include="vendor\glm\glm\ext\quaternion_common_simd.inl" />
@@ -319,6 +357,8 @@
     <ClInclude Include="vendor\glm\glm\ext\scalar_int_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\scalar_integer.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\scalar_integer.inl" />
+    <ClInclude Include="vendor\glm\glm\ext\scalar_packing.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\scalar_packing.inl" />
     <ClInclude Include="vendor\glm\glm\ext\scalar_relational.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\scalar_relational.inl" />
     <ClInclude Include="vendor\glm\glm\ext\scalar_uint_sized.hpp" />
@@ -352,24 +392,34 @@
     <ClInclude Include="vendor\glm\glm\ext\vector_float4_precision.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_int1.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_int1_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_int1_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_int2.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_int2_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_int2_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_int3.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_int3_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_int3_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_int4.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_int4_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_int4_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_integer.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_integer.inl" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_packing.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_packing.inl" />
     <ClInclude Include="vendor\glm\glm\ext\vector_relational.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_relational.inl" />
     <ClInclude Include="vendor\glm\glm\ext\vector_uint1.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_uint1_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_uint1_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_uint2.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_uint2_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_uint2_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_uint3.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_uint3_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_uint3_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_uint4.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_uint4_precision.hpp" />
+    <ClInclude Include="vendor\glm\glm\ext\vector_uint4_sized.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_ulp.hpp" />
     <ClInclude Include="vendor\glm\glm\ext\vector_ulp.inl" />
     <ClInclude Include="vendor\glm\glm\fwd.hpp" />
@@ -578,6 +628,7 @@
     <ClCompile Include="src\Moza\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\Moza\Renderer\Texture.cpp" />
     <ClCompile Include="src\Moza\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Moza\Scene\Scene.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />

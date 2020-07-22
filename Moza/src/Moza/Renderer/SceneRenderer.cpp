@@ -17,7 +17,8 @@ namespace Moza
 			Camera SceneCamera;
 
 			// Resources
-			Ref<MaterialInstance> SkyboxMaterial;
+			//Ref<MaterialInstance> SkyboxMaterial;
+			Ref<Shader> SkyboxShader;
 			Environment SceneEnvironment;
 		} SceneData;
 
@@ -36,7 +37,9 @@ namespace Moza
 		std::vector<DrawCommand> DrawList;
 
 		// Grid
-		Ref<MaterialInstance> GridMaterial;
+		//Ref<MaterialInstance> GridMaterial;
+		Ref<Mesh> GridMesh;
+		Ref<Shader> GridShader;
 	};
 
 	static SceneRendererData s_Data;
@@ -64,14 +67,19 @@ namespace Moza
 		s_Data.CompositePass = RenderPass::Create(compRenderPassSpec);
 
 		s_Data.CompositeShader = Shader::Create("assets/shaders/hdr.glsl");
+		s_Data.CompositeShader->Bind();
+		s_Data.CompositeShader->SetInt("u_Texture", 0);
+		s_Data.CompositeShader->UnBind();
+
 		s_Data.BRDFLUT = Texture2D::Create("assets/textures/BRDF_LUT.tga");
 
 		// Grid
-		auto gridShader = Shader::Create("assets/shaders/Grid.glsl");
-		s_Data.GridMaterial = MaterialInstance::Create(Material::Create(gridShader));
+		s_Data.GridMesh = CreateRef<Mesh>("assets/models/Plane1m.obj");
+		s_Data.GridShader = Shader::Create("assets/shaders/grid.glsl");
 		float gridScale = 16.025f, gridSize = 0.025f;
-		s_Data.GridMaterial->Set("u_Scale", gridScale);
-		s_Data.GridMaterial->Set("u_Res", gridSize);
+		s_Data.GridShader->Bind();
+		s_Data.GridShader->SetFloat("u_Scale", gridScale);
+		s_Data.GridShader->SetFloat("u_Res", gridSize);
 	}
 
 	void SceneRenderer::SetViewportSize(uint32_t width, uint32_t height)
@@ -87,7 +95,7 @@ namespace Moza
 		s_Data.ActiveScene = scene;
 
 		s_Data.SceneData.SceneCamera = scene->m_Camera;
-		s_Data.SceneData.SkyboxMaterial = scene->m_SkyboxMaterial;
+		s_Data.SceneData.SkyboxShader = scene->m_SkyboxShader;
 		s_Data.SceneData.SceneEnvironment = scene->m_Environment;
 	}
 
@@ -195,30 +203,46 @@ namespace Moza
 		auto viewProjection = s_Data.SceneData.SceneCamera.GetProjectionMatrix() * s_Data.SceneData.SceneCamera.GetViewMatrix();
 
 		// Skybox
-		auto skyboxShader = s_Data.SceneData.SkyboxMaterial->GetShader();
-		s_Data.SceneData.SkyboxMaterial->Set("u_InverseVP", glm::inverse(viewProjection));
-		// s_Data.SceneInfo.EnvironmentIrradianceMap->Bind(0);
-		Renderer::SubmitFullscreenQuad(s_Data.SceneData.SkyboxMaterial);
+		s_Data.SceneData.SkyboxShader->Bind();
+		s_Data.SceneData.SkyboxShader->SetMat4("u_InverseVP", glm::inverse(viewProjection));
+		Renderer::SubmitFullscreenQuad(nullptr, false);
 
 		// Render entities
 		for (auto& dc : s_Data.DrawList)
 		{
-			auto baseMaterial = dc.Mesh->GetMaterial();
-			baseMaterial->Set("u_ViewProjectionMatrix", viewProjection);
-			baseMaterial->Set("u_CameraPosition", s_Data.SceneData.SceneCamera.GetPosition());
+			//auto baseMaterial = dc.Mesh->GetMaterial();
+			//baseMaterial->Set("u_ViewProjectionMatrix", viewProjection);
+			//baseMaterial->Set("u_CameraPosition", s_Data.SceneData.SceneCamera.GetPosition());
+			//
+			//// Environment (TODO: don't do this per mesh)
+			//baseMaterial->Set("u_EnvRadianceTex", s_Data.SceneData.SceneEnvironment.RadianceMap);
+			//baseMaterial->Set("u_EnvIrradianceTex", s_Data.SceneData.SceneEnvironment.IrradianceMap);
+			//baseMaterial->Set("u_BRDFLUTTexture", s_Data.BRDFLUT);
 
+			auto baseShader = dc.Mesh->GetMeshShader();
+			baseShader->Bind();
+			baseShader->SetMat4("u_ViewProjectionMatrix", viewProjection);
+			baseShader->SetFloat3("u_CameraPosition", s_Data.SceneData.SceneCamera.GetPosition());
+			
 			// Environment (TODO: don't do this per mesh)
-			baseMaterial->Set("u_EnvRadianceTex", s_Data.SceneData.SceneEnvironment.RadianceMap);
-			baseMaterial->Set("u_EnvIrradianceTex", s_Data.SceneData.SceneEnvironment.IrradianceMap);
-			baseMaterial->Set("u_BRDFLUTTexture", s_Data.BRDFLUT);
+			baseShader->SetInt("u_EnvRadianceTex", 0);
+			baseShader->SetInt("u_EnvIrradianceTex", 1);
+			baseShader->SetInt("u_BRDFLUTTexture", 2);
+			s_Data.SceneData.SceneEnvironment.RadianceMap->Bind(0);
+			s_Data.SceneData.SceneEnvironment.IrradianceMap->Bind(1);
+			s_Data.BRDFLUT->Bind(2);
 
 			auto overrideMaterial = nullptr; // dc.Material;
 			Renderer::SubmitMesh(dc.Mesh, dc.Transform, overrideMaterial);
 		}
 
 		// Grid
-		s_Data.GridMaterial->Set("u_ViewProjection", viewProjection);
-		Renderer::SubmitQuad(s_Data.GridMaterial, glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+		s_Data.GridShader->Bind();
+		s_Data.GridShader->SetMat4("u_ViewProjection", viewProjection);
+		s_Data.GridShader->SetMat4("u_Transform", glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+		Renderer::SubmitQuad(nullptr, glm::mat4(1.0f));
+		//s_Data.GridShader->SetMat4("u_Transform", glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+		//s_Data.GridMesh->Render(0.0f, s_Data.GridShader.get());
 
 		Renderer::EndRenderPass();
 	}
@@ -229,7 +253,7 @@ namespace Moza
 		s_Data.CompositeShader->Bind();
 		s_Data.CompositeShader->SetFloat("u_Exposure", s_Data.SceneData.SceneCamera.GetExposure());
 		s_Data.GeoPass->GetSpecification().TargetFramebuffer->BindTexture();
-		Renderer::SubmitFullscreenQuad(nullptr);
+		Renderer::SubmitFullscreenQuad(nullptr, false);
 		Renderer::EndRenderPass();
 	}
 }

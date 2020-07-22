@@ -188,7 +188,6 @@ namespace Moza
 		m_MeshMaterial = MaterialInstance::Create(m_Mesh->GetMaterial());
 
 		m_SphereMesh = CreateRef<Mesh>("assets/models/Sphere1m.fbx");
-		m_PlaneMesh = CreateRef<Mesh>("assets/models/Plane1m.obj");
 
 		m_QuadShader->Bind();
 		m_QuadShader->SetInt("u_Texture", 0);
@@ -223,6 +222,10 @@ namespace Moza
 		// Enviroment
 		m_EnvironmentCubeMap = TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Radiance.tga");
 		m_EnvironmentIrradiance = TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Irradiance.tga");
+		auto environment = Environment::Load("assets/env/birchwood_4k.hdr");
+		m_EnvironmentCubeMap = environment.RadianceMap;
+		m_EnvironmentIrradiance = environment.IrradianceMap;
+
 		m_BRDFLUT = Texture2D::Create("assets/textures/BRDF_LUT.tga");
 
 		m_CheckerboardTex = Texture2D::Create("assets/textures/Checkerboard.png");
@@ -361,7 +364,7 @@ namespace Moza
 			m_DynamicPBRShader->Bind();
 
 			m_DynamicPBRShader->SetMat4("u_ViewProjectionMatrix", viewProjection);
-			m_DynamicPBRShader->SetMat4("u_Transform", m_Transform);
+			m_DynamicPBRShader->SetMat4("u_Transform", glm::scale(m_Transform, glm::vec3(m_MeshScale)));
 			m_DynamicPBRShader->SetFloat3("u_AlbedoColor", m_AlbedoInput.Color);
 			m_DynamicPBRShader->SetFloat("u_Metalness", m_MetalnessInput.Value);
 			m_DynamicPBRShader->SetFloat("u_Roughness", m_RoughnessInput.Value);
@@ -501,10 +504,11 @@ namespace Moza
 
 			m_GridShader->Bind();
 			m_GridShader->SetMat4("u_ViewProjection", viewProjection);
-			m_GridShader->SetMat4("u_Transform", glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
+			m_GridShader->SetMat4("u_Transform", glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f)) * glm::scale(glm::mat4(1.0f), glm::vec3(16.0f)));
 			m_GridShader->SetFloat("u_Scale", m_GridScale);
 			m_GridShader->SetFloat("u_Res", m_GridSize);
-			m_PlaneMesh->Render(ts, m_GridShader.get());
+			m_QuadVertexArray->Bind();
+			RendererCommand::DrawIndexed(m_QuadVertexArray, m_QuadVertexArray->GetIndexBuffer()->GetCount(), true);
 
 			Renderer::EndRenderPass();
 

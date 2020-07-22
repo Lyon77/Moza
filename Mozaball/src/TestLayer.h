@@ -47,6 +47,7 @@ namespace Moza
 
 		Ref<Shader> m_BrushShader;
 		Ref<Mesh> m_PlaneMesh;
+		Ref<Shader> m_SphereShader;
 		Ref<Material> m_SphereBaseMaterial;
 
 		Ref<Material> m_MeshMaterial;

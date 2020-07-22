@@ -27,6 +27,7 @@ namespace Moza
 		Camera& GetCamera() { return m_Camera; }
 
 		void SetEnvironment(const Environment& environment);
+		void SetEnvironment(const Ref<TextureCube>& radiance, const Ref<TextureCube>& irradiance);
 		void SetSkybox(const Ref<TextureCube>& skybox);
 
 		float& GetSkyboxLod() { return m_SkyboxLod; }
@@ -40,7 +41,8 @@ namespace Moza
 
 		Environment m_Environment;
 		Ref<TextureCube> m_SkyboxTexture;
-		Ref<MaterialInstance> m_SkyboxMaterial;
+		Ref<Shader> m_SkyboxShader;
+		//Ref<MaterialInstance> m_SkyboxMaterial;
 
 		float m_SkyboxLod = 1.0f;
 

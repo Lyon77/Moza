@@ -105,7 +105,7 @@ namespace Moza
 
 	void Renderer::SubmitQuad(const Ref<MaterialInstance>& material, const glm::mat4& transform)
 	{
-		bool depthTest = true;
+		bool depthTest = false;
 		if (material)
 		{
 			material->Bind();
@@ -119,9 +119,8 @@ namespace Moza
 		RendererCommand::DrawIndexed(6, depthTest);
 	}
 
-	void Renderer::SubmitFullscreenQuad(const Ref<MaterialInstance>& material)
+	void Renderer::SubmitFullscreenQuad(const Ref<MaterialInstance>& material, bool depthTest)
 	{
-		bool depthTest = true;
 		if (material)
 		{
 			material->Bind();

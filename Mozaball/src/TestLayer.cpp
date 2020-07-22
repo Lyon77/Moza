@@ -177,12 +177,16 @@ namespace Moza
 
 		auto environment = Environment::Load("assets/env/birchwood_4k.hdr");
 
+		auto m_EnvironmentCubeMap = TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Radiance.tga");
+		auto m_EnvironmentIrradiance = TextureCube::Create("assets/textures/environments/Arches_E_PineTree_Irradiance.tga");
+
 		// Model Scene
 		{
 			m_Scene = CreateRef<Scene>("Model Scene");
 			m_Scene->SetCamera(Camera(glm::perspectiveFov(glm::radians(45.0f), 1280.0f, 720.0f, 0.1f, 10000.0f)));
 
 			m_Scene->SetEnvironment(environment);
+			m_Scene->SetEnvironment(m_EnvironmentCubeMap, m_EnvironmentIrradiance);
 
 			/*m_MeshEntity = m_Scene->CreateEntity();
 
@@ -199,10 +203,26 @@ namespace Moza
 
 			m_SphereScene->SetEnvironment(environment);
 
-			/*auto sphereMesh = CreateRef<Mesh>("assets/models/Sphere1m.fbx");
+			auto sphereMesh = CreateRef<Mesh>("assets/models/Sphere1m.fbx");
 			m_SphereBaseMaterial = sphereMesh->GetMaterial();
+			m_SphereShader = sphereMesh->GetMeshShader();
 
-			float x = -4.0f;
+			auto sphereEntity = m_SphereScene->CreateEntity();
+
+			Ref<MaterialInstance> mi = CreateRef<MaterialInstance>(m_SphereBaseMaterial);
+			mi->Set("u_Metalness", 1.0f);
+			mi->Set("u_Roughness", 0.0f);
+			m_MetalSphereMaterialInstances.push_back(mi);
+
+			m_SphereShader->Bind();
+			m_SphereShader->SetFloat("u_Metalness", 1.0f);
+			m_SphereShader->SetFloat("u_Roughness", 0.0f);
+
+			sphereEntity->SetMesh(sphereMesh);
+			sphereEntity->SetMaterial(mi);
+			sphereEntity->Transform() = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+			/*float x = -4.0f;
 			float roughness = 0.0f;
 			for (int i = 0; i < 8; i++)
 			{
@@ -261,33 +281,44 @@ namespace Moza
 	{
 		MZ_PROFILE_FUNCTION();
 
-		/*m_MeshMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
-		m_MeshMaterial->Set("u_Metalness", m_MetalnessInput.Value);
-		m_MeshMaterial->Set("u_Roughness", m_RoughnessInput.Value);
-		m_MeshMaterial->Set("lights", m_Light);
-		m_MeshMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
-		m_MeshMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
-		m_MeshMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
-		m_MeshMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
-		m_MeshMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
+		//m_MeshMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
+		//m_MeshMaterial->Set("u_Metalness", m_MetalnessInput.Value);
+		//m_MeshMaterial->Set("u_Roughness", m_RoughnessInput.Value);
+		//m_MeshMaterial->Set("lights", m_Light);
+		//m_MeshMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		//m_MeshMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
 
-		m_SphereBaseMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
-		m_SphereBaseMaterial->Set("lights", m_Light);
-		m_SphereBaseMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
-		m_SphereBaseMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
-		m_SphereBaseMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
-		m_SphereBaseMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
-		m_SphereBaseMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
-		m_SphereBaseMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
+		//m_SphereBaseMaterial->Set("u_AlbedoColor", m_AlbedoInput.Color);
+		//m_SphereBaseMaterial->Set("lights", m_Light);
+		//m_SphereBaseMaterial->Set("u_RadiancePrefilter", m_RadiancePrefilter ? 1.0f : 0.0f);
+		//m_SphereBaseMaterial->Set("u_AlbedoTexToggle", m_AlbedoInput.UseTexture ? 1.0f : 0.0f);
+		//m_SphereBaseMaterial->Set("u_NormalTexToggle", m_NormalInput.UseTexture ? 1.0f : 0.0f);
+		//m_SphereBaseMaterial->Set("u_MetalnessTexToggle", m_MetalnessInput.UseTexture ? 1.0f : 0.0f);
+		//m_SphereBaseMaterial->Set("u_RoughnessTexToggle", m_RoughnessInput.UseTexture ? 1.0f : 0.0f);
+		//m_SphereBaseMaterial->Set("u_EnvMapRotation", m_EnvMapRotation);
 
-		if (m_AlbedoInput.TextureMap)
-			m_MeshMaterial->Set("u_AlbedoTexture", m_AlbedoInput.TextureMap);
-		if (m_NormalInput.TextureMap)
-			m_MeshMaterial->Set("u_NormalTexture", m_NormalInput.TextureMap);
-		if (m_MetalnessInput.TextureMap)
-			m_MeshMaterial->Set("u_MetalnessTexture", m_MetalnessInput.TextureMap);
-		if (m_RoughnessInput.TextureMap)
-			m_MeshMaterial->Set("u_RoughnessTexture", m_RoughnessInput.TextureMap);*/
+		m_SphereShader->Bind();
+		m_SphereShader->SetFloat3("u_AlbedoColor", m_AlbedoInput.Color);
+		m_SphereShader->SetFloat3("lights.Direction", m_Light.Direction);
+		m_SphereShader->SetFloat3("lights.Radiance", m_Light.Radiance * m_LightMultiplier);
+		m_SphereShader->SetFloat("u_RadiancePrefilter", 0.0f);
+		m_SphereShader->SetFloat("u_AlbedoTexToggle", 0.0f);
+		m_SphereShader->SetFloat("u_NormalTexToggle", 0.0f);
+		m_SphereShader->SetFloat("u_MetalnessTexToggle", 0.0f);
+		m_SphereShader->SetFloat("u_RoughnessTexToggle", 0.0f);
+		m_SphereShader->SetFloat("u_EnvMapRotation", m_EnvMapRotation);
+
+		//if (m_AlbedoInput.TextureMap)
+		//	m_MeshMaterial->Set("u_AlbedoTexture", m_AlbedoInput.TextureMap);
+		//if (m_NormalInput.TextureMap)
+		//	m_MeshMaterial->Set("u_NormalTexture", m_NormalInput.TextureMap);
+		//if (m_MetalnessInput.TextureMap)
+		//	m_MeshMaterial->Set("u_MetalnessTexture", m_MetalnessInput.TextureMap);
+		//if (m_RoughnessInput.TextureMap)
+		//	m_MeshMaterial->Set("u_RoughnessTexture", m_RoughnessInput.TextureMap);
 
 		m_ActiveScene->OnUpdate(ts);
 	}
@@ -343,6 +374,16 @@ namespace Moza
 		ImGui::RadioButton("Model", (int*)&m_SceneType, (int)SceneType::Model);
 
 		ImGui::Begin("Environment");
+
+		if (ImGui::Button("Load Environment Map"))
+		{
+			std::string filename = Application::Get().OpenFile("*.hdr");
+			if (filename != "")
+				m_ActiveScene->SetEnvironment(Environment::Load(filename));
+		}
+
+		ImGui::SliderFloat("Skybox LOD", &m_Scene->GetSkyboxLod(), 0.0f, 11.0f);
+
 		ImGui::Columns(2);
 		ImGui::AlignTextToFramePadding();
 
@@ -587,11 +628,9 @@ namespace Moza
 			ImGui::EndMenuBar();
 		}
 
+		m_SceneHierarchyPanel->OnImGuiRender();
+
 		ImGui::End();
-
-		/*if (m_Mesh)
-			m_Mesh->OnImGuiRender();*/
-
 	}
 
 	void TestLayer::OnEvent(Event& e)

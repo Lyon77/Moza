@@ -25,15 +25,18 @@ namespace Moza
 
 	void Scene::Init()
 	{
-		auto skyboxShader = Shader::Create("assets/shaders/Skybox.glsl");
-		m_SkyboxMaterial = MaterialInstance::Create(Material::Create(skyboxShader));
+		m_SkyboxShader = Shader::Create("assets/shaders/skybox.glsl");
+		m_SkyboxShader->Bind();
+		m_SkyboxShader->SetInt("u_Texture", 0);
+		//m_SkyboxMaterial = MaterialInstance::Create(Material::Create(m_SkyboxShader));
 	}
 
 	void Scene::OnUpdate(Timestep ts)
 	{
 		m_Camera.Update(ts);
 
-		m_SkyboxMaterial->Set("u_TextureLod", m_SkyboxLod);
+		m_SkyboxShader->Bind();
+		m_SkyboxShader->SetFloat("u_TextureLod", m_SkyboxLod);
 
 		// Update all entities
 		for (auto entity : m_Entities)
@@ -66,10 +69,18 @@ namespace Moza
 		SetSkybox(environment.RadianceMap);
 	}
 
+	void Scene::SetEnvironment(const Ref<TextureCube>& radiance, const Ref<TextureCube>& irradiance)
+	{
+		m_Environment.RadianceMap = radiance;
+		m_Environment.IrradianceMap = irradiance;
+		SetSkybox(radiance);
+	}
+
 	void Scene::SetSkybox(const Ref<TextureCube>& skybox)
 	{
 		m_SkyboxTexture = skybox;
-		m_SkyboxMaterial->Set("u_Texture", skybox);
+		m_SkyboxShader->Bind();
+		m_SkyboxTexture->Bind(0);
 	}
 
 	void Scene::AddEntity(Entity* entity)

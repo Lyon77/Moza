@@ -10,8 +10,8 @@ public:
 	Mozaball(const Moza::ApplicationProps& props)
 		: Application(props)
 	{
-		//PushLayer(new Moza::EditorLayer());
-		PushLayer(new Moza::TestLayer());
+		PushLayer(new Moza::EditorLayer());
+		//PushLayer(new Moza::TestLayer());
 	}
 
 	~Mozaball()

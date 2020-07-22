@@ -39,7 +39,7 @@ namespace Moza
 		Ref<Shader> m_HDRShader;
 		Ref<Shader> m_GridShader;
 		Ref<Mesh> m_Mesh;
-		Ref<Mesh> m_SphereMesh, m_PlaneMesh;
+		Ref<Mesh> m_SphereMesh;
 		Ref<Texture2D> m_BRDFLUT;
 		Ref<RenderPass> m_GeoPass, m_CompositePass;
 

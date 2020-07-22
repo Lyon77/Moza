@@ -9,11 +9,11 @@ namespace Moza
 	class Input
 	{
 	public:
-		inline static bool IsKeyPressed(int keycode);
+		static bool IsKeyPressed(int keycode);
 
-		inline static bool IsMouseButtonPressed(int button);
-		inline static std::pair<float, float> GetMousePosition();
-		inline static float GetMouseX();
-		inline static float GetMouseY();
+		static bool IsMouseButtonPressed(int button);
+		static std::pair<float, float> GetMousePosition();
+		static float GetMouseX();
+		static float GetMouseY();
 	};
 }

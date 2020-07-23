@@ -2,7 +2,10 @@
 #include "Moza/Scene/Scene.h"
 
 #include "Moza/Renderer/Renderer2D.h"
+#include "Moza/Scene/Entity.h"
 #include "Moza/Scene/Components.h"
+
+#include <glm/glm.hpp>
 
 namespace Moza
 {
@@ -14,9 +17,12 @@ namespace Moza
 	{
 	}
 
-	entt::entity Scene::CreateEntity()
+	Entity Scene::CreateEntity(const std::string& name)
 	{
-		return m_Registry.create();
+		Entity entity = { m_Registry.create(), this };
+		entity.AddComponent<TransformComponent>();
+		entity.AddComponent<TagComponent>(name);
+		return entity;
 	}
 
 	void Scene::OnUpdate(Timestep ts)

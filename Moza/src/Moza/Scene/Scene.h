@@ -6,13 +6,15 @@
 
 namespace Moza
 {
+	class Entity;
+
 	class Scene
 	{
 	public:
 		Scene();
 		~Scene();
 
-		entt::entity CreateEntity();
+		Entity CreateEntity(const std::string& name = "Entity");
 
 		// TEMP
 		entt::registry& Reg() { return m_Registry; }
@@ -20,5 +22,7 @@ namespace Moza
 		void OnUpdate(Timestep ts);
 	private:
 		entt::registry m_Registry;
+
+		friend class Entity;
 	};
 }

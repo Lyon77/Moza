@@ -178,6 +178,7 @@
     <ClInclude Include="src\Moza\Renderer\Texture.h" />
     <ClInclude Include="src\Moza\Renderer\VertexArray.h" />
     <ClInclude Include="src\Moza\Scene\Components.h" />
+    <ClInclude Include="src\Moza\Scene\Entity.h" />
     <ClInclude Include="src\Moza\Scene\Scene.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
@@ -628,6 +629,7 @@
     <ClCompile Include="src\Moza\Renderer\SubTexture2D.cpp" />
     <ClCompile Include="src\Moza\Renderer\Texture.cpp" />
     <ClCompile Include="src\Moza\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Moza\Scene\Entity.cpp" />
     <ClCompile Include="src\Moza\Scene\Scene.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />

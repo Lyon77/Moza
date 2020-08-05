@@ -164,6 +164,7 @@
     <ClInclude Include="src\Moza\Events\MouseEvent.h" />
     <ClInclude Include="src\Moza\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Moza\Renderer\Buffer.h" />
+    <ClInclude Include="src\Moza\Renderer\Camera.h" />
     <ClInclude Include="src\Moza\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="src\Moza\Scene\Components.h" />
     <ClInclude Include="src\Moza\Scene\Entity.h" />
     <ClInclude Include="src\Moza\Scene\Scene.h" />
+    <ClInclude Include="src\Moza\Scene\SceneCamera.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
@@ -631,6 +633,7 @@
     <ClCompile Include="src\Moza\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Moza\Scene\Entity.cpp" />
     <ClCompile Include="src\Moza\Scene\Scene.cpp" />
+    <ClCompile Include="src\Moza\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />

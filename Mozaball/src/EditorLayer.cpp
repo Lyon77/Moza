@@ -38,15 +38,15 @@ namespace Moza
 	{
 		MZ_PROFILE_FUNCTION();
 
-		m_CheckerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
-		m_SpriteSheet = Texture2D::Create("assets/textures/farm.png");
-
-		m_MapWidth = s_MapWidth;
-		m_MapHeight = strlen(s_MapTiles) / s_MapWidth;
-
-		s_TextureMap['D'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 });
-		s_TextureMap['W'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 });
-		m_Stairs = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 1 }, { 128, 128 });
+		//m_CheckerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
+		//m_SpriteSheet = Texture2D::Create("assets/textures/farm.png");
+		//
+		//m_MapWidth = s_MapWidth;
+		//m_MapHeight = strlen(s_MapTiles) / s_MapWidth;
+		//
+		//s_TextureMap['D'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 6, 11 }, { 128, 128 });
+		//s_TextureMap['W'] = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 11, 11 }, { 128, 128 });
+		//m_Stairs = SubTexture2D::CreateFromCoords(m_SpriteSheet, { 7, 1 }, { 128, 128 });
 
 		//m_CameraController.SetZoomLevel(5.0f);
 
@@ -59,6 +59,13 @@ namespace Moza
 
 		m_SquareEntity = m_ActiveScene->CreateEntity("Square");
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity.AddComponent<CameraComponent>();
+
+		m_SecondCamera = m_ActiveScene->CreateEntity("Clip-Space Entity");
+		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
+		cc.Primary = false;
 	}
 
 	void EditorLayer::OnDetach()
@@ -78,6 +85,8 @@ namespace Moza
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
 		// update Camera
@@ -99,38 +108,8 @@ namespace Moza
 		{
 			MZ_PROFILE_SCOPE("RendererDraw");
 
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
-
 			m_ActiveScene->OnUpdate(ts);
 
-			//static float angle = 0.0f;
-			//angle += ts * 20.0f;
-			//
-			//Renderer2D::DrawRotatedQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, glm::radians(45.0f), m_SquareColor);
-			//Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-			//Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, { 0.2f, 0.8f, 0.3f, 0.75f }, 2.0f);
-			//Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f,  0.1f }, { 1.0f, 1.0f }, glm::radians(angle), m_CheckerboardTexture, { 0.7f, 0.2f, 0.3f, 0.75f }, 1.0f);
-
-			/*
-			// Drawing the Sprite Map
-			for (uint32_t y = 0; y < m_MapHeight; y++)
-			{
-				for (uint32_t x = 0; x < m_MapWidth; x++)
-				{
-					char tileType = s_MapTiles[x + y * m_MapWidth];
-					Ref<SubTexture2D> texture;
-
-					if (s_TextureMap.find(tileType) != s_TextureMap.end())
-						texture = s_TextureMap[tileType];
-					else
-						texture = m_Stairs;
-
-					Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f, m_MapHeight - y - m_MapHeight / 2.0f }, { 1.0f, 1.0f }, texture, { 1.0f, 1.0f, 1.0f, 1.0f }, 1.0f);
-				}
-			}
-			*/
-
-			Renderer2D::EndScene();
 			m_Framebuffer->Unbind();
 		}
 	}
@@ -217,6 +196,22 @@ namespace Moza
 			auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
 			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
 			ImGui::Separator();
+		}
+
+		ImGui::DragFloat3("Camera Transform",
+			glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
+
+		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
+		{
+			m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
+			m_SecondCamera.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
+		}
+
+		{
+			auto& camera = m_SecondCamera.GetComponent<CameraComponent>().Camera;
+			float orthoSize = camera.GetOrthographicSize();
+			if (ImGui::DragFloat("Second Camera Ortho Size", &orthoSize))
+				camera.SetOrthographicSize(orthoSize);
 		}
 
 		ImGui::End();

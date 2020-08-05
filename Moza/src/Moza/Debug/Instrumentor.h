@@ -23,15 +23,9 @@ namespace Moza
 
 	class Instrumentor
 	{
-	private:
-		InstrumentationSession* m_CurrentSession;
-		std::ofstream m_OutputStream;
-		int m_ProfileCount;
 	public:
-		Instrumentor()
-			: m_CurrentSession(nullptr), m_ProfileCount(0)
-		{
-		}
+		Instrumentor(const Instrumentor&) = delete;
+		Instrumentor(Instrumentor&&) = delete;
 
 		void BeginSession(const std::string& name, const std::string& filepath = "results.json")
 		{
@@ -87,6 +81,18 @@ namespace Moza
 			static Instrumentor instance;
 			return instance;
 		}
+
+	private:
+		InstrumentationSession* m_CurrentSession;
+		std::ofstream m_OutputStream;
+		int m_ProfileCount;
+
+		Instrumentor()
+			: m_CurrentSession(nullptr), m_ProfileCount(0)
+		{
+		}
+
+		~Instrumentor() = default;
 	};
 
 	class InstrumentationTimer

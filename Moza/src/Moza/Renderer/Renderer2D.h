@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Moza/Renderer/Camera.h"
 #include "Moza/Renderer/OrthographicCamera.h"
 #include "Moza/Renderer/Texture.h"
 #include "Moza/Renderer/SubTexture2D.h"
@@ -12,7 +13,8 @@ namespace Moza
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const Camera& camera, glm::mat4 transform);
+		static void BeginScene(const OrthographicCamera& camera); // TODO: Remove
 		static void EndScene();
 		static void Flush();
 

@@ -19,6 +19,7 @@
 
 #include "Moza/Scene/Scene.h"
 #include "Moza/Scene/Entity.h"
+#include "Moza/Scene/ScriptableEntity.h"
 #include "Moza/Scene/Components.h"
 
 //--- Renderer ------------------------------

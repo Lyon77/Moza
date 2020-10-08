@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Moza.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Moza
 {
@@ -46,5 +47,8 @@ namespace Moza
 		uint32_t m_MapWidth;
 		uint32_t m_MapHeight;
 		std::unordered_map<char, Ref<SubTexture2D>> s_TextureMap;
+
+		// Panels
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 }

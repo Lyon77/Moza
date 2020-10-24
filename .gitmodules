@@ -14,3 +14,6 @@
 	path = Moza/vendor/glm
 	url = https://github.com/g-truc/glm
 	branch = master
+[submodule "Moza/vendor/yaml-cpp"]
+	path = Moza/vendor/yaml-cpp
+	url = https://github.com/TheCherno/yaml-cpp

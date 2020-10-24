@@ -24,11 +24,13 @@ IncludeDir["ImGui"] = "Moza/vendor/imgui"
 IncludeDir["glm"] = "Moza/vendor/glm"
 IncludeDir["stb_image"] = "Moza/vendor/stb_image"
 IncludeDir["entt"] = "Moza/vendor/entt/include"
+IncludeDir["yaml_cpp"] = "Moza/vendor/yaml-cpp/include"
 
 group "Dependencies"
 	include "Moza/vendor/GLFW"
 	include "Moza/vendor/Glad"
 	include "Moza/vendor/imgui"
+	include "Moza/vendor/yaml-cpp"
 group ""
 
 project "Moza"
@@ -69,7 +71,8 @@ project "Moza"
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
 	}
 
 	links
@@ -77,6 +80,7 @@ project "Moza"
 		"GLFW",
 		"Glad",
 		"ImGui",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 

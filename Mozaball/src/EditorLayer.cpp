@@ -9,6 +9,7 @@
 
 #include "Moza/Scene/SceneSerializer.h"
 
+#include "Moza/Utils/PlatformUtils.h"
 
 namespace Moza
 {
@@ -19,7 +20,8 @@ namespace Moza
 		"WWWWWWDDDDDDWWWWWWWWWWWW"
 		"WWWWWDDDDDDDDDDDWWWWWWWW"
 		"WWWWDDDWWWWWDDDDDDDDWWWW"
-		"WWWWDDDWWWWWDDDDDDDDWWWW"		"WWWWDDDWWWWWDDDDDDDDWWWW"
+		"WWWWDDDWWWWWDDDDDDDDWWWW"
+		"WWWWDDDWWWWWDDDDDDDDWWWW"
 		"WWWWDDDDDDDDDDDDDDDDWWWW"
 		"WWWWDDDDDDDDDDDWWDDDWWWW"
 		"WWWWDDDDDDDDDDDWWDDDWWWW"
@@ -216,17 +218,14 @@ namespace Moza
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 
-				if (ImGui::MenuItem("Serialize"))
-				{
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Serialize("assets/scenes/Example.moza");
-				}
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+					NewScene();
 
-				if (ImGui::MenuItem("Deserialize"))
-				{
-					SceneSerializer serializer(m_ActiveScene);
-					serializer.Deserialize("assets/scenes/Example.moza");
-				}
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+					OpenScene();
+
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+					SaveSceneAs();
 
 				if (ImGui::MenuItem("Exit"))
 					Application::Get().Close();
@@ -272,5 +271,74 @@ namespace Moza
 	void EditorLayer::OnEvent(Event& e)
 	{
 		m_CameraController.OnEvent(e);
+
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressedEvent>(MZ_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
 	}
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+	{
+		// Shortcuts
+		if (e.GetRepeatCount() > 0)
+			return false;
+
+		bool control = Input::IsKeyPressed(MZ_KEY_LEFT_CONTROL) || Input::IsKeyPressed(MZ_KEY_RIGHT_CONTROL);
+		bool shift = Input::IsKeyPressed(MZ_KEY_LEFT_SHIFT) || Input::IsKeyPressed(MZ_KEY_LEFT_SHIFT);
+		switch (e.GetKeyCode())
+		{
+		case MZ_KEY_N:
+		{
+			if (control)
+				NewScene();
+
+			break;
+		}
+		case MZ_KEY_O:
+		{
+			if (control)
+				OpenScene();
+
+			break;
+		}
+		case MZ_KEY_S:
+		{
+			if (control && shift)
+				SaveSceneAs();
+
+			break;
+		}
+		}
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialogs::OpenFile("Moza Scene (*.moza)\0*.moza\0");
+		if (!filepath.empty())
+		{
+			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath);
+		}
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("Moza Scene (*.moza)\0*.moza\0");
+		if (!filepath.empty())
+		{
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+		}
+	}
+
 }

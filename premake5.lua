@@ -25,6 +25,7 @@ IncludeDir["glm"] = "Moza/vendor/glm"
 IncludeDir["stb_image"] = "Moza/vendor/stb_image"
 IncludeDir["entt"] = "Moza/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Moza/vendor/yaml-cpp/include"
+IncludeDir["ImGuizmo"] = "Moza/vendor/ImGuizmo"
 
 group "Dependencies"
 	include "Moza/vendor/GLFW"
@@ -53,7 +54,10 @@ project "Moza"
 		"%{prj.name}/vendor/stb_image/**.h",
 		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl"
+		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.h",
+		"%{prj.name}/vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	defines
@@ -72,7 +76,8 @@ project "Moza"
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
-		"%{IncludeDir.yaml_cpp}"
+		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links
@@ -83,6 +88,9 @@ project "Moza"
 		"yaml-cpp",
 		"opengl32.lib"
 	}
+	
+	filter "files:Moza/vendor/ImGuizmo/**.cpp"
+	flags { "NoPCH" }
 
 	filter "system:windows"
 		systemversion "latest"
@@ -176,7 +184,8 @@ project "Mozaball"
 		"Moza/src",
 		"Moza/vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.ImGuizmo}"
 	}
 
 	links

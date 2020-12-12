@@ -49,6 +49,9 @@ namespace Moza
 		Ref<Texture2D> m_SpriteSheet;
 		Ref<SubTexture2D> m_Stairs;
 
+		// Gizmo
+		int m_GizmoType = -1;
+
 		// Texture Map
 		uint32_t m_MapWidth;
 		uint32_t m_MapHeight;

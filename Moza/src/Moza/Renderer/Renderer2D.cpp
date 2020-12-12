@@ -145,9 +145,6 @@ namespace Moza
 
 	void Renderer2D::StartBatch()
 	{
-		uint32_t datasize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
-		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, datasize);
-
 		s_Data.QuadIndexCount = 0;
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 
@@ -158,6 +155,9 @@ namespace Moza
 	{
 		if (s_Data.QuadIndexCount == 0)
 			return; // Nothing to draw
+
+		uint32_t datasize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, datasize);
 
 		//Bind Textures
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)

@@ -17,3 +17,6 @@
 [submodule "Moza/vendor/yaml-cpp"]
 	path = Moza/vendor/yaml-cpp
 	url = https://github.com/TheCherno/yaml-cpp
+[submodule "Moza/vendor/ImGuizmo"]
+	path = Moza/vendor/ImGuizmo
+	url = https://github.com/TheCherno/ImGuizmo.git

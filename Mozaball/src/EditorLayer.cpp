@@ -64,6 +64,8 @@ namespace Moza
 
 		m_ActiveScene = CreateRef<Scene>();
 
+		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
+
 #if 0
 		m_SquareEntity = m_ActiveScene->CreateEntity("Green Square");
 		m_SquareEntity.AddComponent<SpriteRendererComponent>(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
@@ -133,6 +135,7 @@ namespace Moza
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
 
+			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
@@ -141,6 +144,8 @@ namespace Moza
 			MZ_PROFILE_SCOPE("CameraController::OnUpdate");
 			if (m_ViewportFocused)
 				m_CameraController.OnUpdate(ts);
+
+			m_EditorCamera.OnUpdate(ts);
 		}
 
 		// update Render
@@ -156,7 +161,7 @@ namespace Moza
 		{
 			MZ_PROFILE_SCOPE("RendererDraw");
 
-			m_ActiveScene->OnUpdate(ts);
+			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
 			m_Framebuffer->Unbind();
 		}
@@ -278,10 +283,14 @@ namespace Moza
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 			// Camera
-			auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			/*auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
 			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
 			const glm::mat4& cameraProjection = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());*/
+
+			// EditorCamera
+			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
+			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
 
 			// Entity Transform
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
@@ -320,6 +329,7 @@ namespace Moza
 	void EditorLayer::OnEvent(Event& e)
 	{
 		m_CameraController.OnEvent(e);
+		m_EditorCamera.OnEvent(e);
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>(MZ_BIND_EVENT_FN(EditorLayer::OnKeyPressed));

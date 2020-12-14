@@ -166,6 +166,7 @@
     <ClInclude Include="src\Moza\Math\Math.h" />
     <ClInclude Include="src\Moza\Renderer\Buffer.h" />
     <ClInclude Include="src\Moza\Renderer\Camera.h" />
+    <ClInclude Include="src\Moza\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Moza\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Moza\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Moza\Renderer\OrthographicCamera.h" />
@@ -576,6 +577,7 @@
     <ClCompile Include="src\Moza\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Moza\Math\Math.cpp" />
     <ClCompile Include="src\Moza\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Moza\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Moza\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Moza\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Moza\Renderer\OrthographicCamera.cpp" />

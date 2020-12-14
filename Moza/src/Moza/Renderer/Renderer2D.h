@@ -4,6 +4,7 @@
 #include "Moza/Renderer/OrthographicCamera.h"
 #include "Moza/Renderer/Texture.h"
 #include "Moza/Renderer/SubTexture2D.h"
+#include "Moza/Renderer/EditorCamera.h"
 
 namespace Moza
 {
@@ -14,6 +15,7 @@ namespace Moza
 		static void Shutdown();
 
 		static void BeginScene(const Camera& camera, glm::mat4 transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void BeginScene(const OrthographicCamera& camera); // TODO: Remove
 		static void EndScene();
 		static void Flush();

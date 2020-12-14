@@ -3,6 +3,7 @@
 #include "entt.hpp"
 
 #include "Moza/Core/Timestep.h"
+#include "Moza/Renderer/EditorCamera.h"
 
 namespace Moza
 {
@@ -20,7 +21,8 @@ namespace Moza
 		// TEMP
 		entt::registry& Reg() { return m_Registry; }
 
-		void OnUpdate(Timestep ts);
+		void OnUpdateRuntime(Timestep ts);
+		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
 		void OnViewportResize(uint32_t width, uint32_t height);
 
 		Entity GetPrimaryCameraEntity();

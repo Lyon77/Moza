@@ -3,6 +3,8 @@
 #include "Moza.h"
 #include "Panels/SceneHierarchyPanel.h"
 
+#include "Moza/Renderer/EditorCamera.h"
+
 namespace Moza
 {
 	class EditorLayer : public Layer
@@ -44,6 +46,8 @@ namespace Moza
 		bool m_ViewportFocused = false;
 		bool m_ViewportHovered = false;
 		glm::vec2 m_ViewportSize = { 0, 0 };
+
+		EditorCamera m_EditorCamera;
 
 		Ref<Texture2D> m_CheckerboardTexture;
 		Ref<Texture2D> m_SpriteSheet;

@@ -82,13 +82,13 @@ namespace Moza
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
 		: m_Specification(spec)
 	{
-		/*for (auto spec : m_Specification.Attachments.Attachments)
+		for (auto spec : m_Specification.Attachments.Attachments)
 		{
 			if (!Utils::IsDepthFormat(spec.TextureFormat))
 				m_ColorAttachmentSpecifications.emplace_back(spec);
 			else
 				m_DepthAttachmentSpecification = spec;
-		}*/
+		}
 
 		Resize(spec.Width, spec.Height);
 	}

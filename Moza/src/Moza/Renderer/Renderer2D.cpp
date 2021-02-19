@@ -16,6 +16,9 @@ namespace Moza
 		glm::vec2 TexCoord;
 		float TexID;
 		float TexScale;
+
+		// Editor Only
+		int EntityID = -1;
 	};
 
 	struct Renderer2DData
@@ -59,7 +62,8 @@ namespace Moza
 			{ ShaderDataType::Float4, "a_Color" },
 			{ ShaderDataType::Float2, "a_TexCood" },
 			{ ShaderDataType::Float, "a_TexID" },
-			{ ShaderDataType::Float, "a_TexScale" }
+			{ ShaderDataType::Float, "a_TexScale" },
+			{ ShaderDataType::Int, "a_EntityID" }
 		});
 
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
@@ -279,7 +283,7 @@ namespace Moza
 		DrawQuad(transform, subtexture, color, textureScale);
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, int entityID)
 	{
 		MZ_PROFILE_FUNCTION();
 
@@ -298,6 +302,7 @@ namespace Moza
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexID = textureIndex;
 			s_Data.QuadVertexBufferPtr->TexScale = tilingFactor;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
@@ -306,7 +311,7 @@ namespace Moza
 		s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& color, float textureScale)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec4& color, float textureScale, int entityID)
 	{
 		MZ_PROFILE_FUNCTION();
 
@@ -344,6 +349,7 @@ namespace Moza
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexID = textureIndex;
 			s_Data.QuadVertexBufferPtr->TexScale = textureScale;
+			s_Data.QuadVertexBufferPtr->EntityID = entityID;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
@@ -397,6 +403,11 @@ namespace Moza
 		s_Data.QuadIndexCount += 6;
 
 		s_Data.Stats.QuadCount++;
+	}
+
+	void Renderer2D::DrawSprite(const glm::mat4& transform, SpriteRendererComponent& src, int entityID)
+	{
+		DrawQuad(transform, src.Color, entityID);
 	}
 
 	void Renderer2D::ResetStats()

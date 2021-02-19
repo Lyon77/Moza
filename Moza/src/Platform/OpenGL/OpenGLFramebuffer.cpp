@@ -77,6 +77,18 @@ namespace Moza
 			return false;
 		}
 
+		static GLenum MozaTextureFormatToGL(FramebufferTextureFormat format)
+		{
+			switch (format)
+			{
+				case FramebufferTextureFormat::RGBA8: return GL_RGBA8;
+				case FramebufferTextureFormat::RED_INTEGER: return GL_RED_INTEGER;
+			}
+
+			MZ_CORE_ASSERT(false, "Unknown format");
+
+			return 0;
+		}
 	}
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
@@ -182,6 +194,14 @@ namespace Moza
 		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
 
 		return pixelData;
+	}
+
+	void OpenGLFramebuffer::ClearAttachment(uint32_t index, int value)
+	{
+		MZ_CORE_ASSERT(index < m_ColorAttachments.size(), "Attachment Index is out of Range!");
+
+		auto& spec = m_ColorAttachmentSpecifications[index];
+		glClearTexImage(m_ColorAttachments[index], 0, Utils::MozaTextureFormatToGL(spec.TextureFormat), GL_INT, &value);
 	}
 
 	void OpenGLFramebuffer::Bind()

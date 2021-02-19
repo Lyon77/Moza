@@ -157,6 +157,8 @@ namespace Moza
 			Renderer2D::ResetStats();
 			RendererCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 			RendererCommand::Clear();
+
+			m_Framebuffer->ClearAttachment(1, -1);
 		}
 
 		{
@@ -176,7 +178,7 @@ namespace Moza
 			if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < viewportSize.y)
 			{
 				int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-				MZ_CORE_WARN("PixelData {0}", pixelData);
+				m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
 			}
 				
 
@@ -264,6 +266,11 @@ namespace Moza
 		m_SceneHierarchyPanel.OnImGuiRender();
 
 		ImGui::Begin("Render Stats");
+
+		std::string name = "None";
+		if (m_HoveredEntity)
+			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
+		ImGui::Text("Hovered Entity: %s", name.c_str());
 
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("Renderer2D Stats:");
